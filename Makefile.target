@@ -1,0 +1,17 @@
+%.o: %.cpp
+	@echo "  CC" $@
+	@$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+%.o: %.S
+	@echo "  AS" $@
+	@$(CXX) $(CXXFLAGS) -D__ASM__ -c -o $@ $<
+
+compile: $(OBJS) compile-recursive
+
+compile-recursive:
+	@for dir in $(SUBDIR); do $(MAKE) -C $$dir compile || exit 1; done
+
+clean:
+	@for dir in $(SUBDIR); do $(MAKE) -C $$dir $@ || exit 1; done
+	@echo "  CLEAN" `basename $$PWD`
+	@rm -rf $(OBJS) $(CLEAN)

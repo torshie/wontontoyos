@@ -1,0 +1,24 @@
+.PHONY: clean compile
+
+CROSS = x86_64-unknown-linux-gnu-
+CXX = $(CROSS)g++
+OPTIMIZE_FLAGS = -O0
+OTHER_FLAGS = -g
+INCLUDE_FLAGS = -I$(WONTON)/inc
+DEFINE_FLAGS = 
+CXXFLAGS += -nostdlib -nostartfiles -nodefaultlibs \
+			-ansi \
+			-Wall -Wextra -W -Werror \
+			-fno-omit-frame-pointer -fno-rtti -fno-exceptions \
+			-mno-red-zone
+
+CXXFLAGS += $(OTHER_FLAGS) $(OPTIMIZE_FLAGS) $(DEFINE_FLAGS) \
+			$(INCLUDE_FLAGS)
+LD = $(CROSS)ld
+AS = $(CROSS)as
+AR = $(CROSS)ar
+OBJCOPY = $(CROSS)objcopy
+OBJDUMP = $(CROSS)objdump
+
+OBJS += $(patsubst %.cpp, %.o, $(wildcard *.cpp)) \
+		$(patsubst %.S, %.o, $(wildcard *.S))
