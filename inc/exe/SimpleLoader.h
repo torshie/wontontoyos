@@ -18,28 +18,28 @@ public:
 	 *
 	 * @see Loader::parse()
 	 */
-	int parse(const void* image, kernel::Size size);
+	int parse(const void* image, base::Size size);
 
 	/**
 	 * Get the base address of the memory image
 	 *
 	 * @see Loader::getBaseAddress()
 	 */
-	kernel::Address getBaseAddress();
+	base::Address getBaseAddress();
 
 	/**
 	 * Get the size of the of the memory image
 	 *
 	 * @see Loader::getMemoryImageSize()
 	 */
-	kernel::Size getMemoryImageSize();
+	base::Size getMemoryImageSize();
 
 	/**
 	 * Load the elf64 into memory
 	 *
 	 * @see Loader::load()
 	 */
-	kernel::Address load(void* base, kernel::Size size);
+	base::Address load(void* base, base::Size size);
 
 private:
 	/**
@@ -50,19 +50,19 @@ private:
 	/**
 	 * Base address of the memory image
 	 */
-	kernel::Address base;
+	base::Address base;
 
 	/**
 	 * Size of the memory image
 	 */
-	kernel::Size memoryImageSize;
+	base::Size memoryImageSize;
 };
 
-inline kernel::Address SimpleLoader::getBaseAddress() {
+inline base::Address SimpleLoader::getBaseAddress() {
 	return base;
 }
 
-inline kernel::Size SimpleLoader::getMemoryImageSize() {
+inline base::Size SimpleLoader::getMemoryImageSize() {
 	return memoryImageSize;
 }
 

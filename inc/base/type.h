@@ -1,9 +1,9 @@
-#ifndef __WONTON_KERNEL_TYPE_H_INCLUDED__
-#define __WONTON_KERNEL_TYPE_H_INCLUDED__
+#ifndef __WONTON_BASE_TYPE_H_INCLUDED__
+#define __WONTON_BASE_TYPE_H_INCLUDED__
 
 #include <sexy/TERNARY.h>
 
-namespace kernel {
+namespace base {
 
 typedef signed char I8;
 typedef short I16;

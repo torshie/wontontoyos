@@ -7,4 +7,6 @@ _start:
 	cli
 	mov $(KERNEL_VIRTUAL_BASE + KERNEL_LOAD_ADDRESS - 16), %rsp
 
+	call startKernel
+
 	jmp .
