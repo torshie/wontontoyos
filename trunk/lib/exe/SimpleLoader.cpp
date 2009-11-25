@@ -1,8 +1,7 @@
 #include <exe/SimpleLoader.h>
-#include <util/Memory.h>
+#include <base/Memory.h>
 
-using namespace kernel;
-using namespace util;
+using namespace base;
 
 namespace exe {
 

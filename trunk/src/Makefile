@@ -1,7 +1,10 @@
 KERNEL = kernel.elf
 X64KERNEL = kernel.x64
 LD_SCRIPT = kernel.ld
-CLEAN = $(KERNEL) $(X64KERNEL)
+MAP = link.map
+CLEAN = $(KERNEL) $(X64KERNEL) $(MAP)
+LIBS = ../cxx/libcxx.a ../lib/libwonton.a
+SUBDIR = arch
 
 build: $(KERNEL)
 
@@ -13,6 +16,7 @@ $(KERNEL): $(X64KERNEL)
 	@cp $< $@
 	@$(OBJCOPY) -O elf64-little $@
 
-$(X64KERNEL): $(OBJS)
+$(X64KERNEL): compile $(LIBS)
 	@echo "  LD" $@
-	@$(LD) -o $@ $< -T $(LD_SCRIPT)
+	@$(LD) -T $(LD_SCRIPT) $(LIBS) $(shell find . -type f -name '*.o') \
+		$(LIBS) -o $@ -Map=$(MAP)

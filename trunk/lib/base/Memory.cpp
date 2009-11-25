@@ -1,8 +1,6 @@
-#include <util/Memory.h>
+#include <base/Memory.h>
 
-using namespace kernel;
-
-namespace util {
+namespace base {
 
 /**
  * XXX Optimize

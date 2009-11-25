@@ -1,7 +1,7 @@
 #ifndef __WONTON_EXE_LOADER_H_INCLUDED__
 #define __WONTON_EXE_LOADER_H_INCLUDED__
 
-#include <kernel/type.h>
+#include <base/type.h>
 
 namespace exe {
 
@@ -23,7 +23,7 @@ public:
 	 * @return On success returns 0, otherwise return error code, the
 	 * error code is implementation dependent.
 	 */
-	virtual int parse(const void* image, kernel::Size size) = 0;
+	virtual int parse(const void* image, base::Size size) = 0;
 
 	/**
 	 * Get the base address of the memory image of the executable
@@ -34,7 +34,7 @@ public:
 	 *
 	 * @see parse()
 	 */
-	virtual kernel::Address getBaseAddress() = 0;
+	virtual base::Address getBaseAddress() = 0;
 
 	/**
 	 * Get the size of the memory image of the executable
@@ -45,7 +45,7 @@ public:
 	 *
 	 * @see parse()
 	 */
-	virtual kernel::Size getMemoryImageSize() = 0;
+	virtual base::Size getMemoryImageSize() = 0;
 
 	/**
 	 * Load the executable into memory.
@@ -61,7 +61,7 @@ public:
 	 *
 	 * @see parse()
 	 */
-	virtual kernel::Address load(void* base, kernel::Size size) = 0;
+	virtual base::Address load(void* base, base::Size size) = 0;
 };
 
 }

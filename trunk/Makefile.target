@@ -15,3 +15,6 @@ clean:
 	@for dir in $(SUBDIR); do $(MAKE) -C $$dir $@ || exit 1; done
 	@echo "  CLEAN" `basename $$PWD`
 	@rm -rf $(OBJS) $(CLEAN)
+
+$(LIBS):
+	@$(MAKE) -C `dirname $@` `basename $@`

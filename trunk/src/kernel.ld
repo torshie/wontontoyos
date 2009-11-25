@@ -65,7 +65,7 @@ SECTIONS {
 	. = ALIGN(PAGE_SIZE);
 	__ld_bss_end = .;
 
-	/DISCARD/ : {
+/*	/DISCARD/ : {
 		*(.comment)
-	}
+	} */
 }
