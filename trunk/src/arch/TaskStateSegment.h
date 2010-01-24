@@ -1,9 +1,9 @@
-#ifndef __WONTON_KERNEL_TASK_STATE_SEGMENT_H_INCLUDED__
-#define __WONTON_KERNEL_TASK_STATE_SEGMENT_H_INCLUDED__
+#ifndef KERNEL_ARCH_TASK_STATE_SEGMENT_H_INCLUDED
+#define KERNEL_ARCH_TASK_STATE_SEGMENT_H_INCLUDED
 
-#include <base/type.h>
-#include <base/getSingleInstance.h>
-#include <base/Memory.h>
+#include <generic/type.h>
+#include <generic/getSingleInstance.h>
+#include <generic/Memory.h>
 
 namespace kernel {
 
@@ -14,24 +14,24 @@ namespace kernel {
  * information
  */
 struct TaskStateSegment {
-	friend TaskStateSegment& base::getSingleInstance<TaskStateSegment>();
+	friend TaskStateSegment& getSingleInstance<TaskStateSegment>();
 private:
-	base::U32 reserved0;
+	U32 reserved0;
 public:
-	base::U64 rsp[3];
-	base::U64 ist[7]; /* IST0 is reserved */
+	U64 rsp[3];
+	U64 ist[7]; /* IST0 is reserved */
 private:
-	base::U64 reserved1;
-	base::U16 reserved2;
+	U64 reserved1;
+	U16 reserved2;
 public:
-	base::U16 ioMapBase;
-	base::U8 ioMap[8192];
+	U16 ioMapBase;
+	U8 ioMap[8192];
 
 private:
 	TaskStateSegment() {
-		base::Memory::zeroize(this,
+		Memory::zeroize(this,
 				sizeof(TaskStateSegment) - sizeof(ioMap));
-		base::Memory::memset(ioMap, 0xff, sizeof(ioMap));
+		Memory::memset(ioMap, 0xff, sizeof(ioMap));
 		ioMapBase = (char*)&ioMapBase - (char*)this;
 	}
 
@@ -40,6 +40,6 @@ private:
 
 } __attribute__((packed));
 
-}
+} /* namespace kernel */
 
-#endif
+#endif /* KERNEL_ARCH_TASK_STATE_SEGMENT_H_INCLUDED */

@@ -1,9 +1,7 @@
 #include <exe/SimpleLoader.h>
-#include <base/Memory.h>
+#include <generic/Memory.h>
 
-using namespace base;
-
-namespace exe {
+namespace kernel {
 
 int SimpleLoader::parse(const void* image, Size) {
 	header = (Elf64Header*)image;
@@ -49,4 +47,4 @@ Address SimpleLoader::load(void* base, Size) {
 	return header->entryPoint;
 }
 
-}
+} /* namespace kernel */

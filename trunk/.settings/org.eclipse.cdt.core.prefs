@@ -1,3 +1,3 @@
-#Fri Nov 06 19:50:27 CST 2009
+#Sun Jan 24 13:05:20 CST 2010
 eclipse.preferences.version=1
-environment/project/0.1288400857=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\n<environment append\="true" appendContributed\="true">\n<variable delimiter\=";" name\="WONTON" operation\="append" value\="/Users/torshie/Documents/workspace/wonton"/>\n</environment>\n
+environment/project/0.1288400857=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\n<environment append\="true" appendContributed\="false">\n<variable delimiter\=";" name\="WONTON" operation\="append" value\="/Users/torshie/wonton"/>\n<variable delimiter\=";" name\="PATH" operation\="replace" value\="/Users/torshie/lab/bin\:/Users/torshie/lab/sbin\:/Users/torshie/lab/tool/cross/bin\:/usr/bin\:/bin\:/usr/sbin\:/sbin\:/usr/local/bin\:/usr/local/git/bin\:/usr/X11/bin\:/usr/local/i386-mingw32-4.3.0/bin"/>\n</environment>\n

@@ -1,7 +1,7 @@
-#ifndef __WONTON_KERNEL_NULL_DESCRIPTOR_H_INCLUDED__
-#define __WONTON_KERNEL_NULL_DESCRIPTOR_H_INCLUDED__
+#ifndef KERNEL_ARCH_NULL_DESCRIPTOR_H_INCLUDED
+#define KERNEL_ARCH_NULL_DESCRIPTOR_H_INCLUDED
 
-#include <base/type.h>
+#include <generic/type.h>
 
 namespace kernel {
 
@@ -14,7 +14,7 @@ namespace kernel {
 struct NullDescriptor {
 	friend class GlobalDescriptorTable;
 private:
-	base::U64 i;
+	U64 i;
 
 	NullDescriptor() : i(0) {}
 
@@ -22,6 +22,6 @@ private:
 	const NullDescriptor& operator = (const NullDescriptor&);
 } __attribute__((packed));
 
-}
+} /* namespace kernel */
 
-#endif
+#endif /* KERNEL_ARCH_NULL_DESCRIPTOR_H_INCLUDED */

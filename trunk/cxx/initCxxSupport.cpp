@@ -1,6 +1,6 @@
-#include <cxx/initCxxSupport.h>
+#include "initCxxSupport.h"
 
-namespace cxx {
+namespace kernel {
 
 typedef void (*Constructor)(void);
 

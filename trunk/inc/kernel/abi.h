@@ -1,5 +1,5 @@
-#ifndef __WONTON_KERNEL_ABI_H_INCLUDED__
-#define __WONTON_KERNEL_ABI_H_INCLUDED__
+#ifndef KERNEL_ABI_H_INCLUDED
+#define KERNEL_ABI_H_INCLUDED
 
 /**
  * !!!!!!!!!!!!!!!
@@ -27,4 +27,4 @@ enum {
 } /* namespace kernel */
 #endif
 
-#endif
+#endif /* KERNEL_ABI_H_INCLUDED */

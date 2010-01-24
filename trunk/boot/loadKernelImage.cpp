@@ -1,8 +1,6 @@
 #include <exe/SimpleLoader.h>
 #include <kernel/abi.h>
 
-using namespace base;
-using namespace exe;
 using namespace kernel;
 
 extern "C" Address loadKernelImage(Elf64Header* fileHeader, Size size) {

@@ -1,7 +1,7 @@
-#ifndef __WONTON_SEXY_TERNARY_H_INCLUDED__
-#define __WONTON_SEXY_TERNARY_H_INCLUDED__
+#ifndef KERNEL_SEXY_TERNARY_H_INCLUDED
+#define KERNEL_SEXY_TERNARY_H_INCLUDED
 
-namespace sexy {
+namespace kernel {
 
 template<bool b, typename First, typename Second> class TERNARY;
 
@@ -19,4 +19,4 @@ public:
 
 }
 
-#endif
+#endif /* KERNEL_SEXY_TERNARY_H_INCLUDED */

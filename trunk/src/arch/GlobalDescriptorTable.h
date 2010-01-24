@@ -1,8 +1,8 @@
-#ifndef __WONTON_KERNEL_GLOBAL_DESCRIPTOR_TABLE_H_INCLUDED__
-#define __WONTON_KERNEL_GLOBAL_DESCRIPTOR_TABLE_H_INCLUDED__
+#ifndef KERNEL_ARCH_GLOBAL_DESCRIPTOR_TABLE_H_INCLUDED
+#define KERNEL_ARCH_GLOBAL_DESCRIPTOR_TABLE_H_INCLUDED
 
-#include <base/getSingleInstance.h>
-#include <base/type.h>
+#include <generic/getSingleInstance.h>
+#include <generic/type.h>
 #include "NullDescriptor.h"
 #include "TaskStateSegment.h"
 #include "CodeSegmentDescriptor.h"
@@ -19,7 +19,7 @@ namespace kernel {
  */
 struct GlobalDescriptorTable {
 	friend GlobalDescriptorTable&
-			base::getSingleInstance<GlobalDescriptorTable>();
+			getSingleInstance<GlobalDescriptorTable>();
 
 	/**
 	 * The order of these descriptors are important:
@@ -50,7 +50,7 @@ struct GlobalDescriptorTable {
 
 private:
 	char _pad[6];
-	base::U16 limit;
+	U16 limit;
 	void* base;
 
 	GlobalDescriptorTable()
@@ -81,24 +81,27 @@ public:
 
 namespace internal {
 /**
- * Make sure GlobalDescriptorTable is correctly padded
+ * Used to make sure the data structure is correctly packed.
+ *
+ * If the data structure isn't packed as expected, we will get compile
+ * time error.
  */
-void __checkStructureSize(char check
+typedef int StaticSizeChecker
 		[sizeof(GlobalDescriptorTable)
 			 == sizeof(NullDescriptor)
 				+ sizeof(DataSegmentDescriptor) * 2
 				+ sizeof(CodeSegmentDescriptor) * 2
 				+ sizeof(TaskStateSegmentDescriptor)
 				+ 6
-				+ sizeof(base::U16)
-				+ sizeof(void*) ? 1 : -1]);
+				+ sizeof(U16)
+				+ sizeof(void*) ? 1 : -1];
 }
 
 inline void GlobalDescriptorTable::load() const {
 	asm volatile("lgdt %0" : : "m"(limit));
 
-	base::Offset offsetKernelData = OFFSET_KERNEL_DATA;
-	base::Offset offsetTaskState = OFFSET_TASK_STATE;
+	Offset offsetKernelData = OFFSET_KERNEL_DATA;
+	Offset offsetTaskState = OFFSET_TASK_STATE;
 
 	asm volatile("mov %0, %%rax\n"
 			"mov %%ax, %%ds\n"
@@ -111,4 +114,4 @@ inline void GlobalDescriptorTable::load() const {
 
 } /* namespace kernel */
 
-#endif
+#endif /* KERNEL_ARCH_GLOBAL_DESCRIPTOR_TABLE_H_INCLUDED */

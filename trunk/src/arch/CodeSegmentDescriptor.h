@@ -1,7 +1,7 @@
-#ifndef __WONTON_KERNEL_CODE_SEGMENT_DESCRIPTOR_H_INCLUDED__
-#define __WONTON_KERNEL_CODE_SEGMENT_DESCRIPTOR_H_INCLUDED__
+#ifndef KERNEL_ARCH_CODE_SEGMENT_DESCRIPTOR_H_INCLUDED
+#define KERNEL_ARCH_CODE_SEGMENT_DESCRIPTOR_H_INCLUDED
 
-#include <base/type.h>
+#include <generic/type.h>
 
 namespace kernel {
 
@@ -14,22 +14,22 @@ namespace kernel {
 union CodeSegmentDescriptor {
 	friend class GlobalDescriptorTable;
 private:
-	base::U64 data; /** Used for initialize the descriptor to zero */
+	U64 data; /* Used to initialize the descriptor */
 public:
 	struct {
-		base::U32 _zero0;
-		base::U8 _zero1;
-		base::U8 _zero2:2;
-		base::U8 conforming:1;
-		base::U8 _one0:1;
-		base::U8 _one1:1;
-		base::U8 dpl:2;
-		base::U8 present:1;
-		base::U8 _zero3:5;
-		base::U8 longMode:1;
-		base::U8 _zero4:1;
-		base::U8 _zero5:1;
-		base::U8 _zero6;
+		U32 _zero0;
+		U8 _zero1;
+		U8 _zero2:2;
+		U8 conforming:1;
+		U8 _one0:1;
+		U8 _one1:1;
+		U8 dpl:2;
+		U8 present:1;
+		U8 _zero3:5;
+		U8 longMode:1;
+		U8 _zero4:1;
+		U8 _zero5:1;
+		U8 _zero6;
 	} __attribute__((packed));
 private:
 	CodeSegmentDescriptor() : data(0), _one0(1), _one1(1),
@@ -42,17 +42,15 @@ private:
 
 namespace internal {
 /**
- * Used to make sure the data structure is correctly packed
- * The use of the function is a little tricky: if the the data
- * data structure isn't packed as expected, we will get compile time
- * error. So, no need to implement this function, we just declare
- * it.
+ * Used to make sure the data structure is correctly packed.
+ *
+ * If the data structure isn't packed as expected, we will get compile
+ * time error.
  */
-void __checkStructureSize(char check
-		[sizeof(CodeSegmentDescriptor) == 8 ? 1 : -1]);
+typedef int StaticSizeChecker[sizeof(CodeSegmentDescriptor) == 8 ? 1 : -1];
 
-}
+} /* namespace internal */
 
-}
+} /* namespace kernel */
 
-#endif
+#endif /* KERNEL_ARCH_CODE_SEGMENT_DESCRIPTOR_H_INCLUDED */

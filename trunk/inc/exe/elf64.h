@@ -1,36 +1,36 @@
-#ifndef __WONTON_EXE_ELF64_H__
-#define __WONTON_EXE_ELF64_H__
+#ifndef KERNEL_EXE_ELF64_H_INCLUDED
+#define KERNEL_EXE_ELF64_H_INCLUDED
 
-#include <base/type.h>
+#include <generic/type.h>
 
-namespace exe {
+namespace kernel {
 
 struct Elf64Header {
 	struct {
-		base::U8 mag0;
-		base::U8 mag1;
-		base::U8 mag2;
-		base::U8 mag3;
-		base::U8 fileClass;
-		base::U8 dataEncoding;
-		base::U8 fileVersion;
-		base::U8 abiId;
-		base::U8 abiVersion;
-		base::U8 _pad[7];
+		U8 mag0;
+		U8 mag1;
+		U8 mag2;
+		U8 mag3;
+		U8 fileClass;
+		U8 dataEncoding;
+		U8 fileVersion;
+		U8 abiId;
+		U8 abiVersion;
+		U8 _pad[7];
 	};
-	base::U16 type;
-	base::U16 machine;
-	base::U32 version;
-	base::U64 entryPoint;
-	base::U64 programHeaderOffset;
-	base::U64 sectionHeaderOffset;
-	base::U32 flags;
-	base::U16 headerSize;
-	base::U16 programHeaderSize;
-	base::U16 programHeaderCount;
-	base::U16 sectionHeaderSize;
-	base::U16 sectionHeaderCount;
-	base::U16 sectionNameStringTableIndex;
+	U16 type;
+	U16 machine;
+	U32 version;
+	U64 entryPoint;
+	U64 programHeaderOffset;
+	U64 sectionHeaderOffset;
+	U32 flags;
+	U16 headerSize;
+	U16 programHeaderSize;
+	U16 programHeaderCount;
+	U16 sectionHeaderSize;
+	U16 sectionHeaderCount;
+	U16 sectionNameStringTableIndex;
 
 	enum {
 		FILE_CLASS_32 = 1,
@@ -50,16 +50,16 @@ struct Elf64Header {
 };
 
 struct SectionHeader {
-	base::U32 name;
-	base::U32 type;
-	base::U64 flags;
-	base::U64 address;
-	base::U64 offset;
-	base::U64 size;
-	base::U32 link;
-	base::U32 misc;
-	base::U64 align;
-	base::U64 entrySize;
+	U32 name;
+	U32 type;
+	U64 flags;
+	U64 address;
+	U64 offset;
+	U64 size;
+	U32 link;
+	U32 misc;
+	U64 align;
+	U64 entrySize;
 
 	enum {
 		TYPE_NULL = 0,
@@ -82,12 +82,12 @@ struct SectionHeader {
 };
 
 struct Symbol {
-	base::U32 name;
-	base::U8 flags;
-	base::U8 reserved;
-	base::U16 sectionTableIndex;
-	base::U64 value;
-	base::U64 size;
+	U32 name;
+	U8 flags;
+	U8 reserved;
+	U16 sectionTableIndex;
+	U64 value;
+	U64 size;
 
 	enum {
 		BINDING_LOCAL = 0,
@@ -103,14 +103,14 @@ struct Symbol {
 };
 
 struct ProgramHeader {
-	base::U32 type;
-	base::U32 flags;
-	base::U64 offset;
-	base::U64 address;
-	base::U64 reserved;
-	base::U64 fileSize;
-	base::U64 memorySize;
-	base::U64 align;
+	U32 type;
+	U32 flags;
+	U64 offset;
+	U64 address;
+	U64 reserved;
+	U64 fileSize;
+	U64 memorySize;
+	U64 align;
 
 	enum {
 		TYPE_NULL = 0,
@@ -127,7 +127,7 @@ struct ProgramHeader {
 	};
 };
 
-} /* namespace exe */
+} /* namespace kernel */
 
-#endif
+#endif /* KERNEL_EXE_ELF64_H_INCLUDED */
 

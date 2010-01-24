@@ -1,6 +1,7 @@
-#ifndef __WONTON_SEXY_IS_CHAR_POINTER_H__
-#define __WONTON_SEXY_IS_CHAR_POINTER_H__
+#ifndef KERNEL_SEXY_IS_CHAR_POINTER_H_INCLUDED
+#define KERNEL_SEXY_IS_CHAR_POINTER_H_INCLUDED
 
+namespace kernel {
 template<typename T>
 class IS_CHAR_POINTER {
 public:
@@ -17,4 +18,6 @@ public:
 	};
 };
 
-#endif
+} /* namespace kernel */
+
+#endif /* KERNEL_SEXY_IS_CHAR_POINTER_H_INCLUDED */

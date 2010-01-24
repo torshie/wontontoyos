@@ -1,10 +1,10 @@
-#ifndef __WONTON_EXE_SIMPLE_LOADER_H_INCLUDED__
-#define __WONTON_EXE_SIMPLE_LOADER_H_INCLUDED__
+#ifndef KERNEL_EXE_SIMPLE_LOADER_H_INCLUDED
+#define KERNEL_EXE_SIMPLE_LOADER_H_INCLUDED
 
 #include <exe/Loader.h>
 #include <exe/elf64.h>
 
-namespace exe {
+namespace kernel {
 /**
  * A simple elf64 executable loader.
  * This simple loader can only load *static* linked elf64 executable. It
@@ -18,28 +18,28 @@ public:
 	 *
 	 * @see Loader::parse()
 	 */
-	int parse(const void* image, base::Size size);
+	int parse(const void* image, Size size);
 
 	/**
 	 * Get the base address of the memory image
 	 *
 	 * @see Loader::getBaseAddress()
 	 */
-	base::Address getBaseAddress();
+	Address getBaseAddress();
 
 	/**
 	 * Get the size of the of the memory image
 	 *
 	 * @see Loader::getMemoryImageSize()
 	 */
-	base::Size getMemoryImageSize();
+	Size getMemoryImageSize();
 
 	/**
 	 * Load the elf64 into memory
 	 *
 	 * @see Loader::load()
 	 */
-	base::Address load(void* base, base::Size size);
+	Address load(void* base, Size size);
 
 private:
 	/**
@@ -50,22 +50,22 @@ private:
 	/**
 	 * Base address of the memory image
 	 */
-	base::Address base;
+	Address base;
 
 	/**
 	 * Size of the memory image
 	 */
-	base::Size memoryImageSize;
+	Size memoryImageSize;
 };
 
-inline base::Address SimpleLoader::getBaseAddress() {
+inline Address SimpleLoader::getBaseAddress() {
 	return base;
 }
 
-inline base::Size SimpleLoader::getMemoryImageSize() {
+inline Size SimpleLoader::getMemoryImageSize() {
 	return memoryImageSize;
 }
 
-}
+} /* namespace kernel */
 
-#endif
+#endif /* KERNEL_EXE_SIMPLE_LOADER_H_INCLUDED */

@@ -1,8 +1,6 @@
-#include <kernel/arch/SpinLock.h>
+#include "SpinLock.h"
 
 namespace kernel {
-
-using namespace base;
 
 void SpinLock::lock() {
 	register Address ticket = 1;
@@ -15,4 +13,4 @@ void SpinLock::unlock() {
 	data = 0;
 }
 
-}
+} /* namespace kernel */

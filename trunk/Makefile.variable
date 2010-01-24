@@ -4,7 +4,7 @@ CROSS = x86_64-unknown-linux-gnu-
 CXX = $(CROSS)g++
 OPTIMIZE_FLAGS = -O2
 OTHER_FLAGS = -g
-INCLUDE_FLAGS = -I$(WONTON)/inc
+INCLUDE_FLAGS = -I$(WONTON)/inc -I$(WONTON) -I$(WONTON)/src
 DEFINE_FLAGS = 
 CXXFLAGS += -nostdlib -nostartfiles -nodefaultlibs \
 			-ansi \

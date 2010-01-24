@@ -1,14 +1,14 @@
-#ifndef __WONTON_KERNEL_INTERRUPT_DESCRIPTOR_TABLE_H__
-#define __WONTON_KERNEL_INTERRUPT_DESCRIPTOR_TABLE_H__
+#ifndef KERNEL_ARCH_INTERRUPT_DESCRIPTOR_TABLE_H_INCLUDED
+#define KERNEL_ARCH_INTERRUPT_DESCRIPTOR_TABLE_H_INCLUDED
 
-#include <base/type.h>
-#include <base/getSingleInstance.h>
+#include <generic/type.h>
+#include <generic/getSingleInstance.h>
 
 namespace kernel {
 
 class InterruptDescriptorTable {
 	friend InterruptDescriptorTable&
-			base::getSingleInstance<InterruptDescriptorTable>();
+			getSingleInstance<InterruptDescriptorTable>();
 public:
 	enum {
 		PAGE_FAULT = 14,
@@ -25,27 +25,27 @@ public:
 
 private:
 	struct InterruptDescriptor {
-		base::U16 offset0;
-		base::U16 selector;
-		base::U8 ist:3;
-		base::U8 ignored0:5;
-		base::U8 type:4;
-		base::U8 zero0:1;
-		base::U8 dpl:2;
-		base::U8 present:1;
-		base::U16 offset1;
-		base::U32 offset2;
-		base::U32 ignored1;
+		U16 offset0;
+		U16 selector;
+		U8 ist:3;
+		U8 ignored0:5;
+		U8 type:4;
+		U8 zero0:1;
+		U8 dpl:2;
+		U8 present:1;
+		U16 offset1;
+		U32 offset2;
+		U32 ignored1;
 
 		/**
-		 * XXX As InterruptDescriptor must have a default constructor, we need
-		 * to make the interface of InterruptDescriptor to be this. Although
-		 * C++0x support initialize array members, C++0x are always
-		 * unavailable.
+		 * XXX As InterruptDescriptor must have a default constructor, we
+		 * need to make the interface of InterruptDescriptor to be this.
+		 * Although C++0x support initialize array members, C++0x are
+		 * always unavailable.
 		 */
 		InterruptDescriptor();
 
-		void setOffset(base::Address offset) {
+		void setOffset(Address offset) {
 			offset0 = offset;
 			offset1 = offset >> 16;
 			offset2 = offset >> 32;
@@ -61,8 +61,8 @@ private:
 	void (*handler[HANDLER_COUNT])(void);
 
 	InterruptDescriptor table[HANDLER_COUNT];
-	base::U16 limit;
-	base::U64 address;
+	U16 limit;
+	U64 address;
 
 	InterruptDescriptorTable();
 	~InterruptDescriptorTable() {}
@@ -93,4 +93,4 @@ inline void InterruptDescriptorTable::load() const {
 
 } /* namespace kernel */
 
-#endif
+#endif /* KERNEL_ARCH_INTERRUPT_DESCRIPTOR_TABLE_H_INCLUDED */

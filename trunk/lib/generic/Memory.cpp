@@ -1,6 +1,6 @@
-#include <base/Memory.h>
+#include <generic/Memory.h>
 
-namespace base {
+namespace kernel {
 
 /**
  * XXX Optimize
@@ -27,4 +27,4 @@ void Memory::memset(void* dst, char value, Size count) {
 	}
 }
 
-}
+} /* namespace kernel */
