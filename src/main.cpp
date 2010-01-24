@@ -1,8 +1,6 @@
 #include "Printer.h"
-#include <cxx/initCxxSupport.h>
+#include "cxx/initCxxSupport.h"
 #include "arch/GlobalDescriptorTable.h"
-
-using namespace base;
 
 namespace kernel {
 
@@ -33,7 +31,7 @@ extern "C" void startKernel() {
 	Address physical = levelFour[511] & 0xFFFFFFFFFFFFF000;
 	asm volatile("mov %0, %%cr3" : : "r"(physical));
 
-	cxx::initCxxSupport();
+	initCxxSupport();
 
 	main();
 

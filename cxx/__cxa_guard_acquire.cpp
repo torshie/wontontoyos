@@ -1,5 +1,5 @@
-#include <base/type.h>
+#include <generic/type.h>
 
-extern "C" int __cxa_guard_acquire(base::U64* guard) {
+extern "C" int __cxa_guard_acquire(kernel::U64* guard) {
 	return !(*((char*)guard));
 }

@@ -1,8 +1,8 @@
-#include "../Printer.h"
-#include "InterruptDescriptorTable.h"
-#include <base/Memory.h>
+#include "Printer.h"
 
-using namespace base;
+#include "InterruptDescriptorTable.h"
+#include "GlobalDescriptorTable.h"
+#include <generic/Memory.h>
 
 namespace kernel {
 
@@ -13,13 +13,8 @@ extern "C" Address
 		isrAddressTable[InterruptDescriptorTable::HANDLER_COUNT];
 
 InterruptDescriptorTable::InterruptDescriptor::InterruptDescriptor() {
-	base::Memory::memset(this, 0, sizeof(InterruptDescriptor));
-	//selector = GlobalDescriptorTable::OFFSET_KERNEL_CODE;
-	/**
-	 * XXX Find out why the linked binary is wrong when we use
-	 * selector = GlobalDescriptorTable
-	 */
-	selector = 8;
+	Memory::memset(this, 0, sizeof(InterruptDescriptor));
+	selector = GlobalDescriptorTable::OFFSET_KERNEL_CODE;
 	type = 0xe;
 	present = 1;
 }
@@ -31,7 +26,7 @@ InterruptDescriptorTable::InterruptDescriptorTable() {
 	for (int i = 0; i < HANDLER_COUNT; ++i) {
 		table[i].setOffset(isrAddressTable[i]);
 	}
-	base::Memory::memset(handler, 0, sizeof(handler));
+	Memory::memset(handler, 0, sizeof(handler));
 
 	setHandler(PAGE_FAULT, 0);
 }
@@ -59,7 +54,7 @@ void InterruptDescriptorTable::handle(int isrNumber) {
 		"#MC Machine-Check Exception",
 		"#XM SIMD Floating-Point Exception"
 	};
-	Printer& console = base::getSingleInstance<Printer>();
+	Printer& console = getSingleInstance<Printer>();
 	console << ISR_NAME[isrNumber];
 
 	InterruptDescriptorTable& idt

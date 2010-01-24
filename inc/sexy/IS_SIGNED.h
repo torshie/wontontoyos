@@ -1,7 +1,7 @@
-#ifndef __WONTON_SEXY_IS_SIGNED_H_INCLUDED__
-#define __WONTON_SEXY_IS_SIGNED_H_INCLUDED__
+#ifndef KERNEL_SEXY_IS_SIGNED_H_INCLUDED
+#define KERNEL_SEXY_IS_SIGNED_H_INCLUDED
 
-namespace sexy {
+namespace kernel {
 
 template<typename Primitive>
 class IS_SIGNED {
@@ -11,7 +11,7 @@ public:
 	};
 };
 
-#define __SEXY_SPECIALIZE_IS_SIGNED_OPERATOR_BOOL(type) \
+#define KERNEL_SEXY_SPECIALIZE_IS_SIGNED_VALUE(type) \
 	template<> \
 	class IS_SIGNED<type> { \
 	public: \
@@ -20,12 +20,12 @@ public:
 		}; \
 	}
 
-__SEXY_SPECIALIZE_IS_SIGNED_OPERATOR_BOOL(signed char);
-__SEXY_SPECIALIZE_IS_SIGNED_OPERATOR_BOOL(short);
-__SEXY_SPECIALIZE_IS_SIGNED_OPERATOR_BOOL(int);
-__SEXY_SPECIALIZE_IS_SIGNED_OPERATOR_BOOL(long);
-__SEXY_SPECIALIZE_IS_SIGNED_OPERATOR_BOOL(long long);
+KERNEL_SEXY_SPECIALIZE_IS_SIGNED_VALUE(signed char);
+KERNEL_SEXY_SPECIALIZE_IS_SIGNED_VALUE(short);
+KERNEL_SEXY_SPECIALIZE_IS_SIGNED_VALUE(int);
+KERNEL_SEXY_SPECIALIZE_IS_SIGNED_VALUE(long);
+KERNEL_SEXY_SPECIALIZE_IS_SIGNED_VALUE(long long);
 
-} /* namespace sexy */
+} /* namespace kernel */
 
-#endif
+#endif /* KERNEL_SEXY_IS_SIGNED_H_INCLUDED */

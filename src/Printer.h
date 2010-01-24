@@ -1,8 +1,8 @@
-#ifndef __WONTON_KERNEL_PRINTER_H_INCLUDED__
-#define __WONTON_KERNEL_PRINTER_H_INCLUDED__
+#ifndef KERNEL_PRINTER_H_INCLUDED
+#define KERNEL_PRINTER_H_INCLUDED
 
-#include <base/type.h>
-#include <base/getSingleInstance.h>
+#include <generic/type.h>
+#include <generic/getSingleInstance.h>
 
 namespace kernel {
 
@@ -11,7 +11,7 @@ namespace kernel {
  * XXX Make all methods thread-safe
  */
 class Printer {
-	friend Printer& base::getSingleInstance<Printer>();
+	friend Printer& getSingleInstance<Printer>();
 private:
 	Printer();
 
@@ -59,14 +59,14 @@ public:
 	}
 
 	Printer& operator << (void* pointer) {
-		printUnsigned((base::Address)pointer);
+		printUnsigned((Address)pointer);
 		return *this;
 	}
 
 	void scroll();
 
 private:
-	base::U16* buffer;
+	U16* buffer;
 	int x;
 	int y;
 
@@ -99,7 +99,7 @@ private:
 	}
 };
 
-}
+} /* namespace kernel */
 
-#endif
+#endif /* KERNEL_PRINTER_H_INCLUDED */
 

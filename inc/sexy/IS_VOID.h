@@ -1,7 +1,7 @@
-#ifndef __WONTON_SEXY_IS_VOID_H_INCLUDED__
-#define __WONTON_SEXY_IS_VOID_H_INCLUDED__
+#ifndef KERNEL_SEXY_IS_VOID_H_INCLUDED
+#define KERNEL_SEXY_IS_VOID_H_INCLUDED
 
-namespace sexy {
+namespace kernel {
 
 template<typename T>
 class IS_VOID {
@@ -19,6 +19,6 @@ public:
 	};
 };
 
-} /* namespace sexy */
+} /* namespace kernel */
 
-#endif
+#endif /* KERNEL_SEXY_IS_VOID_H_INCLUDED */

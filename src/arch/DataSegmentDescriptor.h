@@ -1,7 +1,7 @@
-#ifndef __WONTON_KERNEL_DATA_SEGMENT_DESCRIPTOR_H_INCLUDED__
-#define __WONTON_KERNEL_DATA_SEGMENT_DESCRIPTOR_H_INCLUDED__
+#ifndef KERNEL_ARCH_DATA_SEGMENT_DESCRIPTOR_H_INCLUDED
+#define KERNEL_ARCH_DATA_SEGMENT_DESCRIPTOR_H_INCLUDED
 
-#include <base/type.h>
+#include <generic/type.h>
 
 namespace kernel {
 
@@ -14,18 +14,18 @@ namespace kernel {
 union DataSegmentDescriptor {
 	friend class GlobalDescriptorTable;
 private:
-	base::U64 data;
+	U64 data; /* Used to initialize the descriptor */
 public:
 	struct {
-		base::U32 _zero0;
-		base::U16 _base0:8;
-		base::U8 accessed:1;
-		base::U8 writable:1;
-		base::U8 _ignored:2;
-		base::U8 _one0:1;
-		base::U8 _dpl:2;
-		base::U8 present:1;
-		base::U16 _ig;
+		U32 _zero0;
+		U16 _base0:8;
+		U8 accessed:1;
+		U8 writable:1;
+		U8 _ignored:2;
+		U8 _one0:1;
+		U8 _dpl:2;
+		U8 present:1;
+		U16 _ig;
 	} __attribute__((packed));
 private:
 	DataSegmentDescriptor() : data(0), writable(1), _one0(1),
@@ -37,10 +37,15 @@ private:
 } __attribute__((packed));
 
 namespace internal {
-void __checkStructureSize(char check
-		[sizeof(DataSegmentDescriptor) == 8 ? 1 : -1]);
-}
+/**
+ * Used to make sure the data structure is correctly packed.
+ *
+ * If the data structure isn't packed as expected, we will get compile
+ * time error.
+ */
+typedef int StaticSizeChecker[sizeof(DataSegmentDescriptor) == 8 ? 1 : -1];
+} /* namespace internal */
 
-}
+} /* namespace kernel */
 
-#endif
+#endif /* KERNEL_ARCH_DATA_SEGMENT_DESCRIPTOR_H_INCLUDED */

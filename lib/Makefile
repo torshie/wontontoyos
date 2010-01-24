@@ -1,4 +1,4 @@
-SUBDIR = exe
+SUBDIR = exe generic
 LIBRARY = libwonton.a
 CLEAN = $(LIBRARY)
 

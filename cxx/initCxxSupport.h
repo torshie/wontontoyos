@@ -1,7 +1,7 @@
-#ifndef __WONTON_CXX_INIT_CXX_SUPPORT_H_INCLUDED__
-#define __WONTON_CXX_INIT_CXX_SUPPORT_H_INCLUDED__
+#ifndef KERNEL_CXX_INIT_CXX_SUPPORT_H_INCLUDED
+#define KERNEL_CXX_INIT_CXX_SUPPORT_H_INCLUDED
 
-namespace cxx {
+namespace kernel {
 /**
  * Initialize C++ support library libcxx
  *
@@ -13,6 +13,6 @@ namespace cxx {
  */
 int initCxxSupport();
 
-}
+} /* namespace kernel */
 
-#endif
+#endif /* KERNEL_CXX_INIT_CXX_SUPPORT_H_INCLUDED */

@@ -1,5 +1,5 @@
 /**
- * Source code using global objects need this function to be compiled
+ * Source code using global objects will be linked against this function
  *
  * XXX Implement
  */
