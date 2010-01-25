@@ -1,6 +1,9 @@
 #include "Printer.h"
 #include "cxx/initCxxSupport.h"
 #include "arch/GlobalDescriptorTable.h"
+#include "arch/InterruptDescriptorTable.h"
+#include "ut/framework/UnitTesting.h"
+#include "System.h"
 
 namespace kernel {
 
@@ -11,8 +14,14 @@ void main() {
 	console << "to the hell!\n";
 
 	getSingleInstance<GlobalDescriptorTable>().load();
+	getSingleInstance<InterruptDescriptorTable>().load();
 
-	console << "Ah, we are still alive!\n";
+	TestRunner& runner = getSingleInstance<TestRunner>();
+	runner.installTestSuite();
+	runner.verbose();
+	TestResult result;
+	runner.run(result);
+	result.show();
 }
 
 } /* namespace kernel */
@@ -35,6 +44,5 @@ extern "C" void startKernel() {
 
 	main();
 
-	for (;;)
-		;
+	System::halt();
 }

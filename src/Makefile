@@ -4,7 +4,7 @@ LD_SCRIPT = kernel.ld
 MAP = link.map
 CLEAN = $(KERNEL) $(X64KERNEL) $(MAP)
 LIBS = ../cxx/libcxx.a ../lib/libwonton.a
-SUBDIR = arch
+SUBDIR = arch mm
 
 build: $(KERNEL)
 
@@ -20,3 +20,6 @@ $(X64KERNEL): compile $(LIBS)
 	@echo "  LD" $@
 	@$(LD) -T $(LD_SCRIPT) $(LIBS) $(shell find . -type f -name '*.o') \
 		$(LIBS) -o $@ -Map=$(MAP)
+		
+dump: $(X64KERNEL)
+	$(OBJDUMP) $< -D --demangle | less
