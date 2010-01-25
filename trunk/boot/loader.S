@@ -119,18 +119,6 @@ _64bitMode:
 
 	jmp *%rax /* Jump to kernel's entry point */
 
-	mov $0xB8000, %edi
-	mov $0x0f620f2d0f340f36, %rax
-	mov %rax, (%edi)
-
-	mov $0x0f6d0f200f640f69, %rax
-	mov %rax, 8(%edi)
-
-	mov $0x0f200f650f640f6f, %rax
-	mov %rax, 16(%edi)
-
-	jmp .
-
 .section .data
 kernelImage:
 .incbin "../src/kernel.elf"
