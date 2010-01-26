@@ -5,12 +5,12 @@
 
 namespace kernel {
 
-class TestResult;
+class TestRunner;
 
 class TestSuite {
 public:
 	void addTestCase(TestCase& testCase, const char* testCaseName);
-	void run(TestResult& result);
+	void run(TestRunner& runner);
 
 private:
 	typedef void (TestCase::*TestPoint)(void);
@@ -25,6 +25,8 @@ private:
 	int testPointCount[TEST_CASE_MAX];
 	TestPoint testPoint[TEST_CASE_MAX][TEST_POINT_MAX];
 	const char* testPointName[TEST_CASE_MAX][TEST_POINT_MAX];
+
+	void runTestCase(int index, TestRunner& runner);
 };
 
 } /* namespace kernel */

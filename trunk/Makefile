@@ -1,4 +1,4 @@
-SUBDIR = cxx lib src boot ut
+SUBDIR = cxx lib src boot
 
 all: build
 

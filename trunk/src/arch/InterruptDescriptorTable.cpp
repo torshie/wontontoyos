@@ -3,6 +3,7 @@
 #include "InterruptDescriptorTable.h"
 #include "GlobalDescriptorTable.h"
 #include <generic/Memory.h>
+#include <generic/type.h>
 
 namespace kernel {
 
@@ -62,9 +63,6 @@ void InterruptDescriptorTable::handle(int isrNumber) {
 	if (idt.handler[isrNumber] != 0) {
 		idt.handler[isrNumber]();
 	}
-
-		for (;;)
-			;
 }
 
 } /* namespace kernel */

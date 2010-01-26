@@ -16,8 +16,11 @@ void main() {
 	getSingleInstance<GlobalDescriptorTable>().load();
 	getSingleInstance<InterruptDescriptorTable>().load();
 
+	console << "IDT works now\n";
+
 	TestRunner& runner = getSingleInstance<TestRunner>();
 	runner.installTestSuite();
+
 	runner.verbose();
 	TestResult result;
 	runner.run(result);

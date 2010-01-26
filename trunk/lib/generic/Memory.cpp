@@ -1,4 +1,5 @@
 #include <generic/Memory.h>
+#include <generic/type.h>
 
 namespace kernel {
 
@@ -25,6 +26,20 @@ void Memory::memset(void* dst, char value, Size count) {
 	for (Size i = 0; i < count; ++i) {
 		((char*)dst)[i] = value;
 	}
+}
+
+/**
+ * XXX Optimize
+ */
+int Memory::strcmp(const char* first, const char* second) {
+	const unsigned char* a = (const unsigned char*)first;
+	const unsigned char* b = (const unsigned char*)second;
+	for (; *a && *b; ++a, ++b) {
+		if (*a != *b) {
+			return *a - *b;
+		}
+	}
+	return *a - *b;
 }
 
 } /* namespace kernel */
