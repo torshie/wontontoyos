@@ -22,11 +22,15 @@ void TestRunner::installTestSuite() {
 EOF
 
 for testCase in "$@"; do
-	testCase=`echo ${testCase} | sed s/\.h$//g`
-	echo "	static TestSuite testSuite_${testCase};" >> ${sourcePath}
-	echo "	addTestSuite(testSuite_${testCase}, \"${testCase}\");" >> ${sourcePath}
-	echo "	static ${testCase} testCase_${testCase};" >> ${sourcePath}
-	echo "	testCase_${testCase}.addTestPoint(testSuite_${testCase});" >> ${sourcePath}
+	caseName=`echo ${testCase} | sed s/\.h$//g`
+	cat >> ${sourcePath} << EOF
+	do {
+		static TestSuite testSuite;
+		static ${caseName} testCase;
+		addTestSuite(testSuite, "${caseName}");
+		testSuite.addTestCase(testCase, "${caseName}");
+	} while (0);
+EOF
 done
 
 cat >> ${sourcePath} << EOF

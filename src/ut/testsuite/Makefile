@@ -9,7 +9,9 @@ include $(WONTON)/Makefile.variable
 include $(WONTON)/Makefile.target
 
 %.cpp: %.h $(CASE_GENERATOR)
-	$(CASE_GENERATOR) $<
+	@echo "  GEN" $@
+	@$(CASE_GENERATOR) $<
 
 installTestSuite.cpp: $(SUITE_GENERATOR)
-	$(SUITE_GENERATOR) $(wildcard *.h)
+	@echo "  GEN" installTestSuite.o
+	@$(SUITE_GENERATOR) $(wildcard *.h)

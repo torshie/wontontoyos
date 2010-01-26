@@ -1,10 +1,10 @@
 KERNEL = kernel.elf
 X64KERNEL = kernel.x64
 LD_SCRIPT = kernel.ld
-MAP = link.map
+MAP = link.map.txt
 CLEAN = $(KERNEL) $(X64KERNEL) $(MAP)
 LIBS = ../cxx/libcxx.a ../lib/libwonton.a
-SUBDIR = arch mm
+SUBDIR = arch mm ut
 
 build: $(KERNEL)
 

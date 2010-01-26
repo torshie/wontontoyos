@@ -55,8 +55,6 @@ private:
 	/**
 	 * As this structure is packed, we should put the handlers before member
 	 * limit, otherwise we will suffer from performance overhead.
-	 *
-	 * XXX Remove the static modifier
 	 */
 	void (*handler[HANDLER_COUNT])(void);
 

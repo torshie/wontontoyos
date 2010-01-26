@@ -7,11 +7,11 @@ void TestResult::show() {
 	Printer& console = getSingleInstance<Printer>();
 	console << "Test result:\n"
 			<< "Number Of Test Suites: " << suiteCount << "\n"
-			<< "Number Of Test Cases: " << caseCount
+			<< "Number Of Test Cases: " << totalCase
 			<< ", Failed: " << failedCase << "\n"
-			<< "Number Of Test Points: " << testPointCount
+			<< "Number Of Test Points: " << totalTestPoint
 			<< ", Failed: " << failedTestPoint << "\n"
-			<< "Number Of Assertions: " << assertionCount
+			<< "Number Of Assertions: " << totalAssertion
 			<< ", Failed: " << failedAssertion << "\n";
 }
 

@@ -36,6 +36,14 @@ public:
 	 * @param size The size of the memory in bytes
 	 */
 	static void zeroize(void* dst, Size size);
+
+	/**
+	 * Compare two C style string
+	 *
+	 * @param first The first string
+	 * @param second The second string
+	 */
+	static int strcmp(const char* first, const char* second);
 };
 
 } /* namespace kernel */

@@ -5,9 +5,9 @@ namespace kernel {
 
 class TestResult {
 public:
-	TestResult() : suiteCount(0), caseCount(0), failedCase(0), testPointCount(0),
-			failedTestPoint(0), assertionCount(0), failedAssertion(0) {
-	}
+	TestResult() : suiteCount(0), totalCase(0), failedCase(0),
+			totalTestPoint(0), failedTestPoint(0), totalAssertion(0),
+			failedAssertion(0) {}
 
 	/**
 	 * Show the test result to user.
@@ -15,11 +15,11 @@ public:
 	void show();
 
 	int suiteCount;
-	int caseCount;
+	int totalCase;
 	int failedCase;
-	int testPointCount;
+	int totalTestPoint;
 	int failedTestPoint;
-	int assertionCount;
+	int totalAssertion;
 	int failedAssertion;
 };
 

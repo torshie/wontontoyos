@@ -1,5 +1,6 @@
 #include <exe/SimpleLoader.h>
 #include <kernel/abi.h>
+#include <generic/type.h>
 
 using namespace kernel;
 
