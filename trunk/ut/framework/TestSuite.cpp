@@ -17,4 +17,9 @@ void TestSuite::addTestCase(TestCase& tc, const char* name) {
 	++caseCount;
 }
 
+void TestSuite::run(TestResult& result) {
+	for (int i = 0; i < caseCount; ++i) {
+	}
+}
+
 } /* namespace kernel */
