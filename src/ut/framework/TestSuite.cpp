@@ -23,7 +23,7 @@ void TestSuite::run(TestRunner& runner) {
 	Printer& console = getSingleInstance<Printer>();
 	for (int i = 0; i < caseCount; ++i) {
 		if (!runner.isQuiet()) {
-			console << "Running test case " << testCaseName[i] << "\n";
+			console << "    Running test case " << testCaseName[i] << "\n";
 		}
 		runTestCase(i, runner);
 	}
@@ -34,19 +34,22 @@ void TestSuite::runTestCase(int index, TestRunner& runner) {
 	runner.initialize();
 	for (int i = 0; i < testPointCount[index]; ++i) {
 		if (!runner.isQuiet()) {
-			console << testPointName[index][i] << "";
+			console << "        " << testPointName[index][i];
 		}
 		testCase[index]->setUp();
 		(testCase[index]->*testPoint[index][i])();
 		testCase[index]->tearDown();
 
-		if (runner.clearTestPoint()) {
-			if (runner.shouldStopTesting()) {
-				break;
+		if (runner.testPointPassed()) {
+			if (!runner.isQuiet()) {
+				console << "------- PASSED\n";
 			}
 		} else {
 			if (!runner.isQuiet()) {
-				console << "------- PASSED\n";
+				console << "-------- FAILED\n";
+			}
+			if (runner.shouldStopTesting()) {
+				break;
 			}
 		}
 		runner.reset();

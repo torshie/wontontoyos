@@ -15,10 +15,24 @@ cat > ${sourcePath} << EOF
 
 namespace kernel {
 
+EOF
+
+methodList=`egrep 'void test[a-zA-Z0-9_]+ *\(\)' "$1" | sed 's/void//'\
+		| sed 's/[(){}]//g' | xargs`
+
+if [ "z${methodList}" = "z" ]; then
+	cat >> ${sourcePath} << EOF
+bool ${testName}::getTestPoint(TestPoint&, const char*&) {
+	static int index = 0;
+	switch (index) {	
+EOF
+else
+	cat >> ${sourcePath} << EOF
 bool ${testName}::getTestPoint(TestPoint& point, const char*& name) {
 	static int index = 0;
 	switch (index) {
 EOF
+fi
 
 methodList=`egrep 'void test[a-zA-Z0-9_]+ *\(\)' "$1" | sed 's/void//'| sed 's/[(){}]//g'`
 
