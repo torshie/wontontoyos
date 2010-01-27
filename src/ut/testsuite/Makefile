@@ -2,7 +2,6 @@ build: compile
 
 OBJS = $(patsubst %.h, %.o, $(wildcard *.h)) installTestSuite.o
 CLEAN = $(patsubst %.o, %.cpp, $(OBJS))
-SUBDIR = unit.testing.framework
 CASE_GENERATOR = ../framework/GenerateTestCase.sh
 SUITE_GENERATOR = ../framework/GenerateTestSuite.sh
 
