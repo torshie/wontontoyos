@@ -3,6 +3,7 @@
 
 /**
  * XXX Rewrite the whole unit testing framework when kernel heap is ready
+ * XXX The framework is ugly, classes are coupled, redesign it.
  * XXX Make this framework thread-safe ???
  */
 

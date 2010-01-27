@@ -17,7 +17,7 @@ void TestRunner::run(TestResult& r) {
 		if (!quiet) {
 			console << "Running test suite " << testSuiteName[i] << "\n";
 		}
-		result->suiteCount++;
+		result->totalSuite++;
 		testSuite[i]->run(*this);
 	}
 }

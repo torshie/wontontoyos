@@ -5,7 +5,7 @@ namespace kernel {
 
 class TestResult {
 public:
-	TestResult() : suiteCount(0), totalCase(0), failedCase(0),
+	TestResult() : totalSuite(0), totalCase(0), failedCase(0),
 			totalTestPoint(0), failedTestPoint(0), totalAssertion(0),
 			failedAssertion(0) {}
 
@@ -14,7 +14,7 @@ public:
 	 */
 	void show();
 
-	int suiteCount;
+	int totalSuite;
 	int totalCase;
 	int failedCase;
 	int totalTestPoint;

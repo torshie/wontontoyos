@@ -9,6 +9,8 @@ class TestRunner;
 
 class TestSuite {
 public:
+	TestSuite() : caseCount(0) {}
+
 	void addTestCase(TestCase& testCase, const char* testCaseName);
 	void run(TestRunner& runner);
 
