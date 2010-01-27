@@ -63,24 +63,24 @@ private:
 	int totalSuite;
 	TestResult* result;
 	bool stop;
-	int totalAssertionInCurrentTestPoint;
-	int failedAssertionInCurrentTestPoint;
+	int totalAssertion;
+	int failedAssertion;
 	TestSuite* testSuite[TEST_SUITE_MAX];
 	const char* testSuiteName[TEST_SUITE_MAX];
 
 	TestRunner() : quiet(false), totalSuite(0), result(0), stop(false),
-			totalAssertionInCurrentTestPoint(0),
-			failedAssertionInCurrentTestPoint(0) {}
+			totalAssertion(0),
+			failedAssertion(0) {}
 
 	void reset() {
-		failedAssertionInCurrentTestPoint = 0;
-		totalAssertionInCurrentTestPoint = 0;
+		failedAssertion = 0;
+		totalAssertion = 0;
 	}
 
 	void finalize() {
 		result->totalCase++;
-		result->totalAssertion += totalAssertionInCurrentTestPoint;
-		result->failedAssertion += failedAssertionInCurrentTestPoint;
+		result->totalAssertion += totalAssertion;
+		result->failedAssertion += failedAssertion;
 	}
 
 	/**
@@ -91,11 +91,11 @@ private:
 	}
 
 	bool shouldStopTesting() const {
-		return failedAssertionInCurrentTestPoint > 0 && stop;
+		return failedAssertion > 0 && stop;
 	}
 
-	bool clearTestPoint() const {
-		return failedAssertionInCurrentTestPoint == 0;
+	bool testPointPassed() const {
+		return failedAssertion == 0;
 	}
 
 	void assertionSucceeded() {
