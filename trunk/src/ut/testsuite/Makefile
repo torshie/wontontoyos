@@ -1,19 +1,17 @@
 build: compile
 
-OBJS = $(patsubst %.h, %.o, $(wildcard *.h)) installTestSuite.o
-CLEAN = $(patsubst %.o, %.cpp, $(OBJS))
-CASE_GENERATOR = ../framework/GenerateTestCase.sh
-SUITE_GENERATOR = ../framework/GenerateTestSuite.sh
+SUBDIR = unit.testing.framework
+
+INSTALLER = installTestSuite
+OBJS = $(INSTALLER).o
+CLEAN = $(INSTALLER).cpp
 
 include $(WONTON)/Makefile.variable
 include $(WONTON)/Makefile.target
 
-%.cpp: %.h $(CASE_GENERATOR)
-	@chmod +x $(CASE_GENERATOR)
-	@echo "  GEN" $@
-	@$(CASE_GENERATOR) $<
+INSTALLER_GENERATOR = $(WONTON)/src/ut/framework/GenerateSuiteInstaller.sh
 
-installTestSuite.cpp: $(SUITE_GENERATOR)
-	@chmod +x $(SUITE_GENERATOR)
-	@echo "  GEN" installTestSuite.o
-	@$(SUITE_GENERATOR) $(wildcard *.h)
+$(INSTALLER).cpp: $(INSTALLER_GENERATOR)
+	@chmod +x $<
+	@echo "  GEN" $@
+	@$<
