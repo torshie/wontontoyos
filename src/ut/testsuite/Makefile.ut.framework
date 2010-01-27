@@ -1,0 +1,17 @@
+TEST_SUITE_NAME = $(shell basename `pwd` | sed s/\\./_/g)
+TEST_SUITE_INSTALLER = $(TEST_SUITE_NAME)_installTestSuite.cpp
+OBJS += $(patsubst %.h, %.o, $(wildcard *.h)) \
+		$(TEST_SUITE_NAME)_installTestSuite.o
+CLEAN += $(patsubst %.o, %.cpp, $(OBJS))
+CASE_GENERATOR = $(WONTON)/src/ut/framework/GenerateTestCase.sh
+SUITE_GENERATOR = $(WONTON)/src/ut/framework/GenerateTestSuite.sh
+
+%.cpp: %.h $(CASE_GENERATOR)
+	@chmod +x $(CASE_GENERATOR)
+	@echo "  GEN" $@
+	@$(CASE_GENERATOR) $<
+
+$(TEST_SUITE_INSTALLER): $(SUITE_GENERATOR)
+	@chmod +x $<
+	@echo "  GEN" $@
+	@$< $@
