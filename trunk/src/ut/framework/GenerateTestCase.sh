@@ -28,16 +28,18 @@ for method in ${methodList}; do
 	case ${methodIndex}:
 		point = (TestPoint)(&${testName}::${method});
 		name = "${method}";
-		return true;
+		break;
 EOF
 	methodIndex=`expr ${methodIndex} + 1`
 done
 
 cat >> ${sourcePath} << EOF
 	default:
+		++index;
 		return false;
 	}
 	++index;
+	return true;
 }
 
 } /* namespace kernel */
