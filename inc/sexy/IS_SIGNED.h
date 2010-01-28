@@ -11,7 +11,10 @@ public:
 	};
 };
 
-#define KERNEL_SEXY_SPECIALIZE_IS_SIGNED_VALUE(type) \
+#ifdef SPECIALIZE_IS_SIGNED_VALUE
+#error "SPECIALIZE_IS_SIGNED_VALUE is already defined"
+#else
+#define SPECIALIZE_IS_SIGNED_VALUE(type) \
 	template<> \
 	class IS_SIGNED<type> { \
 	public: \
@@ -19,12 +22,15 @@ public:
 			value = 1 \
 		}; \
 	}
+#endif
 
-KERNEL_SEXY_SPECIALIZE_IS_SIGNED_VALUE(signed char);
-KERNEL_SEXY_SPECIALIZE_IS_SIGNED_VALUE(short);
-KERNEL_SEXY_SPECIALIZE_IS_SIGNED_VALUE(int);
-KERNEL_SEXY_SPECIALIZE_IS_SIGNED_VALUE(long);
-KERNEL_SEXY_SPECIALIZE_IS_SIGNED_VALUE(long long);
+SPECIALIZE_IS_SIGNED_VALUE(signed char);
+SPECIALIZE_IS_SIGNED_VALUE(short);
+SPECIALIZE_IS_SIGNED_VALUE(int);
+SPECIALIZE_IS_SIGNED_VALUE(long);
+SPECIALIZE_IS_SIGNED_VALUE(long long);
+
+#undef SPECIALIZE_IS_SIGNED_VALUE
 
 } /* namespace kernel */
 

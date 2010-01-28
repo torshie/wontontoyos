@@ -22,32 +22,46 @@ void TestRunner::run(TestResult& r) {
 
 void TestRunner::runTestSuite(TestSuite& suite) {
 	for (int testCaseId = 0; testCaseId < suite.totalCase; ++testCaseId) {
-		message << "    Running test case "
+		message << "  Running test case "
 				<< suite.testCaseName[testCaseId] << "\n";
 		runTestCase(suite, testCaseId);
+		result->totalCase++;
+		if (shouldStopTesting()) {
+			break;
+		}
 	}
 }
 
 void TestRunner::runTestCase(TestSuite& suite, int testCaseId) {
+	bool testCaseClean = true;
+
 	for (int testPointId = 0; testPointId < suite.totalTestPoint[testCaseId];
 			++testPointId) {
 		prepareForTesting();
 
-		message << "        " << suite.testPointName[testCaseId][testPointId];
+		message << "    " << suite.testPointName[testCaseId][testPointId]
+				<< ": ";
 		suite.testCase[testCaseId]->setUp();
 		(suite.testCase[testCaseId]->*suite.testPoint[testCaseId][testPointId])();
 		suite.testCase[testCaseId]->tearDown();
 
 		if (isTestPointClean()) {
-			message << "-------- PASS\n";
+			message << "  PASS\n";
 		} else {
-			message << "-------- FAIL\n";
+			testCaseClean = false;
+			result->failedTestPoint++;
+			message << "  FAIL\n";
 			if (shouldStopTesting()) {
 				break;
 			}
 		}
+		result->totalTestPoint++;
 
-		saveTestingResult();
+		saveAssertionInformation();
+	}
+
+	if (!testCaseClean) {
+		result->failedCase++;
 	}
 }
 

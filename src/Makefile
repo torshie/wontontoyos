@@ -12,11 +12,13 @@ include $(WONTON)/Makefile.variable
 include $(WONTON)/Makefile.target
 
 $(KERNEL): $(X64KERNEL)
+	@rm -f $@
 	@echo "  OBJCOPY" $@
 	@cp $< $@
 	@$(OBJCOPY) -O elf64-little $@
 
 $(X64KERNEL): compile $(LIBS)
+	@rm -f $@
 	@echo "  LD" $@
 	@$(LD) -T $(LD_SCRIPT) $(LIBS) $(shell find . -type f -name '*.o') \
 		$(LIBS) -o $@ -Map=$(MAP)
