@@ -8,27 +8,24 @@ namespace kernel {
 class TestRunner;
 
 class TestSuite {
+	friend class TestRunner;
 public:
-	TestSuite() : caseCount(0) {}
+	TestSuite() : totalCase(0) {}
 
 	void addTestCase(TestCase& testCase, const char* testCaseName);
-	void run(TestRunner& runner);
 
 private:
-	typedef void (TestCase::*TestPoint)(void);
 	enum {
-		TEST_CASE_MAX = 8,
-		TEST_POINT_MAX = 32
+		MAX_TEST_CASE = 128,
+		MAX_TEST_POINT = 32
 	};
 
-	int caseCount;
-	TestCase* testCase[TEST_CASE_MAX];
-	const char* testCaseName[TEST_CASE_MAX];
-	int testPointCount[TEST_CASE_MAX];
-	TestPoint testPoint[TEST_CASE_MAX][TEST_POINT_MAX];
-	const char* testPointName[TEST_CASE_MAX][TEST_POINT_MAX];
-
-	void runTestCase(int index, TestRunner& runner);
+	int totalCase;
+	TestCase* testCase[MAX_TEST_CASE];
+	const char* testCaseName[MAX_TEST_CASE];
+	int totalTestPoint[MAX_TEST_CASE];
+	TestCase::TestPoint testPoint[MAX_TEST_CASE][MAX_TEST_POINT];
+	const char* testPointName[MAX_TEST_CASE][MAX_TEST_POINT];
 };
 
 } /* namespace kernel */

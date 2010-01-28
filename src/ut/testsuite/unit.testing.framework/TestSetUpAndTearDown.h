@@ -22,7 +22,7 @@ public:
 	/**
 	 * This function is used to make setUp & tearDown get called
 	 */
-	void testEmpty() {}
+	void testNothing() {}
 };
 
 } /* namespace kernel */

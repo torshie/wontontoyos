@@ -6,7 +6,7 @@ namespace kernel {
 class TestSuite;
 
 class TestCase {
-protected:
+public:
 	typedef void (TestCase::*TestPoint)(void);
 public:
 	virtual ~TestCase() {}

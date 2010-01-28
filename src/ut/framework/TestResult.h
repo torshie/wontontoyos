@@ -9,9 +9,6 @@ public:
 			totalTestPoint(0), failedTestPoint(0), totalAssertion(0),
 			failedAssertion(0) {}
 
-	/**
-	 * Show the test result to user.
-	 */
 	void show();
 
 	int totalSuite;
