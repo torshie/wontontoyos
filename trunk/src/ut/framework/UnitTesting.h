@@ -3,7 +3,6 @@
 
 /**
  * XXX Rewrite the whole unit testing framework when kernel heap is ready
- * XXX The framework is ugly, classes are coupled, redesign it.
  * XXX Make this framework thread-safe ???
  */
 
@@ -11,7 +10,7 @@
  * Simple helper file.
  *
  * This file used to simplify the use of the unit testing framework, only
- * need to include this file, can a client get the full functionality
+ * need to include this file, can a client get the all the functionalities
  * of the testing framework
  */
 #include "UnitTestingAssert.h"

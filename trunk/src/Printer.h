@@ -3,6 +3,7 @@
 
 #include <generic/type.h>
 #include <generic/getSingleInstance.h>
+#include <sexy/IS_SIGNED.h>
 
 namespace kernel {
 
@@ -17,12 +18,13 @@ private:
 
 public:
 	Printer& operator << (char data);
-	Printer& operator << (const char* string);
 
-	Printer& operator << (short data) {
-		printInteger(data);
+	Printer& operator << (char* string) {
+		operator << ((const char*)(string));
 		return *this;
 	}
+
+	Printer& operator << (const char* string);
 
 	Printer& operator << (bool b) {
 		if (b) {
@@ -33,37 +35,20 @@ public:
 		return *this;
 	}
 
-	Printer& operator << (int data) {
-		printInteger(data);
+	template<typename Integer>
+	Printer& operator << (Integer data) {
+		if (IS_SIGNED<Integer>::value) {
+			printSigned(data);
+		} else {
+			printUnsigned(data);
+		}
 		return *this;
 	}
 
-	Printer& operator << (long data) {
-		printInteger(data);
-		return *this;
-	}
-
-	Printer& operator << (unsigned short data) {
-		printUnsigned(data);
-		return *this;
-	}
-
-	Printer& operator << (unsigned int data) {
-		printUnsigned(data);
-		return *this;
-	}
-
-	Printer& operator << (unsigned long data) {
-		printUnsigned(data);
-		return *this;
-	}
-
-	Printer& operator << (void* pointer) {
+	Printer& operator << (const void* pointer) {
 		printUnsigned((Address)pointer);
 		return *this;
 	}
-
-	void scroll();
 
 private:
 	U16* buffer;
@@ -71,13 +56,13 @@ private:
 	int y;
 
 	template<typename Int>
-	void printInteger(Int data) {
+	void printSigned(Int data) {
 		if (data < 0) {
 			operator << ('-');
-			printInteger(-data);
+			printSigned(-data);
 		} else {
 			if (data >= 10) {
-				printInteger(data / 10);
+				printSigned(data / 10);
 				data %= 10;
 			}
 			operator << ((char)('0' + data));
@@ -97,6 +82,9 @@ private:
 		}
 		operator << (tmp);
 	}
+
+	void scroll();
+
 };
 
 } /* namespace kernel */

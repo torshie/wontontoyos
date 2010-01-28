@@ -11,14 +11,43 @@ void TestRunner::addTestSuite(TestSuite& suite,
 }
 
 void TestRunner::run(TestResult& r) {
-	Printer& console = getSingleInstance<Printer> ();
 	result = &r;
-	for (int i = 0; i < totalSuite; ++i) {
-		if (!quiet) {
-			console << "Running test suite " << testSuiteName[i] << "\n";
-		}
+	for (int suiteId = 0; suiteId < totalSuite; ++suiteId) {
+		message << "Running test suite " << testSuiteName[suiteId] << "\n";
 		result->totalSuite++;
-		testSuite[i]->run(*this);
+		runTestSuite(*(testSuite[suiteId]));
+	}
+}
+
+
+void TestRunner::runTestSuite(TestSuite& suite) {
+	for (int testCaseId = 0; testCaseId < suite.totalCase; ++testCaseId) {
+		message << "    Running test case "
+				<< suite.testCaseName[testCaseId] << "\n";
+		runTestCase(suite, testCaseId);
+	}
+}
+
+void TestRunner::runTestCase(TestSuite& suite, int testCaseId) {
+	for (int testPointId = 0; testPointId < suite.totalTestPoint[testCaseId];
+			++testPointId) {
+		prepareForTesting();
+
+		message << "        " << suite.testPointName[testCaseId][testPointId];
+		suite.testCase[testCaseId]->setUp();
+		(suite.testCase[testCaseId]->*suite.testPoint[testCaseId][testPointId])();
+		suite.testCase[testCaseId]->tearDown();
+
+		if (isTestPointClean()) {
+			message << "-------- PASS\n";
+		} else {
+			message << "-------- FAIL\n";
+			if (shouldStopTesting()) {
+				break;
+			}
+		}
+
+		saveTestingResult();
 	}
 }
 

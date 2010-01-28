@@ -19,7 +19,6 @@ void main() {
 	console << "IDT works now\n";
 
 	TestRunner& runner = getSingleInstance<TestRunner>();
-	runner.installTestSuite();
 
 	runner.verbose();
 	TestResult result;
