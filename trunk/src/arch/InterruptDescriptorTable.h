@@ -38,9 +38,9 @@ private:
 		U32 ignored1;
 
 		/**
-		 * XXX As InterruptDescriptor must have a default constructor, we
-		 * need to make the interface of InterruptDescriptor to be this.
-		 * Although C++0x support initialize array members, C++0x are
+		 * XXX Event InterruptDescriptor must have a default constructor, we
+		 * still have to make the interface of InterruptDescriptor to be like
+		 * this. Although C++0x support initialize array members, C++0x are
 		 * always unavailable.
 		 */
 		InterruptDescriptor();
@@ -73,11 +73,12 @@ private:
 	static void handle(int isrNumber);
 
 	/**
-	 * Make sure that InterruptDescriptor is correctly packed. Since
-	 * InterruptDescriptor is private, we cannot put this declaration into
-	 * namespace insurance
+	 * Used to make sure the data structure is correctly packed.
+	 *
+	 * If the data structure isn't packed as expected, we will get compile
+	 * time error.
 	 */
-	void insure(char [sizeof(InterruptDescriptor) == 16 ? 1 : -1]);
+	typedef char StaticSizeChecker[sizeof(InterruptDescriptor) == 16 ? 1 : -1];
 } __attribute__((packed));
 
 inline void InterruptDescriptorTable::setHandler(int isrNumber,

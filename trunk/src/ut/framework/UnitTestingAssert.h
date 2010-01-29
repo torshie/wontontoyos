@@ -3,7 +3,7 @@
 
 #include "TestRunner.h"
 #include <generic/Memory.h>
-#include <generic/Compare.h>
+#include <generic/Comparer.h>
 
 namespace kernel {
 
@@ -17,7 +17,7 @@ public:
 			const char* file, int line, const char* actualString,
 			const char* expectedString) {
 		TestRunner& runner = getSingleInstance<TestRunner>();
-		if (Compare<First, Second>::equal(actual, expected)) {
+		if (Comparer<First, Second>::equal(actual, expected)) {
 			runner.gotTrueAssertion();
 		} else {
 			runner.gotFalseAssertion(file, line, actualString,
