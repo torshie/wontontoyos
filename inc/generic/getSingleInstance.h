@@ -4,7 +4,7 @@
 namespace kernel {
 
 /**
- * XXX Make this function thread-safe, although it really is when compiled
+ * XXX Make this function thread-safe, although it already is when compiled
  * with g++
  */
 template<typename T>
