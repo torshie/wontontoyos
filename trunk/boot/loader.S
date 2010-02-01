@@ -1,16 +1,3 @@
-/**
- * 64-bit kernel loader.
- * It does the following:
- * 1. Create 64-bit identity map, maps the lower 2M memory, meanwhile it
- *    maps the this area into higher half, started at 0xFFFFFF0000000000
- *    (the last but one entry in the level four paging structure)
- * 2. The kernel executable will be wrapped into boot loader with .incbin
- *    gas directive.
- * 3. Use SimpleLoader to parse and load the kernel executable
- * 4. Pass kernel's memory layout to kernel (TODO This hasn't been fully
- *    implemented)
- * 5. Jump to the kernel's entry point
- */
 .set MBOOT_MAGIC, 0x1BADB002
 .set MBOOT_FLAGS, (1 | (1 << 1) | (1 << 16))
 .set MBOOT_CHECKSUM, (-(MBOOT_FLAGS + MBOOT_MAGIC))
@@ -40,16 +27,12 @@ mbootheader:
 globalDescriptorTable:
 	.quad 0 /* Null segment descriptor, required by CPU specification */
 
-/**
- * Data Segment descriptor.
- */
+/* Data Segment descriptor. */
 dataSegmentDescriptor:
 	.long 0x0000FFFF
 	.long 0x00CF9200 /* Bit G, D/B, P, 12 and W are set, DPL is 0 */
 
-/**
- * 64-bit Code Segment descriptor
- */
+/* 64-bit Code Segment descriptor */
 _64bitCodeSegmentDescriptor:
 	.long 0x00000000
 	.long 0x00209800 /* Bit L, P, 12 and 11 are set, DPL is 0 */
@@ -66,9 +49,7 @@ bootstrap:
 	mov $__ld_kernel_stack__, %esp /* Defined in ld script */
 
 	call fillPageTable
-	pushl %eax /* Save return value which is the address of level four
-				* map
-				*/
+	pushl %eax /* Save return value which is the address of level four map */
 
 	mov $0x1, %eax
 	mov %eax, %cr0
@@ -78,10 +59,7 @@ bootstrap:
 	bts $7, %eax /* Set PGE */
 	mov %eax, %cr4
 
-	/* Point cr3 at pageMap. See fillPageTable() for why it is 0x10a000 */
-	popl %ebx /* We have saved address of pageMap after calling
-			   * fillPageTable()
-			   */
+	popl %ebx /* We have saved address of pageMap after calling fillPageTable() */
 	mov %ebx, %cr3
 
 	mov $0x00C0000080, %ecx /* EFER MSR */
@@ -123,4 +101,4 @@ _64bitMode:
 kernelImage:
 .incbin "../src/kernel.elf"
 kernelImageEnd:
-	jmp .
+	.long 0
