@@ -1,15 +1,13 @@
-.PHONY: clean compile
-
 CROSS = x86_64-unknown-linux-gnu-
 CXX = $(CROSS)g++
-OPTIMIZE_FLAGS = -O2
+OPTIMIZE_FLAGS = -O0
 OTHER_FLAGS = -g
 INCLUDE_FLAGS = -I$(WONTON)/inc -I$(WONTON) -I$(WONTON)/src
 DEFINE_FLAGS = 
 CXXFLAGS += -nostdlib -nostartfiles -nodefaultlibs \
 			-ansi \
 			-Wall -Wextra -W -Werror \
-			-fomit-frame-pointer -fno-rtti -fno-exceptions \
+			-fomit-frame-pointer -fno-exceptions \
 			-mno-red-zone -mcmodel=large \
 			$(OTHER_FLAGS) $(OPTIMIZE_FLAGS) $(DEFINE_FLAGS) \
 			$(INCLUDE_FLAGS)

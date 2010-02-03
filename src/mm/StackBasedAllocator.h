@@ -29,7 +29,11 @@ public:
 		}
 		typename Stack::Node* top = available.getTop();
 		available.pop();
-		return top->payload;
+		if (top) {
+			return top->payload;
+		} else {
+			return 0;
+		}
 	}
 
 	void release(void* pointer) {

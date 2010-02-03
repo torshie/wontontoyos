@@ -39,18 +39,15 @@ void TestRunner::runTestCase(TestSuite& suite, int testCaseId) {
 			++testPointId) {
 		prepareForTesting();
 
-		message << "    " << suite.testPointName[testCaseId][testPointId]
-				<< ": ";
 		suite.testCase[testCaseId]->setUp();
 		(suite.testCase[testCaseId]->*suite.testPoint[testCaseId][testPointId])();
 		suite.testCase[testCaseId]->tearDown();
 
-		if (isTestPointClean()) {
-			message << "  PASS\n";
-		} else {
+		if (!isTestPointClean()) {
 			testCaseClean = false;
 			result->failedTestPoint++;
-			message << "  FAIL\n";
+			message << "    " << suite.testPointName[testCaseId][testPointId]
+					<< ":  FAIL\n";
 			if (shouldStopTesting()) {
 				break;
 			}

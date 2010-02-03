@@ -20,8 +20,21 @@ public:
 		if (Comparer<First, Second>::equal(actual, expected)) {
 			runner.gotTrueAssertion();
 		} else {
-			runner.gotFalseAssertion(file, line, actualString,
+			runner.gotFalseEqualAssertion(file, line, actualString,
 					expectedString);
+		}
+	}
+
+	template<typename First, typename Second>
+	static void assertUnequal(const First& first, const Second& second,
+			const char* file, int line, const char* firstString,
+			const char* secondString) {
+		TestRunner& runner = getSingleInstance<TestRunner>();
+		if (Comparer<First, Second>::unequal(first, second)) {
+			runner.gotTrueAssertion();
+		} else {
+			runner.gotFalseUnequalAssertion(file, line, firstString,
+					secondString);
 		}
 	}
 };
@@ -35,5 +48,9 @@ public:
 #define UT_ASSERT_EQUAL(actual, expected) \
 	::kernel::UnitTestingAssert::assertEqual((actual), (expected), \
 			__FILE__, __LINE__, #actual, #expected)
+
+#define UT_ASSERT_UNEQUAL(first, second) \
+	::kernel::UnitTestingAssert::assertUnequal((first), (second), \
+			__FILE__, __LINE__, #first, #second)
 
 #endif /* KERNEL_UT_FRAMEWORK_UNIT_TESTING_ASSERT_H_INCLUDED */

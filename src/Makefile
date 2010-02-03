@@ -20,7 +20,7 @@ $(KERNEL): $(X64KERNEL)
 $(X64KERNEL): compile $(LIBS)
 	@rm -f $@
 	@echo "  LD" $@
-	@$(LD) -T $(LD_SCRIPT) $(LIBS) $(shell find . -type f -name '*.o') \
+	@$(LD) -T $(LD_SCRIPT) $(shell find . -type f -name '*.o') \
 		$(LIBS) -o $@ -Map=$(MAP)
 		
 dump: $(X64KERNEL)

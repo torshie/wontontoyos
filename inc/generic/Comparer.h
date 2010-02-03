@@ -36,6 +36,10 @@ public:
 	static bool equal(const Left& left, const Right& right) {
 		return InternalCompare::equal(left, right);
 	}
+
+	static bool unequal(const Left& left, const Right& right) {
+		return !equal(left, right);
+	}
 };
 
 } /* namespace kernel */

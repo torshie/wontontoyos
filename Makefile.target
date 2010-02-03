@@ -1,3 +1,5 @@
+.PHONY: compile clean
+
 %.o: %.cpp
 	@echo "  CC" $@
 	@$(CXX) $(CXXFLAGS) -c -o $@ $<

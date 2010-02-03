@@ -1,7 +1,8 @@
+#include <arch/X64Constant.h>
+
 .set MBOOT_MAGIC, 0x1BADB002
 .set MBOOT_FLAGS, (1 | (1 << 1) | (1 << 16))
 .set MBOOT_CHECKSUM, (-(MBOOT_FLAGS + MBOOT_MAGIC))
-.set PAGE_SIZE, 0x1000
 
 .section .text
 .code32
@@ -51,29 +52,30 @@ bootstrap:
 	call fillPageTable
 	pushl %eax /* Save return value which is the address of level four map */
 
-	mov $0x1, %eax
+	xor %eax, %eax
+	bts $CR0_BIT_PROTECTION_ENABLED, %eax
 	mov %eax, %cr0
 
 	mov %cr4, %eax
-	bts $5, %eax /* Set PAE */
-	bts $7, %eax /* Set PGE */
+	bts $CR4_BIT_PHYSICAL_ADDRESS_EXTENSION, %eax
+	bts $CR4_BIT_PAGE_GLOBAL_ENABLE, %eax
 	mov %eax, %cr4
 
 	popl %ebx /* We have saved address of pageMap after calling fillPageTable() */
 	mov %ebx, %cr3
 
-	mov $0x00C0000080, %ecx /* EFER MSR */
+	mov $MSR_EXTENDED_FEATURE_ENABLE_REGISTER, %ecx
 	rdmsr
 	xor %eax, %eax
-	bts $11, %eax /* No execute */
-	bts $8, %eax /* Long Mode Enable */
-	bts $0, %eax /* System Call Extensions */
+	bts $EFER_BIT_NO_EXECUTE_ENABLE, %eax
+	bts $EFER_BIT_LONG_MODE_ENABLE, %eax
+	bts $EFER_BIT_SYSTEM_CALL_EXTENSION, %eax
 	wrmsr
 
 	lgdt globalDescriptorTablePointer
 
 	mov %cr0, %eax
-	bts $31, %eax /* Enable paging */
+	bts $CR0_BIT_PAGING, %eax /* Enable paging */
 	mov %eax, %cr0
 
 	ljmp $(_64bitCodeSegmentDescriptor - globalDescriptorTable), $_64bitMode
