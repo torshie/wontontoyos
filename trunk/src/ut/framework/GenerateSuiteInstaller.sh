@@ -14,7 +14,7 @@ namespace kernel {
 
 EOF
 
-directoryList=`find . -depth 1 -type d |grep -v svn`
+directoryList="$@"
 for directory in ${directoryList}; do
 	testSuiteName=`basename ${directory} | sed 's/\./_/g'`
 	echo "void ${testSuiteName}_installTestSuite(TestRunner&);" >> ${sourceFile}

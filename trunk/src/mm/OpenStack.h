@@ -7,8 +7,8 @@ template<typename Payload>
 class OpenStack {
 public:
 	struct Node {
-		Node* next;
 		Payload payload;
+		Node* next;
 	};
 
 	OpenStack() : top(0) {}

@@ -4,6 +4,7 @@
 #include "arch/InterruptDescriptorTable.h"
 #include "ut/framework/UnitTesting.h"
 #include "System.h"
+#include "cxx/rtti.h"
 
 namespace kernel {
 

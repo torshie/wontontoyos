@@ -1,6 +1,6 @@
 build: compile
 
-SUBDIR = unit.testing.framework
+SUBDIR = runtime.type.information
 
 INSTALLER = installTestSuite
 OBJS = $(INSTALLER).o
@@ -14,4 +14,4 @@ INSTALLER_GENERATOR = $(WONTON)/src/ut/framework/GenerateSuiteInstaller.sh
 $(INSTALLER).cpp: $(INSTALLER_GENERATOR)
 	@chmod +x $<
 	@echo "  GEN" $@
-	@$<
+	@$< $(SUBDIR)

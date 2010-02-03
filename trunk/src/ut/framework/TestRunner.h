@@ -114,29 +114,27 @@ private:
 		totalAssertion++;
 	}
 
-	void showFailedMessage(const char* file, int line,
+	void gotFalseAssertion(const char* file, int line,
 			const char* expression) {
+		failedAssertion++;
+		totalAssertion++;
 		message << file << ":" << line << " ASSERT(" << expression << ")";
 	}
 
-	void showFailedMessage(const char* file, int line, const char* actual,
-			const char* expected) {
+	void gotFalseEqualAssertion(const char* file, int line,
+			const char* actual, const char* expected) {
+		failedAssertion++;
+		totalAssertion++;
 		message << file << ":" << line << " ASSERT(" << actual << " == "
-				<< expected << ")";
+						<< expected << ")";
 	}
 
-	void gotFalseAssertion(const char* file, int line,
-			const char* expression) {
+	void gotFalseUnequalAssertion(const char* file, int line,
+			const char* first, const char* second) {
 		failedAssertion++;
 		totalAssertion++;
-		showFailedMessage(file, line, expression);
-	}
-
-	void gotFalseAssertion(const char* file, int line,
-				const char* actual, const char* expected) {
-		failedAssertion++;
-		totalAssertion++;
-		showFailedMessage(file, line, actual, expected);
+		message << file << ":" << line << " ASSERT(" << first << " != "
+								<< second << ")";
 	}
 };
 
