@@ -1,7 +1,8 @@
 ELF_KERNEL = ../src/kernel.elf
 IMAGE = image.mboot
 LD_SCRIPT = loader.ld
-CLEAN = $(IMAGE)
+OBJ32 = fillPageTable.32
+CLEAN = $(IMAGE) $(OBJ32)
 LIBS = ../cxx/libcxx.a ../lib/libwonton.a
 
 build: $(IMAGE)
@@ -9,7 +10,7 @@ build: $(IMAGE)
 include $(WONTON)/Makefile.variable
 include $(WONTON)/Makefile.target
 
-$(IMAGE): $(ELF_KERNEL) $(OBJS) $(LIBS)
+$(IMAGE): $(OBJS) $(LIBS)
 	@echo "  LD" $@
 	@$(LD) -T $(LD_SCRIPT) $(OBJS) $(LIBS) -o $@
 	@echo "  OBJCOPY" $@
@@ -18,8 +19,10 @@ $(IMAGE): $(ELF_KERNEL) $(OBJS) $(LIBS)
 $(ELF_KERNEL):
 	@$(MAKE) -C ../src `basename $@`
 
-fillPageTable.o: fillPageTable.32
-	@mv $< $@
+fillPageTable.o: $(OBJ32)
+	@cp $< $@
+
+loader.o: loader.S $(ELF_KERNEL)
 
 compile: $(OBJS)
 

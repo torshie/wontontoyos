@@ -17,10 +17,10 @@ $(KERNEL): $(X64KERNEL)
 	@cp $< $@
 	@$(OBJCOPY) -O elf64-little $@
 
-$(X64KERNEL): compile $(LIBS)
+$(X64KERNEL): compile $(ALL_OBJS) $(LIBS)
 	@rm -f $@
 	@echo "  LD" $@
-	@$(LD) -T $(LD_SCRIPT) $(shell find . -type f -name '*.o') \
+	@$(LD) -T $(LD_SCRIPT) $(ALL_OBJS) \
 		$(LIBS) -o $@ -Map=$(MAP)
 		
 dump: $(X64KERNEL)

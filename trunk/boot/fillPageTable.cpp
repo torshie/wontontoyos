@@ -22,9 +22,6 @@ extern "C" unsigned long fillPageTable() {
 		PAGE_MAP_BEGIN = 1024 * 1024,
 	};
 
-	/**
-	 * XXX Use Memory::memset() instead of loop
-	 */
 	for (Size i = PAGE_MAP_BEGIN; i < PAGE_MAP_BEGIN + PAGE_SIZE * 4; ++i) {
 		*(char*)(PAGE_MAP_BEGIN + i) = 0;
 	}

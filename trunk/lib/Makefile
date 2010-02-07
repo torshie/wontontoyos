@@ -2,11 +2,11 @@ SUBDIR = exe generic
 LIBRARY = libwonton.a
 CLEAN = $(LIBRARY)
 
-build: $(LIBRARY)
+build: compile $(LIBRARY)
 
 include $(WONTON)/Makefile.variable
 include $(WONTON)/Makefile.target
 
-$(LIBRARY): compile
+$(LIBRARY): $(ALL_OBJS)
 	@echo "  AR" $@
-	@$(AR) rcs $@ `find . -type f -name '*.o'`
+	@$(AR) rcs $@ $(ALL_OBJS)
