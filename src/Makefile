@@ -6,19 +6,17 @@ CLEAN = $(KERNEL) $(X64KERNEL) $(MAP)
 LIBS = ../cxx/libcxx.a ../lib/libwonton.a
 SUBDIR = arch mm ut
 
-build: $(KERNEL)
+build: compile $(KERNEL)
 
 include $(WONTON)/Makefile.variable
 include $(WONTON)/Makefile.target
 
 $(KERNEL): $(X64KERNEL)
-	@rm -f $@
 	@echo "  OBJCOPY" $@
 	@cp $< $@
 	@$(OBJCOPY) -O elf64-little $@
 
-$(X64KERNEL): compile $(ALL_OBJS) $(LIBS)
-	@rm -f $@
+$(X64KERNEL): $(ALL_OBJS) $(LIBS)
 	@echo "  LD" $@
 	@$(LD) -T $(LD_SCRIPT) $(ALL_OBJS) \
 		$(LIBS) -o $@ -Map=$(MAP)
