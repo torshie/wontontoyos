@@ -4,13 +4,15 @@ OPTIMIZE_FLAGS = -O0
 OTHER_FLAGS = -g
 INCLUDE_FLAGS = -I$(WONTON)/inc -I$(WONTON) -I$(WONTON)/src
 DEFINE_FLAGS = 
-CXXFLAGS += -nostdlib -nostartfiles -nodefaultlibs \
+COMMON_FLAGS += -nostdlib -nostartfiles -nodefaultlibs \
 			-ansi \
 			-Wall -Wextra -W -Werror \
 			-fomit-frame-pointer -fno-exceptions \
-			-mno-red-zone -mcmodel=large \
+			-mno-red-zone \
 			$(OTHER_FLAGS) $(OPTIMIZE_FLAGS) $(DEFINE_FLAGS) \
 			$(INCLUDE_FLAGS)
+CXXFLAGS = $(COMMON_FLAGS) -mcmodel=large
+CXXFLAGS32 = $(COMMON_FLAGS) -m32 -D__X86_32__
 LD = $(CROSS)ld
 AS = $(CROSS)as
 AR = $(CROSS)ar

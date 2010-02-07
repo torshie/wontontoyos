@@ -32,12 +32,10 @@ public:
 		U8 _zero6;
 	} __attribute__((packed));
 private:
-	CodeSegmentDescriptor() : data(0), _one0(1), _one1(1),
-		present(1), longMode(1) {}
+	CodeSegmentDescriptor() : data(0), _one0(1), _one1(1), present(1), longMode(1) {}
 
 	CodeSegmentDescriptor(const CodeSegmentDescriptor&);
-	const CodeSegmentDescriptor& operator = (
-			const CodeSegmentDescriptor&);
+	const CodeSegmentDescriptor& operator = (const CodeSegmentDescriptor&);
 } __attribute__((packed));
 
 namespace internal {

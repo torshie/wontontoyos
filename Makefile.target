@@ -7,6 +7,11 @@
 %.o: %.S
 	@echo "  AS" $@
 	@$(CXX) $(CXXFLAGS) -D__ASM__ -c -o $@ $<
+	
+%.32: %.cpp
+	@echo "  CC32" $@
+	@$(CXX) $(CXXFLAGS32) -c -o $@ $<
+	@$(OBJCOPY) -O elf64-x86-64 $@
 
 compile: $(OBJS) compile-recursive
 

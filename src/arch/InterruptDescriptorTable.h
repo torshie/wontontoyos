@@ -7,10 +7,10 @@
 namespace kernel {
 
 class InterruptDescriptorTable {
-	friend InterruptDescriptorTable&
-			getSingleInstance<InterruptDescriptorTable>();
+	friend InterruptDescriptorTable& getSingleInstance<InterruptDescriptorTable>();
 public:
 	enum {
+		DOUBLE_FAULT = 8,
 		PAGE_FAULT = 14,
 
 		/**
@@ -52,13 +52,10 @@ private:
 		}
 	} __attribute__((packed));
 
-	/**
-	 * As this structure is packed, we should put the handlers before member
-	 * limit, otherwise we will suffer from performance overhead.
-	 */
 	void (*handler[HANDLER_COUNT])(void);
 
 	InterruptDescriptor table[HANDLER_COUNT];
+	char __pad[sizeof(U64) - sizeof(U16)];
 	U16 limit;
 	U64 address;
 
@@ -75,14 +72,12 @@ private:
 	/**
 	 * Used to make sure the data structure is correctly packed.
 	 *
-	 * If the data structure isn't packed as expected, we will get compile
-	 * time error.
+	 * If the data structure isn't packed as expected, we will get compile time error.
 	 */
 	typedef char StaticSizeChecker[sizeof(InterruptDescriptor) == 16 ? 1 : -1];
 } __attribute__((packed));
 
-inline void InterruptDescriptorTable::setHandler(int isrNumber,
-		void (*h)(void)) {
+inline void InterruptDescriptorTable::setHandler(int isrNumber, void (*h)(void)) {
 	handler[isrNumber] = h;
 }
 

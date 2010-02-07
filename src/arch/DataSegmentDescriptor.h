@@ -28,12 +28,10 @@ public:
 		U16 _ig;
 	} __attribute__((packed));
 private:
-	DataSegmentDescriptor() : data(0), writable(1), _one0(1),
-			present(1) {}
+	DataSegmentDescriptor() : data(0), writable(1), _one0(1), present(1) {}
 
 	DataSegmentDescriptor(const DataSegmentDescriptor&);
-	const DataSegmentDescriptor& operator = (
-			const DataSegmentDescriptor&);
+	const DataSegmentDescriptor& operator = (const DataSegmentDescriptor&);
 } __attribute__((packed));
 
 namespace internal {

@@ -13,8 +13,7 @@ typedef TYPE_SELECTOR<sizeof(long) == 8, long, long long>::Type I64;
 typedef unsigned char U8;
 typedef unsigned short U16;
 typedef unsigned int U32;
-typedef TYPE_SELECTOR<sizeof(unsigned long) == 8, unsigned long,
-		unsigned long long>::Type U64;
+typedef TYPE_SELECTOR<sizeof(unsigned long) == 8, unsigned long, unsigned long long>::Type U64;
 
 /**
  * If you find it difficult to read the following lines, find some
@@ -31,7 +30,7 @@ typedef TYPE_SELECTOR<sizeof(int) == sizeof(void*),
 			>::Type
 		>::Type Address;
 
-typedef unsigned long long Size;
+typedef TYPE_SELECTOR<sizeof(int) == sizeof(long), unsigned int, unsigned long>::Type Size;
 typedef Address Offset;
 
 } /* namespace kernel */

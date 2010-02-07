@@ -2,6 +2,7 @@
 
 #include "InterruptDescriptorTable.h"
 #include "GlobalDescriptorTable.h"
+#include "InterruptHandler.h"
 #include <generic/Memory.h>
 #include <generic/type.h>
 
@@ -10,12 +11,14 @@ namespace kernel {
 /**
  * Defined in interruptServiceRoutine.S
  */
-extern "C" Address
-		isrAddressTable[InterruptDescriptorTable::HANDLER_COUNT];
+extern "C" Address isrAddressTable[InterruptDescriptorTable::HANDLER_COUNT];
 
 InterruptDescriptorTable::InterruptDescriptor::InterruptDescriptor() {
 	Memory::memset(this, 0, sizeof(InterruptDescriptor));
 	selector = GlobalDescriptorTable::OFFSET_KERNEL_CODE;
+	/**
+	 * XXX Evil constants
+	 */
 	type = 0xe;
 	present = 1;
 }
@@ -29,7 +32,7 @@ InterruptDescriptorTable::InterruptDescriptorTable() {
 	}
 	Memory::memset(handler, 0, sizeof(handler));
 
-	setHandler(PAGE_FAULT, 0);
+	setHandler(PAGE_FAULT, InterruptHandler<PAGE_FAULT>::handle);
 }
 
 void InterruptDescriptorTable::handle(int isrNumber) {
@@ -55,13 +58,17 @@ void InterruptDescriptorTable::handle(int isrNumber) {
 		"#MC Machine-Check Exception",
 		"#XM SIMD Floating-Point Exception"
 	};
-	Printer& console = getSingleInstance<Printer>();
-	console << ISR_NAME[isrNumber];
 
-	InterruptDescriptorTable& idt
-			= getSingleInstance<InterruptDescriptorTable>();
+	Printer& console = getSingleInstance<Printer>();
+	InterruptDescriptorTable& idt = getSingleInstance<InterruptDescriptorTable>();
 	if (idt.handler[isrNumber] != 0) {
 		idt.handler[isrNumber]();
+	} else {
+		if (isrNumber != DOUBLE_FAULT) {
+			console << ISR_NAME[isrNumber];
+			for (;;)
+				;
+		}
 	}
 }
 

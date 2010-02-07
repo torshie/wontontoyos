@@ -38,24 +38,19 @@ struct GlobalDescriptorTable {
 
 	enum {
 		OFFSET_KERNEL_DATA = sizeof(NullDescriptor),
-		OFFSET_KERNEL_CODE = sizeof(DataSegmentDescriptor)
-								+ OFFSET_KERNEL_DATA,
-		OFFSET_USER_DATA = sizeof(CodeSegmentDescriptor)
-								+ OFFSET_KERNEL_CODE,
-		OFFSET_USER_CODE = sizeof(DataSegmentDescriptor)
-								+ OFFSET_USER_DATA,
-		OFFSET_TASK_STATE = sizeof(CodeSegmentDescriptor)
-								+ OFFSET_USER_CODE
+		OFFSET_KERNEL_CODE = sizeof(DataSegmentDescriptor) + OFFSET_KERNEL_DATA,
+		OFFSET_USER_DATA = sizeof(CodeSegmentDescriptor) + OFFSET_KERNEL_CODE,
+		OFFSET_USER_CODE = sizeof(DataSegmentDescriptor) + OFFSET_USER_DATA,
+		OFFSET_TASK_STATE = sizeof(CodeSegmentDescriptor) + OFFSET_USER_CODE
 	};
 
 private:
-	char _pad[6];
+	char __pad[sizeof(void*) - sizeof(U16)];
 	U16 limit;
 	void* base;
 
 	GlobalDescriptorTable()
-			: limit(sizeof(null) + sizeof(kernelData)
-					+ sizeof(kernelCode) + sizeof(userData)
+			: limit(sizeof(null) + sizeof(kernelData) + sizeof(kernelCode) + sizeof(userData)
 					+ sizeof(userCode) + sizeof(taskState) - 1),
 			base(this) {
 		userCode.dpl = 3;

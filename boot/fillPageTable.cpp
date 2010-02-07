@@ -1,3 +1,10 @@
+#include "arch/X64Constant.h"
+#include <kernel/abi.h>
+#include "mm/PagePointer.h"
+#include <cxx/new.h>
+
+using namespace kernel;
+
 typedef unsigned long long PageTableItem;
 
 /**
@@ -6,44 +13,61 @@ typedef unsigned long long PageTableItem;
  *
  * @return The address of Page Map Level 4
  */
+/**
+ * XXX DRY
+ */
 extern "C" unsigned long fillPageTable() {
 	enum {
-		MEMORY_SIZE = 2 * 1024 * 1024,
-		MAP_START = 1024 * 1024,
-		PAGE_SIZE = 1024 * 4,
-		PAGE_MASK = 0xfffff000,
-		ATTRIBUTE = (1 << 0) /* P  Page presents */
-					| (1 << 1) /* R/W Read & write access */
+		PAGE_MAP_SIZE = PagePointer<2>::SIZE_OF_POINTED_MEMORY,
+		PAGE_MAP_BEGIN = 1024 * 1024,
 	};
 
-	unsigned long offset = MAP_START;
-	PageTableItem* pageTable = (PageTableItem*)offset;
-	for (unsigned int i = 0; i < MEMORY_SIZE / PAGE_SIZE; ++i) {
-		pageTable[i] = (i * PAGE_SIZE) | ATTRIBUTE;
+	/**
+	 * XXX Use Memory::memset() instead of loop
+	 */
+	for (Size i = PAGE_MAP_BEGIN; i < PAGE_MAP_BEGIN + PAGE_SIZE * 4; ++i) {
+		*(char*)(PAGE_MAP_BEGIN + i) = 0;
+	}
+
+	Offset offset = PAGE_MAP_BEGIN;
+	PagePointer<1>* levelOne = (PagePointer<1>*)offset;
+	for (unsigned int i = 0; i < PAGE_MAP_SIZE / PAGE_SIZE; ++i) {
+		(levelOne + i)->present = 1;
+		(levelOne + i)->writable = 1;
+		(levelOne + i)->page = i;
 	}
 	offset += PAGE_SIZE;
 
-	PageTableItem* pageDirectory = (PageTableItem*)offset;
-	pageDirectory[0] = ((long)pageTable & PAGE_MASK) | ATTRIBUTE;
-	for (int i = 1; i < 512; ++i) {
-		pageDirectory[i] = 0;
-	}
+	PagePointer<2>* levelTwo = (PagePointer<2>*)offset;
+	levelTwo[0].physicalAddress = (Address)levelOne;
+	levelTwo[0].present = 1;
+	levelTwo[0].writable = 1;
 	offset += PAGE_SIZE;
 
-	PageTableItem* pagePointer = (PageTableItem*)offset;
-	pagePointer[0] = ((long)pageDirectory & PAGE_MASK) | ATTRIBUTE;
-	for (int i = 1; i < 512; ++i) {
-		pagePointer[i] = 0;
-	}
+	PagePointer<3>* levelThree = (PagePointer<3>*)offset;
+	levelThree[0].physicalAddress = (Address)levelTwo;
+	levelThree[0].present = 1;
+	levelThree[0].writable = 1;
 	offset += PAGE_SIZE;
 
-	PageTableItem* pageMap = (PageTableItem*)offset;
-	pageMap[0] = ((long)pagePointer & PAGE_MASK) | ATTRIBUTE;
-	for (int i = 1; i < 512; ++i) {
-		pageMap[i] = 0;
-	}
-	pageMap[510] = pageMap[0]; /* Higher half */
-	pageMap[511] = ((long)pageMap & PAGE_MASK) | ATTRIBUTE; /* self reference */
+	PagePointer<4>* levelFour = (PagePointer<4>*)offset;
+	levelFour[0].physicalAddress = (Address)levelThree;
+	levelFour[0].present = 1;
+	levelFour[0].writable = 1;
+
+	/**
+	 * XXX Use copy-constructor instead
+	 */
+	levelFour[510].physicalAddress = (Address)levelThree; /* Higher half */
+	levelFour[510].present = 1;
+	levelFour[510].writable = 1;
+
+	/**
+	 * Self-reference
+	 */
+	levelFour[511].physicalAddress = (Address)levelFour;
+	levelFour[511].present = 1;
+	levelFour[511].writable = 1;
 
 	return offset;
 }
