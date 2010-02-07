@@ -6,8 +6,7 @@ namespace kernel {
 int SimpleLoader::parse(const void* image, Size) {
 	header = (Elf64Header*)image;
 
-	SectionHeader* section = (SectionHeader*)((char*)header +
-			header->sectionHeaderOffset);
+	SectionHeader* section = (SectionHeader*)((char*)header + header->sectionHeaderOffset);
 
 	base = ~((Address)0); /* Set base to an invalid address */
 	Address upper = 0; /* Upper bound of the memory image */
@@ -29,15 +28,14 @@ int SimpleLoader::parse(const void* image, Size) {
 }
 
 Address SimpleLoader::load(void* base, Size) {
-	SectionHeader* section = (SectionHeader*) ((char*)header
-			+ header->sectionHeaderOffset);
+	SectionHeader* section = (SectionHeader*) ((char*)header + header->sectionHeaderOffset);
 	Address b = getBaseAddress();
 	for (Size i = 0; i < header->sectionHeaderCount; ++i) {
 		if (section[i].flags & SectionHeader::FLAG_ALLOCATE) {
 			Address offset = section[i].address - b;
 			if (section[i].type == SectionHeader::TYPE_PROGRAM_BITS) {
-				Memory::memcpy((char*) base + offset, (char*)header
-						+ section[i].offset, section[i].size);
+				Memory::memcpy((char*) base + offset, (char*)header + section[i].offset,
+						section[i].size);
 			} else {
 				Memory::zeroize((char*)base + offset, section[i].size);
 			}

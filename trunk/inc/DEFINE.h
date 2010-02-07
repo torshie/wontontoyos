@@ -1,14 +1,20 @@
 #ifndef KERNEL_DEFINE_H_INCLUDED
 #define KERNEL_DEFINE_H_INCLUDED
 
-#ifdef __ASM__
-#define DEFINE(a, b) .set a, b
-#define BEGIN_DEFINE(space)
-#define END_DEFINE()
+#if defined(__X86_32__)
+#	define DEFINE_LONG_LONG(a, b) DEFINE(a, b##ll)
 #else
-#define DEFINE(a, b) a = b,
-#define BEGIN_DEFINE(space) namespace space { enum {
-#define END_DEFINE() }; }
+#	define DEFINE_LONG_LONG(a, b) DEFINE(a, b)
+#endif
+
+#if defined(__ASM__)
+#	define DEFINE(a, b) .set a, b
+#	define BEGIN_DEFINE(space)
+#	define END_DEFINE()
+#else
+#	define DEFINE(a, b) a = b,
+#	define BEGIN_DEFINE(space) namespace space { enum {
+#	define END_DEFINE() }; }
 #endif
 
 #endif /* KERNEL_DEFINE_H_INCLUDED */

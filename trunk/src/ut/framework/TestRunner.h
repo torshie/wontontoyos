@@ -118,7 +118,7 @@ private:
 			const char* expression) {
 		failedAssertion++;
 		totalAssertion++;
-		message << file << ":" << line << " ASSERT(" << expression << ")";
+		message << file << ":" << line << " ASSERT(" << expression << ")\n";
 	}
 
 	void gotFalseEqualAssertion(const char* file, int line,
@@ -126,7 +126,7 @@ private:
 		failedAssertion++;
 		totalAssertion++;
 		message << file << ":" << line << " ASSERT(" << actual << " == "
-						<< expected << ")";
+						<< expected << ")\n";
 	}
 
 	void gotFalseUnequalAssertion(const char* file, int line,
@@ -134,7 +134,7 @@ private:
 		failedAssertion++;
 		totalAssertion++;
 		message << file << ":" << line << " ASSERT(" << first << " != "
-								<< second << ")";
+								<< second << ")\n";
 	}
 };
 

@@ -2,13 +2,6 @@ OUTPUT_ARCH(i386:x86-64)
 OUTPUT_FORMAT(elf64-x86-64)
 ENTRY (_start)
 
-/**
- * !!!!!!!!!!!!!!!
- * !!! Warning !!!
- * !!!!!!!!!!!!!!!
- * If you want to change load address, make sure you have changed
- * <kernel/abi.h>
- */
 BASE = 0x180000;
 
 ALIGNMENT = 8;

@@ -7,21 +7,21 @@
 
 namespace kernel {
 
+/**
+ * XXX Add support to UT_ASSERT_EQUAL(enum, int) call
+ */
 class UnitTestingAssert {
 public:
-	static void assertTrue(bool value, const char* file, int line,
-			const char* expression);
+	static void assertTrue(bool value, const char* file, int line, const char* expression);
 
 	template<typename First, typename Second>
-	static void assertEqual(const First& actual, const Second& expected,
-			const char* file, int line, const char* actualString,
-			const char* expectedString) {
+	static void assertEqual(const First& actual, const Second& expected, const char* file,
+			int line, const char* actualString, const char* expectedString) {
 		TestRunner& runner = getSingleInstance<TestRunner>();
 		if (Comparer<First, Second>::equal(actual, expected)) {
 			runner.gotTrueAssertion();
 		} else {
-			runner.gotFalseEqualAssertion(file, line, actualString,
-					expectedString);
+			runner.gotFalseEqualAssertion(file, line, actualString, expectedString);
 		}
 	}
 
@@ -33,11 +33,12 @@ public:
 		if (Comparer<First, Second>::unequal(first, second)) {
 			runner.gotTrueAssertion();
 		} else {
-			runner.gotFalseUnequalAssertion(file, line, firstString,
-					secondString);
+			runner.gotFalseUnequalAssertion(file, line, firstString, secondString);
 		}
 	}
 };
+
+#undef SPECIALIZE_UNIT_TESTING_ASSERT_ASSERT_TRUE
 
 } /* namespace kernel */
 

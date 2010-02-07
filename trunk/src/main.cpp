@@ -5,8 +5,8 @@
 #include "ut/framework/UnitTesting.h"
 #include "System.h"
 #include "cxx/rtti.h"
-#include "arch/X64Core.h"
 #include "arch/X64Constant.h"
+#include "mm/PagePointer.h"
 
 namespace kernel {
 
@@ -27,11 +27,6 @@ void main() {
 	TestResult result;
 	runner.run(result);
 	result.show();
-
-	X64Core bootStrapCore;
-	U64 abar = bootStrapCore.readModelSpecificAddress(
-			MSR_APIC_BASE_ADDRES_REGISTER);
-	console << abar << "\n";
 }
 
 } /* namespace kernel */

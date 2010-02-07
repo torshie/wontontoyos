@@ -2,12 +2,13 @@
 #define KERNEL_ARCH_PAGE_POINTER_H_INCLUDED
 
 #include <generic/type.h>
+#include "arch/X64Constant.h"
 
 namespace kernel {
 
 class BasePointer {
 protected:
-	BasePointer() : initializer(0) {}
+	BasePointer() : __initializer(0) {}
 	BasePointer(const BasePointer&);
 	const BasePointer& operator = (const BasePointer&);
 
@@ -15,21 +16,24 @@ public:
 	enum {
 		PRESENT = 1 << 0,
 		WRITABLE = 1 << 1,
-		USERSPACE = 1 << 2,
+		USER_SPACE = 1 << 2,
 		WRITE_THROUGH = 1 << 3,
 		CACHE_DISABLE = 1 << 4,
 		ACCESSED = 1 << 5,
 		DIRTY = 1 << 6,
 		GLOBAL = 1 << 8,
-		NO_EXECUTE = (U64)1 << 63
+		NO_EXECUTE = (U64)1 << 63,
+		NUMBER_OF_POINTERS_PER_PAGE = PAGE_SIZE / sizeof(U64)
 	};
+
+public:
 	union {
-		U64 initializer;
-	public:
+		U64 __initializer;
+
 		struct {
 			U8 present:1;
 			U8 writable:1;
-			U8 userspace:1;
+			U8 userSpace:1;
 			U8 writeThrough:1;
 			U8 cacheDisable:1;
 			U8 accessed:1;
@@ -47,56 +51,27 @@ public:
 } __attribute__((packed));
 
 template<int LEVEL>
-class PagePointer;
+class PagePointer : public BasePointer {
+public:
+	enum {
+		SIZE_OF_POINTED_MEMORY = NUMBER_OF_POINTERS_PER_PAGE
+									* PagePointer<LEVEL - 1>::SIZE_OF_POINTED_MEMORY
+	};
 
-#ifdef HIDE_PARENT_MEMBER
-#error "HIDE_PARENT_MEMBER is already defined"
-#else
-#define HIDE_PARENT_MEMBER(member) \
-	private: using BasePointer::member
-#endif
-
-template<>
-class PagePointer<4> : public BasePointer {
-	HIDE_PARENT_MEMBER(DIRTY);
-	HIDE_PARENT_MEMBER(GLOBAL);
-	HIDE_PARENT_MEMBER(dirty);
-	HIDE_PARENT_MEMBER(global);
-	HIDE_PARENT_MEMBER(__pat);
-	HIDE_PARENT_MEMBER(__reserved_1);
-	HIDE_PARENT_MEMBER(__reserved_2);
-} __attribute__((packed));
-
-template<>
-class PagePointer<3> : public BasePointer {
-	HIDE_PARENT_MEMBER(DIRTY);
-	HIDE_PARENT_MEMBER(GLOBAL);
-	HIDE_PARENT_MEMBER(dirty);
-	HIDE_PARENT_MEMBER(global);
-	HIDE_PARENT_MEMBER(__pat);
-	HIDE_PARENT_MEMBER(__reserved_1);
-	HIDE_PARENT_MEMBER(__reserved_2);
-} __attribute__((packed));
-
-template<>
-class PagePointer<2> : public BasePointer {
-	HIDE_PARENT_MEMBER(DIRTY);
-	HIDE_PARENT_MEMBER(GLOBAL);
-	HIDE_PARENT_MEMBER(dirty);
-	HIDE_PARENT_MEMBER(global);
-	HIDE_PARENT_MEMBER(__pat);
-	HIDE_PARENT_MEMBER(__reserved_1);
-	HIDE_PARENT_MEMBER(__reserved_2);
-} __attribute__((packed));
+private:
+	using BasePointer::dirty;
+	using BasePointer::global;
+	using BasePointer::DIRTY;
+	using BasePointer::GLOBAL;
+};
 
 template<>
 class PagePointer<1> : public BasePointer {
-	HIDE_PARENT_MEMBER(__pat);
-	HIDE_PARENT_MEMBER(__reserved_1);
-	HIDE_PARENT_MEMBER(__reserved_2);
-} __attribute__((packed));
-
-#undef HIDE_PARENT_MEMBER
+public:
+	enum {
+		SIZE_OF_POINTED_MEMORY = 4096
+	};
+};
 
 namespace internal {
 

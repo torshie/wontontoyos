@@ -10,8 +10,7 @@ template<typename Primitive>
 class IS_UNSIGNED {
 public:
 	enum {
-		value = IS_INTEGER<Primitive>::value ?
-					(!IS_SIGNED<Primitive>::value) : 0
+		value = IS_INTEGER<Primitive>::value ? (!IS_SIGNED<Primitive>::value) : 0
 	};
 };
 

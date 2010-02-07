@@ -18,10 +18,8 @@ $(IMAGE): $(ELF_KERNEL) $(OBJS) $(LIBS)
 $(ELF_KERNEL):
 	@$(MAKE) -C ../src `basename $@`
 
-fillPageTable.o: fillPageTable.cpp
-	@echo "  CC32" $@
-	@$(CXX) $(shell echo $(CXXFLAGS)|sed 's/-mcmodel=large//') -c -m32 -o $@ $<
-	@$(OBJCOPY) -O elf64-x86-64 $@
+fillPageTable.o: fillPageTable.32
+	@mv $< $@
 
 compile: $(OBJS)
 

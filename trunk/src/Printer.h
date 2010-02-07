@@ -83,8 +83,14 @@ public:
 		return IntegerPrinter::print(data, *this);
 	}
 
-	Printer& operator << (const void* pointer) {
-		return *this << ((Address)pointer);
+	template<typename T>
+	Printer& operator << (T* pointer) {
+		return *this << (Address)pointer;
+	}
+
+	template<typename T>
+	Printer& operator << (const T* pointer) {
+		return *this << (Address)pointer;
 	}
 
 private:
