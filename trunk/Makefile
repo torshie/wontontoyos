@@ -13,12 +13,11 @@ DISK = disk.img
 KERNEL = boot/image.mboot
 MOUNT = /Volumes/boss
 
-$(DISK): $(KERNEL)
+$(DISK): build $(KERNEL)
 	@echo '  ATTACH' $@
 	@echo `hdiutil attach $@|grep boss|cut -f 1|sed 's/s1//'` > .tmp
 	@echo '  CP' $<
-	@rm $(MOUNT)/`basename $<`
-	@cp $< $(MOUNT)
+	@cp $(KERNEL) $(MOUNT)
 	@echo '  DETACH' $@
 	@hdiutil detach `cat .tmp` > /dev/null
 	@rm .tmp

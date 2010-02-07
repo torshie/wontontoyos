@@ -100,6 +100,7 @@ _64bitMode:
 	jmp *%rax /* Jump to kernel's entry point */
 
 .section .data
+.align 8
 kernelImage:
 .incbin "../src/kernel.elf"
 kernelImageEnd:
