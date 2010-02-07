@@ -2,7 +2,7 @@
 
 namespace kernel {
 
-void UnitTestingAssert::assert(bool value, const char* file, int line,
+void UnitTestingAssert::assertTrue(bool value, const char* file, int line,
 		const char* expression) {
 	TestRunner& runner = getSingleInstance<TestRunner>();
 	if (value) {

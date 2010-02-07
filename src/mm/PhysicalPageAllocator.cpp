@@ -16,8 +16,8 @@ PhysicalPageAllocator::PhysicalPageAllocator() {
  * XXX Implement this method
  * XXX Make this method thread-safe
  */
-void* PhysicalPageAllocator::allocate(Size numberOfNeededPages) {
-	void* result = (void*)(numberOfAllocatedPages * PAGE_SIZE);
+Address PhysicalPageAllocator::allocate(Size numberOfNeededPages) {
+	Address result = numberOfAllocatedPages * PAGE_SIZE;
 	numberOfAllocatedPages += numberOfNeededPages;
 	return result;
 }
@@ -25,7 +25,7 @@ void* PhysicalPageAllocator::allocate(Size numberOfNeededPages) {
 /**
  * XXX Implement this method
  */
-void PhysicalPageAllocator::release(void*) {
+void PhysicalPageAllocator::release(Address) {
 }
 
 } /* namespace kernel */

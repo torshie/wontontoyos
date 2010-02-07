@@ -9,7 +9,7 @@ namespace kernel {
 
 class UnitTestingAssert {
 public:
-	static void assert(bool value, const char* file, int line,
+	static void assertTrue(bool value, const char* file, int line,
 			const char* expression);
 
 	template<typename First, typename Second>
@@ -41,9 +41,11 @@ public:
 
 } /* namespace kernel */
 
-#define UT_ASSERT(value) \
-	::kernel::UnitTestingAssert::assert((value), __FILE__, __LINE__, \
+#define UT_ASSERT_TRUE(value) \
+	::kernel::UnitTestingAssert::assertTrue((value), __FILE__, __LINE__, \
 			#value)
+
+#define UT_ASSERT_FALSE(value) UT_ASSERT_TRUE(!(value))
 
 #define UT_ASSERT_EQUAL(actual, expected) \
 	::kernel::UnitTestingAssert::assertEqual((actual), (expected), \

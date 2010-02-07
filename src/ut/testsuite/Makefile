@@ -1,6 +1,6 @@
 build: compile
 
-SUBDIR = runtime.type.information
+SUBDIR = runtime.type.information sexy.template
 
 INSTALLER = installTestSuite
 OBJS = $(INSTALLER).o

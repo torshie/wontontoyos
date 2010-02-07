@@ -7,14 +7,13 @@ typedef unsigned long long PageTableItem;
  * @return The address of Page Map Level 4
  */
 extern "C" unsigned long fillPageTable() {
-	PageTableItem ATTRIBUTE = (1 << 0) /* P  Page presents */
-						| (1 << 1) /* R/W Read & write access */
-						;
 	enum {
 		MEMORY_SIZE = 2 * 1024 * 1024,
 		MAP_START = 1024 * 1024,
 		PAGE_SIZE = 1024 * 4,
-		PAGE_MASK = 0xfffff000
+		PAGE_MASK = 0xfffff000,
+		ATTRIBUTE = (1 << 0) /* P  Page presents */
+					| (1 << 1) /* R/W Read & write access */
 	};
 
 	unsigned long offset = MAP_START;

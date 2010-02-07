@@ -13,9 +13,48 @@ namespace kernel {
  */
 class Printer {
 	friend Printer& getSingleInstance<Printer>();
-private:
 	Printer();
+	Printer(const Printer&);
+	const Printer& operator=(const Printer&);
 
+	template<typename Integer>
+	class UnsignedIntegerPrinter {
+	public:
+		static Printer& print(Integer data, Printer& printer) {
+			char tmp[sizeof(Integer) * 2 + 1] = {0};
+			for (unsigned i = 0; i < sizeof(Integer) * 2; ++i,
+					data >>= 4) {
+				char c = data & 0x0f;
+				if (c < 10) {
+					tmp[sizeof(Integer) * 2 - i - 1] = '0' + c;
+				} else {
+					tmp[sizeof(Integer) * 2 - i - 1] = 'A' + c - 10;
+				}
+			}
+			return printer << (tmp);
+		}
+	};
+
+	template<typename Integer>
+	class SignedIntegerPrinter {
+	public:
+		/**
+		 * XXX Optimize
+		 */
+		static Printer& print(Integer data, Printer& printer) {
+			if (data < 0) {
+				printer << ('-');
+				print(-data, printer);
+			} else {
+				if (data >= 10) {
+					print(data / 10, printer);
+					data %= 10;
+				}
+				printer << ((char)('0' + data));
+			}
+			return printer;
+		}
+	};
 public:
 	Printer& operator << (char data);
 
@@ -37,17 +76,15 @@ public:
 
 	template<typename Integer>
 	Printer& operator << (Integer data) {
-		if (IS_SIGNED<Integer>::value) {
-			printSigned(data);
-		} else {
-			printUnsigned(data);
-		}
-		return *this;
+		typedef typename TYPE_SELECTOR<IS_SIGNED<Integer>::value,
+							SignedIntegerPrinter<Integer>,
+							UnsignedIntegerPrinter<Integer>
+						>::Type IntegerPrinter;
+		return IntegerPrinter::print(data, *this);
 	}
 
 	Printer& operator << (const void* pointer) {
-		printUnsigned((Address)pointer);
-		return *this;
+		return *this << ((Address)pointer);
 	}
 
 private:
@@ -55,36 +92,7 @@ private:
 	int x;
 	int y;
 
-	template<typename Int>
-	void printSigned(Int data) {
-		if (data < 0) {
-			operator << ('-');
-			printSigned(-data);
-		} else {
-			if (data >= 10) {
-				printSigned(data / 10);
-				data %= 10;
-			}
-			operator << ((char)('0' + data));
-		}
-	}
-
-	template<typename Int>
-	void printUnsigned(Int data) {
-		char tmp[sizeof(Int) * 2 + 1] = {0};
-		for (unsigned i = 0; i < sizeof(Int) * 2; ++i, data >>= 4) {
-			char c = data & 0x0f;
-			if (c < 10) {
-				tmp[sizeof(Int) * 2 - i - 1] = '0' + c;
-			} else {
-				tmp[sizeof(Int) * 2 - i - 1] = 'A' + c - 10;
-			}
-		}
-		operator << (tmp);
-	}
-
 	void scroll();
-
 };
 
 } /* namespace kernel */

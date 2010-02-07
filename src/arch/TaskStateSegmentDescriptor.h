@@ -35,7 +35,7 @@ private:
 	TaskStateSegmentDescriptor() {
 		TaskStateSegment& tss
 				= getSingleInstance<TaskStateSegment>();
-		tss.rsp[0] = KERNEL_VIRTUAL_BASE + KERNEL_LOAD_ADDRESS;
+		tss.rsp[0] = KERNEL_VIRTUAL_BASE + KERNEL_PHYSICAL_BASE;
 		Memory::zeroize(this, sizeof(TaskStateSegmentDescriptor));
 		present = 1;
 		Size limit = sizeof(tss) - 1;
