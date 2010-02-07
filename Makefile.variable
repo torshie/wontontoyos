@@ -18,6 +18,7 @@ AS = $(CROSS)as
 AR = $(CROSS)ar
 OBJCOPY = $(CROSS)objcopy
 OBJDUMP = $(CROSS)objdump
+ALL_OBJS = $(shell find . -name '*.o' -type f)
 
 OBJS += $(patsubst %.cpp, %.o, $(wildcard *.cpp)) \
 		$(patsubst %.S, %.o, $(wildcard *.S))
