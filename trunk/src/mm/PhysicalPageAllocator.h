@@ -9,8 +9,8 @@ class PhysicalPageAllocator {
 public:
 	PhysicalPageAllocator();
 
-	void* allocate(Size numberOfNeededPages);
-	void release(void*);
+	Address allocate(Size numberOfNeededPages);
+	void release(Address);
 
 private:
 	Size numberOfAllocatedPages;
