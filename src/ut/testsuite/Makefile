@@ -7,7 +7,7 @@ OBJS = $(INSTALLER).o
 CLEAN = $(INSTALLER).cpp
 
 include $(WONTON)/Makefile.variable
-include $(WONTON)/Makefile.target
+include $(WONTON)/Makefile.inc
 
 INSTALLER_GENERATOR = $(WONTON)/src/ut/framework/GenerateSuiteInstaller.sh
 

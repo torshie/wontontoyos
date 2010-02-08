@@ -3,4 +3,4 @@ build: compile
 SUBDIR = testsuite framework
 
 include $(WONTON)/Makefile.variable
-include $(WONTON)/Makefile.target
+include $(WONTON)/Makefile.inc

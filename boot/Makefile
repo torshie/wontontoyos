@@ -8,7 +8,7 @@ LIBS = ../cxx/libcxx.a ../lib/libwonton.a
 build: $(IMAGE)
 
 include $(WONTON)/Makefile.variable
-include $(WONTON)/Makefile.target
+include $(WONTON)/Makefile.inc
 
 $(IMAGE): $(OBJS) $(LIBS)
 	@echo "  LD" $@
