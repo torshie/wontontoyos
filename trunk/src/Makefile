@@ -9,7 +9,7 @@ SUBDIR = arch mm ut
 build: compile $(KERNEL)
 
 include $(WONTON)/Makefile.variable
-include $(WONTON)/Makefile.target
+include $(WONTON)/Makefile.inc
 
 $(KERNEL): $(X64KERNEL)
 	@echo "  OBJCOPY" $@
