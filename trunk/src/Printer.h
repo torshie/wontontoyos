@@ -4,6 +4,9 @@
 #include <generic/type.h>
 #include <generic/getSingleInstance.h>
 #include <sexy/IS_SIGNED.h>
+#include <sexy/IS_INTEGER.h>
+#include <sexy/IS_STRING.h>
+#include <sexy/IS_POINTER.h>
 
 namespace kernel {
 
@@ -43,46 +46,64 @@ class Printer {
 		 */
 		static Printer& print(Integer data, Printer& printer) {
 			if (data < 0) {
-				printer << ('-');
+				printer.printChar('-');
 				print(-data, printer);
 			} else {
 				if (data >= 10) {
 					print(data / 10, printer);
 					data %= 10;
 				}
-				printer << ((char)('0' + data));
+				printer.printChar((char)('0' + data));
 			}
 			return printer;
 		}
 	};
-public:
-	Printer& operator << (char data);
-
-	Printer& operator << (char* string) {
-		operator << ((const char*)(string));
-		return *this;
-	}
-
-	Printer& operator << (const char* string);
-
-	Printer& operator << (bool b) {
-		if (b) {
-			operator << ("true");
-		} else {
-			operator << ("false");
-		}
-		return *this;
-	}
 
 	template<typename Integer>
-	Printer& operator << (Integer data) {
-		typedef typename TYPE_SELECTOR<IS_SIGNED<Integer>::value,
-							SignedIntegerPrinter<Integer>,
-							UnsignedIntegerPrinter<Integer>
-						>::Type IntegerPrinter;
-		return IntegerPrinter::print(data, *this);
-	}
+	class EnumPrinter {
+	public:
+		static Printer& print(Integer data, Printer& printer) {
+			return UnsignedIntegerPrinter<U64>::print((U64)data, printer);
+		}
+	};
 
+	template<typename String>
+	class StringPrinter {
+	public:
+		static Printer& print(const String& data, Printer& printer) {
+			for (const char* p = data; *p; ++p) {
+				printer.printChar(*p);
+			}
+			return printer;
+		}
+	};
+
+	template<typename Pointer>
+	class PointerPrinter {
+	public:
+		static Printer& print(Pointer pointer, Printer& printer) {
+			return printer << (Address)pointer;
+		}
+	};
+public:
+	template<typename T>
+	Printer& operator << (const T& data) {
+		typedef typename TYPE_SELECTOR<IS_INTEGER<T>::value,
+							typename TYPE_SELECTOR<IS_SIGNED<T>::value,
+								SignedIntegerPrinter<T>,
+								UnsignedIntegerPrinter<T>
+							>::Type,
+							typename TYPE_SELECTOR<IS_STRING<T>::value,
+								StringPrinter<T>,
+								typename TYPE_SELECTOR<IS_POINTER<T>::value,
+									PointerPrinter<T>,
+									EnumPrinter<T>
+								>::Type
+							>::Type
+						>::Type CompetentPrinter;
+		return CompetentPrinter::print(data, *this);
+	}
+/*
 	template<typename T>
 	Printer& operator << (T* pointer) {
 		return *this << (Address)pointer;
@@ -91,13 +112,14 @@ public:
 	template<typename T>
 	Printer& operator << (const T* pointer) {
 		return *this << (Address)pointer;
-	}
+	} */
 
 private:
 	U16* buffer;
 	int x;
 	int y;
 
+	Printer& printChar(char data);
 	void scroll();
 };
 

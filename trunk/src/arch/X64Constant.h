@@ -3,7 +3,7 @@
 
 #include <DEFINE.h>
 
-BEGIN_DEFINE(kernel)
+BEGIN_DEFINE(X64ArchitectureConstant)
 
 /* Bits of register CR0 */
 DEFINE(CR0_BIT_PAGING, 31)

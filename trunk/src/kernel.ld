@@ -6,10 +6,13 @@ ENTRY(_start)
  * !!!!!!!!!!!!!!!
  * !!! Warning !!!
  * !!!!!!!!!!!!!!!
- * If you want to change load address, make sure you have changed
- * <kernel/abi.h>
+ * If you want to change load address, make sure you have changed <kernel/abi.h>
  */
-BASE = 0xFFFFFF0000105000;
+BASE = 0xFFFF800000000000 + 0x100000 + 0xA000 + 0x6000;
+/*           ^                  ^         ^        ^
+ *           |                  |         |        |
+ *     VIRTUAL_BASE         RESERVED  TEMP_AREA  STACK
+ */
 
 ALIGNMENT = 16;
 PAGE_SIZE = 4096;

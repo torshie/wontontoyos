@@ -13,7 +13,7 @@
 #	define END_DEFINE()
 #else
 #	define DEFINE(a, b) a = b,
-#	define BEGIN_DEFINE(space) namespace space { enum {
+#	define BEGIN_DEFINE(space) namespace kernel { enum space {
 #	define END_DEFINE() }; }
 #endif
 

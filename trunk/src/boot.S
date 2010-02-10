@@ -5,7 +5,7 @@
 .global _start
 _start:
 	cli
-	mov $(KERNEL_VIRTUAL_BASE + KERNEL_PHYSICAL_BASE - 16), %rsp
+	mov $(KERNEL_STACK_BOTTOM - 16), %rsp
 
 	call startKernel
 

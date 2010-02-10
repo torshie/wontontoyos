@@ -2,6 +2,7 @@
 #define KERNEL_ARCH_PAGE_POINTER_H_INCLUDED
 
 #include <generic/type.h>
+#include <generic/STATIC_ASSERT.h>
 #include "arch/X64Constant.h"
 
 namespace kernel {
@@ -69,24 +70,18 @@ template<>
 class PagePointer<1> : public BasePointer {
 public:
 	enum {
-		SIZE_OF_POINTED_MEMORY = 4096
+		SIZE_OF_POINTED_MEMORY = PAGE_SIZE
 	};
 };
 
-namespace internal {
-
-/**
- * Used to make sure the data structure is correctly packed.
- *
- * If the data structure isn't packed as expected, we will get compile
- * time error.
- */
-typedef int StaticSizeChecker[sizeof(PagePointer<1>) == 8 ? 1 : -1];
-typedef int StaticSizeChecker[sizeof(PagePointer<2>) == 8 ? 1 : -1];
-typedef int StaticSizeChecker[sizeof(PagePointer<3>) == 8 ? 1 : -1];
-typedef int StaticSizeChecker[sizeof(PagePointer<4>) == 8 ? 1 : -1];
-
-} /* namespace internal */
+STATIC_ASSERT_EQUAL(sizeof(PagePointer<1>), 8)
+STATIC_ASSERT_EQUAL(sizeof(PagePointer<2>), 8)
+STATIC_ASSERT_EQUAL(sizeof(PagePointer<3>), 8)
+STATIC_ASSERT_EQUAL(sizeof(PagePointer<4>), 8)
+STATIC_ASSERT_EQUAL(PagePointer<1>::SIZE_OF_POINTED_MEMORY, 4096)
+STATIC_ASSERT_EQUAL(PagePointer<2>::SIZE_OF_POINTED_MEMORY, 4096 * 512)
+STATIC_ASSERT_EQUAL(PagePointer<3>::SIZE_OF_POINTED_MEMORY, 4096 * 512 * 512)
+STATIC_ASSERT_EQUAL(PagePointer<4>::SIZE_OF_POINTED_MEMORY, 4096LL * 512 * 512 * 512)
 
 } /* namespace kernel */
 

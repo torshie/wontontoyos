@@ -7,34 +7,29 @@ class type_info {
 public:
 	virtual ~type_info() {}
 
-	bool operator==(const type_info& rhs) const;
-	bool operator!=(const type_info& rhs) const;
-	bool before(const type_info& rhs) const;
-	const char* name() const;
+	bool operator==(const type_info& rhs) const {
+		return name() == rhs.name();
+	}
+
+	bool operator!=(const type_info& rhs) const {
+		return *this != rhs;
+	}
+
+	bool before(const type_info& rhs) const {
+		return name() < rhs.name();
+	}
+
+	const char* name() const {
+		return mangled;
+	}
 
 protected:
-	const char* mangledName;
+	const char* mangled;
 
 private:
 	type_info(const type_info& rhs);
 	const type_info& operator=(const type_info& rhs);
 };
-
-inline bool type_info::operator==(const type_info& rhs) const {
-	return mangledName == rhs.mangledName;
-}
-
-inline bool type_info::operator!=(const type_info& rhs) const {
-	return !(operator==(rhs));
-}
-
-inline const char* type_info::name() const {
-	return mangledName;
-}
-
-inline bool type_info::before(const type_info& rhs) const {
-	return mangledName < rhs.mangledName;
-}
 
 } /* namespace std */
 

@@ -1,7 +1,7 @@
 ELF_KERNEL = ../src/kernel.elf
 IMAGE = image.mboot
 LD_SCRIPT = loader.ld
-OBJ32 = fillPageTable.32
+OBJ32 = createTemporaryPagingMap.32
 CLEAN = $(IMAGE) $(OBJ32)
 LIBS = ../cxx/libcxx.a ../lib/libwonton.a
 
@@ -10,7 +10,7 @@ build: $(IMAGE)
 include $(WONTON)/Makefile.variable
 include $(WONTON)/Makefile.inc
 
-$(IMAGE): $(OBJS) $(LIBS)
+$(IMAGE): $(OBJS) $(LIBS) $(LD_SCRIPT)
 	@echo "  LD" $@
 	@$(LD) -T $(LD_SCRIPT) $(OBJS) $(LIBS) -o $@
 	@echo "  OBJCOPY" $@
@@ -19,7 +19,7 @@ $(IMAGE): $(OBJS) $(LIBS)
 $(ELF_KERNEL):
 	@$(MAKE) -C ../src `basename $@`
 
-fillPageTable.o: $(OBJ32)
+createTemporaryPagingMap.o: $(OBJ32)
 	@cp $< $@
 
 loader.o: loader.S $(ELF_KERNEL)

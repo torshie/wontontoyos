@@ -6,11 +6,48 @@
 
 namespace kernel {
 
+void* PageMap::mapTempPage(Address physicalAddress) {
+	if (physicalAddress % PAGE_SIZE != 0) {
+		BUG("Invalid physicalAddress: " << physicalAddress);
+	}
+
+	PagePointer<1>* freeVirtualPage = getPointerToKernelAddress<1>(KERNEL_TEMP_AREA_BEGIN);
+	Offset offset = KERNEL_TEMP_AREA_BEGIN;
+	for (; offset < KERNEL_TEMP_AREA_END; offset += PAGE_SIZE, ++freeVirtualPage) {
+		if (!freeVirtualPage->present) {
+			break;
+		}
+	}
+	if (offset == KERNEL_TEMP_AREA_END) {
+		return 0;
+	}
+	freeVirtualPage->physicalAddress = physicalAddress;
+	freeVirtualPage->present = 1;
+	freeVirtualPage->writable = 1;
+
+	reload();
+
+	return (void*)(offset);
+}
+
+Address PageMap::unmapTempPage(void* pointer) {
+	if ((Address)pointer % PAGE_SIZE != 0) {
+		BUG("Invalid virtual address: " << pointer);
+	}
+
+	PagePointer<1>* pagePointer = getPointerToKernelAddress<1>((Address)pointer);
+	pagePointer->present = 0;
+
+	reload();
+
+	return pagePointer->page * PAGE_SIZE;
+}
+
 void PageMap::reload() {
 	PageTable<4>* table = (PageTable<4>*)(PageTable<4>::BASE_ADDRESS);
-	Address physicalAddress = table->pointer[PageTable<4>::POINTERS_PER_TABLE - 1].page
-										* PAGE_SIZE;
-	asm volatile("mov %0, %%cr3" : : "r"(physicalAddress));
+	Address address = table->pointer[PagePointer<4>::NUMBER_OF_POINTERS_PER_PAGE - 1].page
+								* PAGE_SIZE;
+	asm volatile("mov %0, %%cr3" : : "r"(address));
 }
 
 }

@@ -12,7 +12,7 @@ Printer::Printer()
 	}
 }
 
-Printer& Printer::operator << (char c) {
+Printer& Printer::printChar(char c) {
 	if (c == '\r') {
 		x = 0;
 		return *this;
@@ -31,13 +31,6 @@ Printer& Printer::operator << (char c) {
 	if (y >= 25) {
 		scroll();
 		y = 24;
-	}
-	return *this;
-}
-
-Printer& Printer::operator << (const char* s) {
-	for (const char* p = s; *p; ++p) {
-		operator << (*p);
 	}
 	return *this;
 }

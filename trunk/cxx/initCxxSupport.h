@@ -5,9 +5,8 @@ namespace kernel {
 /**
  * Initialize C++ support library libcxx
  *
- * This function will do enough initialization to the early execution
- * environment, so that advanced C++ features like global objects can
- * work correctly.
+ * This function will do enough initialization to the early execution environment, so that
+ * advanced C++ features like global objects can work correctly.
  *
  * @return On success return 0, on failure return non-zero
  */

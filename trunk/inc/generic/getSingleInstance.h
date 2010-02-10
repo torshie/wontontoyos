@@ -4,8 +4,7 @@
 namespace kernel {
 
 /**
- * XXX Make this function thread-safe, although it already is when compiled
- * with g++
+ * XXX Make this function thread-safe, although it already is when compiled with g++
  */
 template<typename T>
 T& getSingleInstance() {
