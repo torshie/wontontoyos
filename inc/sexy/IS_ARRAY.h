@@ -37,6 +37,13 @@ public:
 	};
 };
 
+STATIC_ASSERT_FALSE(IS_ARRAY<void>::value)
+STATIC_ASSERT_FALSE(IS_ARRAY<char>::value)
+STATIC_ASSERT_FALSE(IS_ARRAY<char*>::value)
+STATIC_ASSERT_TRUE(IS_ARRAY<char[]>::value)
+STATIC_ASSERT_TRUE(IS_ARRAY<char[1]>::value)
+STATIC_ASSERT_TRUE(IS_ARRAY<char[0]>::value)
+
 } /* namespace kernel */
 
 #endif /* KERNEL_SEXY_TEMPLATE_IS_ARRAY_H_INCLUDED */

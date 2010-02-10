@@ -14,7 +14,10 @@ public:
 		PAGE_FAULT = 14,
 
 		/**
-		 * If you want to change this const, please also change file
+		 * !!!!!!!!!!!!!!!!
+		 * !!! Warning !!!!
+		 * !!!!!!!!!!!!!!!!
+		 * If you want to change this const, make sure you have changed file
 		 * interruptServiceRoutine.S
 		 */
 		HANDLER_COUNT = 32
@@ -55,7 +58,7 @@ private:
 	void (*handler[HANDLER_COUNT])(void);
 
 	InterruptDescriptor table[HANDLER_COUNT];
-	char __pad[sizeof(U64) - sizeof(U16)];
+	char __padding[sizeof(U64) - sizeof(U16)];
 	U16 limit;
 	U64 address;
 

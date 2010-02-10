@@ -8,14 +8,13 @@ namespace kernel {
 class Memory {
 public:
 	/**
-	 * Similar to memcpy() in standard C library, except that this
-	 * function returns void
+	 * Similar to memcpy() in standard C library, except that this function returns void
 	 */
 	static void memcpy(void* dst, const void* src, Size size);
 
 	/**
-	 * !!! Attention, return value of this function is different from
-	 * strcpy() in standard C library.
+	 * !!! Attention, return value of this function is different from strcpy() in standard
+	 * C library.
 	 *
 	 * @return Return the length of the copied string
 	 */

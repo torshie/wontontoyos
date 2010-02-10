@@ -15,7 +15,7 @@ public:
 	bool getTestPoint(TestPoint&, const char*&);
 
 	void testWithEqualNumbers() {
-		UT_ASSERT_UNEQUAL(1, 1);
+//		UT_ASSERT_UNEQUAL(1, 1);
 	}
 
 	void testWithNotEqualNumbers() {
@@ -23,12 +23,12 @@ public:
 	}
 
 	void testWithEqualIntegerVariableAndLiteral() {
-		int i = 1;
-		UT_ASSERT_UNEQUAL(i, 1);
+//		int i = 1;
+//		UT_ASSERT_UNEQUAL(i, 1);
 	}
 
 	void testWithEqualStringLiterals() {
-		UT_ASSERT_UNEQUAL("Hello", "Hello");
+//		UT_ASSERT_UNEQUAL("Hello", "Hello");
 	}
 
 	void testWithNotEqualStringLiterals() {
@@ -36,9 +36,9 @@ public:
 	}
 
 	void testWithEqualCharArrays() {
-		char firstHello[] = "Hello";
-		char secondHello[] = "Hello";
-		UT_ASSERT_UNEQUAL(firstHello, secondHello);
+//		char firstHello[] = "Hello";
+//		char secondHello[] = "Hello";
+//		UT_ASSERT_UNEQUAL(firstHello, secondHello);
 	}
 
 	void testWithNotEqualCharArrays() {
@@ -48,14 +48,14 @@ public:
 	}
 
 	void testWithEqualCharArrayAndStringLiteral() {
-		char hello[] = "Hello";
-		UT_ASSERT_UNEQUAL(hello, "Hello");
+//		char hello[] = "Hello";
+//		UT_ASSERT_UNEQUAL(hello, "Hello");
 	}
 
 	void testWithDifferentSizedEqualCharArrays() {
-		char firstHello[10] = "Hello";
-		char secondHello[20] = "Hello";
-		UT_ASSERT_UNEQUAL(firstHello, secondHello);
+//		char firstHello[10] = "Hello";
+//		char secondHello[20] = "Hello";
+//		UT_ASSERT_UNEQUAL(firstHello, secondHello);
 	}
 };
 

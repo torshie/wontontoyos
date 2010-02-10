@@ -16,7 +16,7 @@ $(KERNEL): $(X64KERNEL)
 	@cp $< $@
 	@$(OBJCOPY) -O elf64-little $@
 
-$(X64KERNEL): $(ALL_OBJS) $(LIBS)
+$(X64KERNEL): $(ALL_OBJS) $(LIBS) $(LD_SCRIPT)
 	@echo "  LD" $@
 	@$(LD) -T $(LD_SCRIPT) $(ALL_OBJS) \
 		$(LIBS) -o $@ -Map=$(MAP)

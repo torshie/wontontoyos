@@ -49,7 +49,7 @@ bootstrap:
 
 	mov $__ld_kernel_stack__, %esp /* Defined in ld script */
 
-	call fillPageTable
+	call _createTemporaryPagingMap
 	pushl %eax /* Save return value which is the address of level four map */
 
 	xor %eax, %eax
@@ -59,6 +59,7 @@ bootstrap:
 	mov %cr4, %eax
 	bts $CR4_BIT_PHYSICAL_ADDRESS_EXTENSION, %eax
 	bts $CR4_BIT_PAGE_GLOBAL_ENABLE, %eax
+	bts $CR4_BIT_OS_FXSAVE_FXRSTOR_SUPPORT, %eax
 	mov %eax, %cr4
 
 	popl %ebx /* We have saved address of pageMap after calling fillPageTable() */

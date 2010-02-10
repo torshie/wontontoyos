@@ -1,14 +1,14 @@
 CROSS = x86_64-unknown-linux-gnu-
 CXX = $(CROSS)g++
-OPTIMIZE_FLAGS = -O0
 OTHER_FLAGS = -g
 INCLUDE_FLAGS = -I$(WONTON)/inc -I$(WONTON) -I$(WONTON)/src
 DEFINE_FLAGS = 
 COMMON_FLAGS += -nostdlib -nostartfiles -nodefaultlibs -ansi -Wall -Wextra -W -Werror \
-			-fomit-frame-pointer -fno-exceptions -mno-red-zone \
-			$(OTHER_FLAGS) $(OPTIMIZE_FLAGS) $(DEFINE_FLAGS) $(INCLUDE_FLAGS)
-CXXFLAGS = $(COMMON_FLAGS) -mcmodel=large
-CXXFLAGS32 = $(COMMON_FLAGS) -m32 -D__X86_32__
+			-fno-exceptions -mno-red-zone \
+			$(OTHER_FLAGS) $(DEFINE_FLAGS) $(INCLUDE_FLAGS)
+CXXFLAGS = $(COMMON_FLAGS) -mcmodel=large -O3 -fomit-frame-pointer -finline-limit=10000 \
+		-finline-functions-called-once
+CXXFLAGS32 = $(COMMON_FLAGS) -m32 -D__X86_32__ -fleading-underscore -O2
 LD = $(CROSS)ld
 AS = $(CROSS)as
 AR = $(CROSS)ar
@@ -16,4 +16,4 @@ OBJCOPY = $(CROSS)objcopy
 OBJDUMP = $(CROSS)objdump
 ALL_OBJS = $(shell find . -name '*.o' -type f)
 OBJS += $(patsubst %.cpp, %.o, $(wildcard *.cpp)) $(patsubst %.S, %.o, $(wildcard *.S))
-MMS += $(patsubst %.cpp, %.mm, $(wildcard *.cpp))
+MMS += $(patsubst %.cpp, %.mfile, $(wildcard *.cpp))

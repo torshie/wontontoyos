@@ -1,6 +1,6 @@
 .PHONY: compile clean veryclean
 
-.SUFFIXES: .mm
+.SUFFIXES: .mfile
 
 %.o: %.cpp
 	@echo "  CC" $@
@@ -15,9 +15,9 @@
 	@$(CXX) $(CXXFLAGS32) -c -o $@ $<
 	@$(OBJCOPY) -O elf64-x86-64 $@
 
-%.mm: %.cpp
-	@echo "  MM" $@
-	@$(CXX) $(CXXFLAGS) -M $< > $@
+%.mfile: %.cpp
+	@echo "  MFILE" $@
+	@$(CXX) $(CXXFLAGS) -M -MF $@ $<
 
 compile: $(OBJS) compile-recursive
 
@@ -31,8 +31,8 @@ clean:
 	
 veryclean: clean
 	@for dir in $(SUBDIR); do $(MAKE) -C $$dir $@ || exit 1; done
-	@echo "  CLEANMM" `basename $$PWD`
-	@rm -rf *.mm
+	@echo "  VERYCLEAN" `basename $$PWD`
+	@rm -rf *.mfile
 	
 $(LIBS):
 	@$(MAKE) -C `dirname $@` `basename $@`

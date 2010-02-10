@@ -10,8 +10,7 @@ namespace kernel {
 /**
  * Task State Segment
  *
- * See AMD/Intel's system programming manual for more detailed
- * information
+ * Referer to AMD/Intel's system programming manual for more detailed information
  */
 struct TaskStateSegment {
 	friend TaskStateSegment& getSingleInstance<TaskStateSegment>();
@@ -29,8 +28,7 @@ public:
 
 private:
 	TaskStateSegment() {
-		Memory::zeroize(this,
-				sizeof(TaskStateSegment) - sizeof(ioMap));
+		Memory::zeroize(this, sizeof(TaskStateSegment) - sizeof(ioMap));
 		Memory::memset(ioMap, 0xff, sizeof(ioMap));
 		ioMapBase = (char*)&ioMapBase - (char*)this;
 	}

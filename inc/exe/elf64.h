@@ -7,16 +7,13 @@ namespace kernel {
 
 struct Elf64Header {
 	struct {
-		U8 mag0;
-		U8 mag1;
-		U8 mag2;
-		U8 mag3;
+		U8 magic[4];
 		U8 fileClass;
 		U8 dataEncoding;
 		U8 fileVersion;
 		U8 abiId;
 		U8 abiVersion;
-		U8 _pad[7];
+		U8 __padding[7];
 	};
 	U16 type;
 	U16 machine;

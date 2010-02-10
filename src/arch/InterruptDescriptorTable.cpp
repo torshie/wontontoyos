@@ -1,5 +1,4 @@
 #include "Printer.h"
-
 #include "InterruptDescriptorTable.h"
 #include "GlobalDescriptorTable.h"
 #include "InterruptHandler.h"

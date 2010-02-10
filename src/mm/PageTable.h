@@ -23,42 +23,33 @@ public:
 				LEVEL == 3 ? 0xFFFFFFFFFFE00000 :
 				LEVEL == 2 ? 0xFFFFFFFFC0000000 :
 				LEVEL == 1 ? 0xFFFFFF8000000000 : 0,
-
-		POINTERS_PER_TABLE = PAGE_SIZE / sizeof(PagePointer<LEVEL>),
 	};
 
-	PagePointer<LEVEL> pointer[POINTERS_PER_TABLE];
+	PagePointer<LEVEL> pointer[PagePointer<LEVEL>::NUMBER_OF_POINTERS_PER_PAGE];
 
 	static PageTable* create(unsigned long, Address virtualAddress);
 	static void destroy(PageTable*);
 };
 
-namespace internal {
+STATIC_ASSERT_EQUAL(sizeof(PageTable<1>), PAGE_SIZE)
+STATIC_ASSERT_EQUAL(sizeof(PageTable<2>), PAGE_SIZE)
+STATIC_ASSERT_EQUAL(sizeof(PageTable<3>), PAGE_SIZE)
+STATIC_ASSERT_EQUAL(sizeof(PageTable<4>), PAGE_SIZE)
 
 /**
- * Used to make sure the data structure is correctly packed.
- *
- * If the data structure isn't packed as expected, we will get compile
- * time error.
+ * XXX Test this method
  */
-typedef int StaticSizeChecker[sizeof(PageTable<4>) == PAGE_SIZE ? 1 : -1];
-typedef int StaticSizeChecker[sizeof(PageTable<3>) == PAGE_SIZE ? 1 : -1];
-typedef int StaticSizeChecker[sizeof(PageTable<2>) == PAGE_SIZE ? 1 : -1];
-typedef int StaticSizeChecker[sizeof(PageTable<1>) == PAGE_SIZE ? 1 : -1];
-
-} /* namespace internal */
-
 template<int LEVEL>
-PageTable<LEVEL>* PageTable<LEVEL>::create(unsigned long,
-		Address virtualAddress) {
-	if (virtualAddress < BASE_ADDRESS
-			|| virtualAddress % PAGE_SIZE != 0) {
+PageTable<LEVEL>* PageTable<LEVEL>::create(unsigned long, Address virtualAddress) {
+	if (virtualAddress < BASE_ADDRESS || virtualAddress % PAGE_SIZE != 0) {
 		return 0;
 	}
 
 	PhysicalPageAllocator& allocator = getSingleInstance<PhysicalPageAllocator>();
 
 	Address physicalAddress = (Address)allocator.allocate(1);
+	PageTable<LEVEL>* pageTable = (PageTable<LEVEL>*)PageMap::mapTempPage(physicalAddress);
+	new (pageTable)PageTable<LEVEL>();
 
 	return (PageTable<LEVEL>*)virtualAddress;
 }

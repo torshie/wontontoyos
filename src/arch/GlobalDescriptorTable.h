@@ -3,6 +3,7 @@
 
 #include <generic/getSingleInstance.h>
 #include <generic/type.h>
+#include <generic/STATIC_ASSERT.h>
 #include "NullDescriptor.h"
 #include "TaskStateSegment.h"
 #include "CodeSegmentDescriptor.h"
@@ -14,20 +15,16 @@ namespace kernel {
 /**
  * Global Descriptor Table
  *
- * See AMD/Intel's system programming manual for more detailed
- * information
+ * See AMD/Intel's system programming manual for more detailed information
  */
 struct GlobalDescriptorTable {
-	friend GlobalDescriptorTable&
-			getSingleInstance<GlobalDescriptorTable>();
+	friend GlobalDescriptorTable& getSingleInstance<GlobalDescriptorTable>();
 
 	/**
 	 * The order of these descriptors are important:
-	 * 1. kernelData and kernelCode must
-	 *    have the same offset as in src/boot.S
-	 * 2. Data Segment Descriptor must be just before Code Segment
-	 *    Descriptor, since we use syscall and sysret. See system
-	 *    programming manual for more detailed information
+	 * 1. kernelData and kernelCode must have the same offset as in src/boot.S
+	 * 2. Data Segment Descriptor must be just before Code Segment Descriptor, since we use
+	 * syscall and sysret. See system programming manual for more detailed information.
 	 */
 	NullDescriptor null;
 	DataSegmentDescriptor kernelData;
@@ -45,7 +42,7 @@ struct GlobalDescriptorTable {
 	};
 
 private:
-	char __pad[sizeof(void*) - sizeof(U16)];
+	char __padding[sizeof(void*) - sizeof(U16)];
 	U16 limit;
 	void* base;
 
@@ -64,33 +61,21 @@ public:
 	/**
 	 * Load the GDTR & TR
 	 *
-	 * Load the GDTR the with address of the only instance of
-	 * GlobalDescriptorTable, load TR with the address of data member
-	 * taskState.
+	 * Load the GDTR the with address of the only instance of GlobalDescriptorTable, load TR
+	 * with the address of data member taskState.
 	 *
-	 * XXX Load TR should be placed in a separate function, maybe even
-	 * in a separate class
+	 * XXX Load TR should be placed in a separate function, maybe even in a separate class
 	 */
 	void load() const;
 };
 
-namespace internal {
-/**
- * Used to make sure the data structure is correctly packed.
- *
- * If the data structure isn't packed as expected, we will get compile
- * time error.
- */
-typedef int StaticSizeChecker
-		[sizeof(GlobalDescriptorTable)
-			 == sizeof(NullDescriptor)
-				+ sizeof(DataSegmentDescriptor) * 2
-				+ sizeof(CodeSegmentDescriptor) * 2
-				+ sizeof(TaskStateSegmentDescriptor)
-				+ 6
-				+ sizeof(U16)
-				+ sizeof(void*) ? 1 : -1];
-}
+STATIC_ASSERT_EQUAL(sizeof(GlobalDescriptorTable),
+		sizeof(NullDescriptor) + sizeof(DataSegmentDescriptor) * 2
+		+ sizeof(CodeSegmentDescriptor) * 2
+		+ sizeof(TaskStateSegmentDescriptor)
+		+ sizeof(void*) - sizeof(U16) /* padding */
+		+ sizeof(U16)
+		+ sizeof(void*))
 
 inline void GlobalDescriptorTable::load() const {
 	asm volatile("lgdt %0" : : "m"(limit));

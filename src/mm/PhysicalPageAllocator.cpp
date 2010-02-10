@@ -1,15 +1,18 @@
 #include "PhysicalPageAllocator.h"
 #include "System.h"
 #include "arch/X64Constant.h"
+#include <kernel/abi.h>
 
 namespace kernel {
 
 /**
  * Defined in linker script
  */
-extern "C" char __ld_bss_end;
+extern "C" char __ld_bss_end, __ld_image_start;
 PhysicalPageAllocator::PhysicalPageAllocator() {
-	numberOfAllocatedPages = (Address)&__ld_bss_end / PAGE_SIZE;
+	Size imageSize = (Address)&__ld_bss_end - (Address)&__ld_image_start;
+	numberOfAllocatedPages = (imageSize + KERNEL_RESERVED_MEMORY + KERNEL_TEMP_AREA
+								+ KERNEL_STACK_SIZE) / PAGE_SIZE;
 }
 
 /**

@@ -12,8 +12,7 @@ namespace kernel {
 /**
  * Task State Segment Descriptor
  *
- * See AMD/Intel's system programming manual for more detailed
- * information
+ * Referer to AMD/Intel's system programming manual for more detailed information
  */
 struct TaskStateSegmentDescriptor {
 	friend class GlobalDescriptorTable;
@@ -33,8 +32,7 @@ private:
 	U32 _zero1;
 
 	TaskStateSegmentDescriptor() {
-		TaskStateSegment& tss
-				= getSingleInstance<TaskStateSegment>();
+		TaskStateSegment& tss = getSingleInstance<TaskStateSegment>();
 		tss.rsp[0] = KERNEL_VIRTUAL_BASE + KERNEL_PHYSICAL_BASE;
 		Memory::zeroize(this, sizeof(TaskStateSegmentDescriptor));
 		present = 1;
@@ -49,20 +47,10 @@ private:
 	}
 
 	TaskStateSegmentDescriptor(const TaskStateSegmentDescriptor&);
-	const TaskStateSegmentDescriptor& operator = (
-			const TaskStateSegmentDescriptor&);
+	const TaskStateSegmentDescriptor& operator = (const TaskStateSegmentDescriptor&);
 } __attribute__((packed));
 
-namespace internal {
-/**
- * Used to make sure the data structure is correctly packed.
- *
- * If the data structure isn't packed as expected, we will get compile
- * time error.
- */
-typedef int StaticSizeChecker
-		[sizeof(TaskStateSegmentDescriptor) == 16 ? 1 : -1];
-} /* namespace internal */
+STATIC_ASSERT_EQUAL(sizeof(TaskStateSegmentDescriptor), 16)
 
 } /* namespace kernel */
 
