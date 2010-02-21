@@ -1,5 +1,5 @@
 #include <exe/SimpleLoader.h>
-#include <generic/Memory.h>
+#include <generic/Utils.h>
 
 namespace kernel {
 
@@ -34,10 +34,10 @@ Address SimpleLoader::load(void* base, Size) {
 		if (section[i].flags & SectionHeader::FLAG_ALLOCATE) {
 			Address offset = section[i].address - b;
 			if (section[i].type == SectionHeader::TYPE_PROGRAM_BITS) {
-				Memory::memcpy((char*) base + offset, (char*)header + section[i].offset,
+				Utils::memcpy((char*) base + offset, (char*)header + section[i].offset,
 						section[i].size);
 			} else {
-				Memory::zeroize((char*)base + offset, section[i].size);
+				Utils::zeroize((char*)base + offset, section[i].size);
 			}
 		}
 	}

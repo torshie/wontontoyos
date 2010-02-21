@@ -7,22 +7,23 @@
 namespace kernel {
 
 class TestSetUpAndTearDown : public TestCase {
+	int counter;
 public:
+	TestSetUpAndTearDown() : counter(0) {}
+
 	bool getTestPoint(TestPoint& point, const char*& name);
+
 	void setUp() {
-		Printer& console = getSingleInstance<Printer>();
-		console << " setUp()";
+		UT_ASSERT_EQUAL(counter, 0);
 	}
 
 	void tearDown() {
-		Printer& console = getSingleInstance<Printer>();
-		console << " tearDown()";
+		UT_ASSERT_EQUAL(counter, 1);
 	}
 
-	/**
-	 * This function is used to make setUp & tearDown get called
-	 */
-	void testNothing() {}
+	void testDummy() {
+		counter++;
+	}
 };
 
 } /* namespace kernel */

@@ -2,7 +2,6 @@
 #define KERNEL_UT_FRAMEWORK_UNIT_TESTING_ASSERT_H_INCLUDED
 
 #include "TestRunner.h"
-#include <generic/Memory.h>
 #include <generic/Comparer.h>
 
 namespace kernel {
@@ -15,25 +14,26 @@ public:
 	static void assertTrue(bool value, const char* file, int line, const char* expression);
 
 	template<typename First, typename Second>
-	static void assertEqual(const First& actual, const Second& expected, const char* file,
-			int line, const char* actualString, const char* expectedString) {
+	static void assertEqual(const First& first, const Second& second, const char* file,
+			int line, const char* firstExpression, const char* secondExpression) {
 		TestRunner& runner = getSingleInstance<TestRunner>();
-		if (Comparer<First, Second>::equal(actual, expected)) {
+		if (Comparer<First, Second>::equal(first, second)) {
 			runner.gotTrueAssertion();
 		} else {
-			runner.gotFalseEqualAssertion(file, line, actualString, expectedString);
+			runner.gotFalseEqualAssertion(file, line, firstExpression, secondExpression,
+					first, second);
 		}
 	}
 
 	template<typename First, typename Second>
-	static void assertUnequal(const First& first, const Second& second,
-			const char* file, int line, const char* firstString,
-			const char* secondString) {
+	static void assertUnequal(const First& first, const Second& second, const char* file,
+			int line, const char* firstExpression, const char* secondExpression) {
 		TestRunner& runner = getSingleInstance<TestRunner>();
 		if (Comparer<First, Second>::unequal(first, second)) {
 			runner.gotTrueAssertion();
 		} else {
-			runner.gotFalseUnequalAssertion(file, line, firstString, secondString);
+			runner.gotFalseUnequalAssertion(file, line, firstExpression, secondExpression,
+					first, second);
 		}
 	}
 };

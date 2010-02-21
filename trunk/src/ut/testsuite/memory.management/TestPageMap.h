@@ -12,25 +12,49 @@
 namespace kernel {
 
 class TestPageMap : public TestCase {
+	enum __ {
+		HIGHEST_ADDRESS = 0xFFFFFFFFFFFFFFFF,
+		LAST_POINTER = 0xFFFFFFFFFFFFFFF8
+	};
 public:
 	bool getTestPoint(TestPoint&, const char*&);
 
-	void testMapUnmapTempPage() {
-		Address physicalAddress = getSingleInstance<PhysicalPageAllocator>().allocate(1);
+	void testMapAndUnmapTempPage() {
+		Address physicalAddress = getSingleInstance<PhysicalPageAllocator>().allocate(PAGE_SIZE);
 		void* virtualAddress = PageMap::mapTempPage(physicalAddress);
 		UT_ASSERT_EQUAL(PageMap::unmapTempPage(virtualAddress), physicalAddress);
 	}
 
-	void testGetPointerToKernelAddress_UnalignedAddress() {
-		PagePointer<1>* aligned = PageMap::getPointerToKernelAddress<1>(KERNEL_VIRTUAL_BASE);
-		PagePointer<1>* unaligned = PageMap::getPointerToKernelAddress<1>(
+	void testGetPointerToKernelAddressWithUnalignedAddress() {
+		PagePointer<1>* aligned = PagePointer<1>::getPointerToKernelAddress(KERNEL_VIRTUAL_BASE);
+		PagePointer<1>* unaligned = PagePointer<1>::getPointerToKernelAddress(
 				KERNEL_VIRTUAL_BASE + 1);
 		UT_ASSERT_EQUAL(aligned, unaligned);
 	}
 
-	void testGetPointerToKernelAddressWithSelfReferencEntry() {
-		PagePointer<4>* pointer = PageMap::getPointerToKernelAddress<4>(PageTable<1>::BASE_ADDRESS);
-		UT_ASSERT_EQUAL(pointer, (-sizeof(PagePointer<4>)));
+	void testGetPointerToKernelWithHighestAddress() {
+		PagePointer<1>* one = PagePointer<1>::getPointerToKernelAddress(HIGHEST_ADDRESS);
+		PagePointer<2>* two = PagePointer<2>::getPointerToKernelAddress(HIGHEST_ADDRESS);
+		PagePointer<3>* three= PagePointer<3>::getPointerToKernelAddress(HIGHEST_ADDRESS);
+		PagePointer<4>* four = PagePointer<4>::getPointerToKernelAddress(HIGHEST_ADDRESS);
+
+		UT_ASSERT_EQUAL(one, LAST_POINTER);
+		UT_ASSERT_EQUAL(two, LAST_POINTER);
+		UT_ASSERT_EQUAL(three, LAST_POINTER);
+		UT_ASSERT_EQUAL(four, LAST_POINTER);
+	}
+
+	void testGetPointerToKernelWithLastButOnePageAddress() {
+		const static U64 ADDRESS = HIGHEST_ADDRESS - PAGE_SIZE;
+		PagePointer<1>* one = PagePointer<1>::getPointerToKernelAddress(ADDRESS);
+		PagePointer<2>* two = PagePointer<2>::getPointerToKernelAddress(ADDRESS);
+		PagePointer<3>* three= PagePointer<3>::getPointerToKernelAddress(ADDRESS);
+		PagePointer<4>* four = PagePointer<4>::getPointerToKernelAddress(ADDRESS);
+
+		UT_ASSERT_EQUAL(four, LAST_POINTER);
+		UT_ASSERT_EQUAL(three, LAST_POINTER);
+		UT_ASSERT_EQUAL(two, LAST_POINTER);
+		UT_ASSERT_EQUAL(one, LAST_POINTER - sizeof(PagePointer<1>));
 	}
 };
 

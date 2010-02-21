@@ -1,6 +1,8 @@
 #ifndef KERNEL_SEXY_IS_REFERENCE_H_INCLUDED
 #define KERNEL_SEXY_IS_REFERENCE_H_INCLUDED
 
+#include <generic/STATIC_ASSERT.h>
+
 namespace kernel {
 
 template<typename T>

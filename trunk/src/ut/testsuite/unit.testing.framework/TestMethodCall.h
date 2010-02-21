@@ -11,8 +11,7 @@ public:
 	bool getTestPoint(TestPoint&, const char*&);
 
 	void testMethodCall() {
-		Printer& console = getSingleInstance<Printer>();
-		console << "Happy Testing :)";
+		UT_ASSERT_TRUE(true);
 	}
 };
 

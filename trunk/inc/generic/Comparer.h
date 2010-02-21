@@ -1,7 +1,7 @@
 #ifndef KERNEL_GENERIC_COMPARER_H_INCLUDED
 #define KERNEL_GENERIC_COMPARER_H_INCLUDED
 
-#include <generic/Memory.h>
+#include <generic/Utils.h>
 #include <sexy/TYPE_SELECTOR.h>
 #include <sexy/IS_STRING.h>
 #include <sexy/IS_ENUM.h>
@@ -14,7 +14,7 @@ class Comparer {
 	class OldStringComparer {
 	public:
 		static bool equal(const char* a, const char* b) {
-			return Memory::strcmp(a, b) == 0;
+			return Utils::strcmp(a, b) == 0;
 		}
 	};
 
@@ -33,13 +33,27 @@ class Comparer {
 			return left == right;
 		}
 	};
+
+	template<typename Integer>
+	class IntegerComparer {
+	public:
+		static bool equal(const Integer& left, const Integer& right) {
+			return left == right;
+		}
+	};
 public:
 	static bool equal(const Left& left, const Right& right) {
 		typedef typename TYPE_SELECTOR<IS_STRING<Left>::value,
 			OldStringComparer,
 			typename TYPE_SELECTOR<(IS_POINTER<Left>::value || IS_POINTER<Right>::value),
 				PointerComparer<Left, Right>,
-				OperatorComparer<Left, Right>
+				typename TYPE_SELECTOR<(IS_INTEGER<Right>::value && IS_INTEGER<Right>::value),
+					typename TYPE_SELECTOR<(sizeof(Left) > sizeof(Right)),
+						IntegerComparer<Left>,
+						IntegerComparer<Right>
+					>::Type,
+					OperatorComparer<Left, Right>
+				>::Type
 			>::Type
 		>::Type CompetentComparer;
 		return CompetentComparer::equal(left, right);

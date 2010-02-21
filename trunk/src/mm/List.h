@@ -41,7 +41,7 @@ public:
 		Iterator(Node* n) : node(n) {}
 	};
 
-	List(Allocator& a) : head(&null), last(&null), allocator(a) {
+	List(Allocator& a) : head(&null), allocator(a) {
 		null.next = &null;
 		null.prev = &null;
 	}

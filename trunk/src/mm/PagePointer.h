@@ -4,17 +4,19 @@
 #include <generic/type.h>
 #include <generic/STATIC_ASSERT.h>
 #include "arch/X64Constant.h"
+#include <cxx/BUG.h>
+#include <kernel/abi.h>
 
 namespace kernel {
 
-class BasePointer {
-protected:
-	BasePointer() : __initializer(0) {}
-	BasePointer(const BasePointer&);
-	const BasePointer& operator = (const BasePointer&);
-
+template<int LEVEL>
+class PagePointer {
+	PagePointer(const PagePointer&);
+	const PagePointer& operator = (const PagePointer&);
 public:
-	enum {
+	PagePointer() : __initializer(0) {}
+
+	enum __ {
 		PRESENT = 1 << 0,
 		WRITABLE = 1 << 1,
 		USER_SPACE = 1 << 2,
@@ -24,10 +26,14 @@ public:
 		DIRTY = 1 << 6,
 		GLOBAL = 1 << 8,
 		NO_EXECUTE = (U64)1 << 63,
-		NUMBER_OF_POINTERS_PER_PAGE = PAGE_SIZE / sizeof(U64)
+		NUMBER_OF_POINTERS_PER_PAGE = PAGE_SIZE / sizeof(U64),
+
+		SIZE_OF_POINTED_MEMORY =
+				(LEVEL == 1) ? (U64)PAGE_SIZE
+						: (U64)NUMBER_OF_POINTERS_PER_PAGE
+								* PagePointer<LEVEL - 1>::SIZE_OF_POINTED_MEMORY
 	};
 
-public:
 	union {
 		U64 __initializer;
 
@@ -49,28 +55,34 @@ public:
 
 		U64 physicalAddress;
 	};
+
+	static PagePointer* getPointerToKernelAddress(void* pointer) {
+		return getPointerToKernelAddress((Address)pointer);
+	}
+
+	static PagePointer* getPointerToKernelAddress(Address virtualAddress) {
+		if (virtualAddress < KERNEL_VIRTUAL_BASE) {
+			BUG("Invalid kernel address " << virtualAddress);
+		}
+
+		Address alignedAddress = virtualAddress / SIZE_OF_POINTED_MEMORY
+				* SIZE_OF_POINTED_MEMORY;
+
+		U64 numberOfPointers = (-alignedAddress) / SIZE_OF_POINTED_MEMORY;
+		U64 spaceUsed = numberOfPointers * sizeof(PagePointer);
+		return (PagePointer*)(-spaceUsed);
+	}
 } __attribute__((packed));
 
-template<int LEVEL>
-class PagePointer : public BasePointer {
-public:
-	enum {
-		SIZE_OF_POINTED_MEMORY = NUMBER_OF_POINTERS_PER_PAGE
-									* PagePointer<LEVEL - 1>::SIZE_OF_POINTED_MEMORY
-	};
-
-private:
-	using BasePointer::dirty;
-	using BasePointer::global;
-	using BasePointer::DIRTY;
-	using BasePointer::GLOBAL;
-};
-
+/**
+ * XXX Find out why we need this to terminate template recursive instantiation, and remove
+ * this template specialization
+ */
 template<>
-class PagePointer<1> : public BasePointer {
+class PagePointer<0> {
 public:
 	enum {
-		SIZE_OF_POINTED_MEMORY = PAGE_SIZE
+		SIZE_OF_POINTED_MEMORY = 1
 	};
 };
 
@@ -78,10 +90,10 @@ STATIC_ASSERT_EQUAL(sizeof(PagePointer<1>), 8)
 STATIC_ASSERT_EQUAL(sizeof(PagePointer<2>), 8)
 STATIC_ASSERT_EQUAL(sizeof(PagePointer<3>), 8)
 STATIC_ASSERT_EQUAL(sizeof(PagePointer<4>), 8)
-STATIC_ASSERT_EQUAL(PagePointer<1>::SIZE_OF_POINTED_MEMORY, 4096)
-STATIC_ASSERT_EQUAL(PagePointer<2>::SIZE_OF_POINTED_MEMORY, 4096 * 512)
-STATIC_ASSERT_EQUAL(PagePointer<3>::SIZE_OF_POINTED_MEMORY, 4096 * 512 * 512)
-STATIC_ASSERT_EQUAL(PagePointer<4>::SIZE_OF_POINTED_MEMORY, 4096LL * 512 * 512 * 512)
+STATIC_ASSERT_EQUAL(PagePointer<1>::SIZE_OF_POINTED_MEMORY, PAGE_SIZE)
+STATIC_ASSERT_EQUAL(PagePointer<2>::SIZE_OF_POINTED_MEMORY, PAGE_SIZE * 512)
+STATIC_ASSERT_EQUAL(PagePointer<3>::SIZE_OF_POINTED_MEMORY, PAGE_SIZE * 512 * 512)
+STATIC_ASSERT_EQUAL(PagePointer<4>::SIZE_OF_POINTED_MEMORY, PAGE_SIZE * 512LL * 512 * 512)
 
 } /* namespace kernel */
 
