@@ -4,6 +4,7 @@
 #include "TestSuite.h"
 #include "TestResult.h"
 #include "Printer.h"
+#include <generic/Utils.h>
 
 namespace kernel {
 
@@ -118,23 +119,30 @@ private:
 			const char* expression) {
 		failedAssertion++;
 		totalAssertion++;
-		message << file << ":" << line << " ASSERT(" << expression << ")\n";
+		const char* base = Utils::basename(file); /* XXX Why cannot inline variable base? */
+		message << base << ":" << line << " ASSERT(" << expression << ")\n";
 	}
 
+	template<typename First, typename Second>
 	void gotFalseEqualAssertion(const char* file, int line,
-			const char* actual, const char* expected) {
+			const char* firstExpression, const char* secondExpression,
+			const First& first, const Second& second) {
 		failedAssertion++;
 		totalAssertion++;
-		message << file << ":" << line << " ASSERT(" << actual << " == "
-						<< expected << ")\n";
+		const char* base = Utils::basename(file); /* XXX Why cannot inline variable base? */
+		message << base << ":" << line << " " << firstExpression << "["
+				<< first << "] == " << secondExpression << "[" << second << "]\n";
 	}
 
+	template<typename First, typename Second>
 	void gotFalseUnequalAssertion(const char* file, int line,
-			const char* first, const char* second) {
+			const char* firstExpression, const char* secondExpression,
+			const First& first, const Second& second) {
 		failedAssertion++;
 		totalAssertion++;
-		message << file << ":" << line << " ASSERT(" << first << " != "
-								<< second << ")\n";
+		const char* base = Utils::basename(file); /* XXX Why cannot inline variable base? */
+		message << base << ":" << line << " " << firstExpression << "["
+				<< first << "] != " << secondExpression << "[" << second << "]\n";
 	}
 };
 

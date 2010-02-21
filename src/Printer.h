@@ -7,6 +7,7 @@
 #include <sexy/IS_INTEGER.h>
 #include <sexy/IS_STRING.h>
 #include <sexy/IS_POINTER.h>
+#include <sexy/IS_ENUM.h>
 
 namespace kernel {
 
@@ -53,7 +54,7 @@ class Printer {
 					print(data / 10, printer);
 					data %= 10;
 				}
-				printer.printChar((char)('0' + data));
+				printer.printChar('0' + data);
 			}
 			return printer;
 		}
@@ -71,6 +72,10 @@ class Printer {
 	class StringPrinter {
 	public:
 		static Printer& print(const String& data, Printer& printer) {
+			if (data == 0) {
+				return printer;
+			}
+
 			for (const char* p = data; *p; ++p) {
 				printer.printChar(*p);
 			}
@@ -85,6 +90,14 @@ class Printer {
 			return printer << (Address)pointer;
 		}
 	};
+
+	template<typename T>
+	class NullPrinter {
+	public:
+		static Printer& print(const T&, Printer& printer) {
+			return printer;
+		}
+	};
 public:
 	template<typename T>
 	Printer& operator << (const T& data) {
@@ -97,24 +110,20 @@ public:
 								StringPrinter<T>,
 								typename TYPE_SELECTOR<IS_POINTER<T>::value,
 									PointerPrinter<T>,
-									EnumPrinter<T>
+									typename TYPE_SELECTOR<IS_ENUM<T>::value,
+										EnumPrinter<T>,
+										NullPrinter<T>
+									>::Type
 								>::Type
 							>::Type
 						>::Type CompetentPrinter;
 		return CompetentPrinter::print(data, *this);
 	}
-/*
-	template<typename T>
-	Printer& operator << (T* pointer) {
-		return *this << (Address)pointer;
-	}
-
-	template<typename T>
-	Printer& operator << (const T* pointer) {
-		return *this << (Address)pointer;
-	} */
 
 private:
+	enum {
+		COLOR = 0x0700
+	};
 	U16* buffer;
 	int x;
 	int y;

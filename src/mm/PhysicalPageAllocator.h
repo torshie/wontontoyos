@@ -9,11 +9,11 @@ class PhysicalPageAllocator {
 public:
 	PhysicalPageAllocator();
 
-	Address allocate(Size numberOfNeededPages);
+	Address allocate(Size memoryNeeded);
 	void release(Address);
 
 private:
-	Size numberOfAllocatedPages;
+	Size available;
 };
 
 } /* namespace kernel */

@@ -1,9 +1,9 @@
-SUBDIR = cxx lib src boot
+SUBDIR = cxx lib src boot inc
 
-all: run
+all: build
 
 build:
-	@for dir in $(SUBDIR); do $(MAKE) -C $$dir $@ || exit 1; done
+	$(MAKE_IN_SUBDIR)
 
 include $(WONTON)/Makefile.variable
 include $(WONTON)/Makefile.inc
@@ -13,7 +13,7 @@ DISK = disk.img
 KERNEL = boot/image.mboot
 MOUNT = /Volumes/boss
 
-$(DISK): build $(KERNEL)
+$(DISK): $(KERNEL)
 	@echo '  ATTACH' $@
 	@echo `hdiutil attach $@|grep boss|cut -f 1|sed 's/s1//'` > .tmp
 	@echo '  CP' $<
@@ -23,7 +23,7 @@ $(DISK): build $(KERNEL)
 	@rm .tmp
 	@touch $(DISK)
 
-$(KERNEL):
+$(KERNEL): build
 	@$(MAKE) -C `dirname $@` `basename $@`
 
 debug: $(DISK)
@@ -31,4 +31,6 @@ debug: $(DISK)
 
 run: $(DISK)
 	@$(QEMU) $<
-
+	
+bochs: $(DISK)
+	bochs

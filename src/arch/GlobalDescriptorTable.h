@@ -51,7 +51,7 @@ private:
 					+ sizeof(userCode) + sizeof(taskState) - 1),
 			base(this) {
 		userCode.dpl = 3;
-		userData._dpl = 3;
+		userData.__dpl = 3;
 	}
 	GlobalDescriptorTable(const GlobalDescriptorTable&);
 	const GlobalDescriptorTable& operator=(const GlobalDescriptorTable&);

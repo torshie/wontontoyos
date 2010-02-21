@@ -3,7 +3,7 @@
 		PUSH_GENERAL_PURPOSE_REGISTERS
 		mov $\isrNumber, %rdi
 
-		/* Mangled InterruptDescriptorTable::handle */
+		/* Mangled ::kernel::InterruptDescriptorTable::handle */
 		call _ZN6kernel24InterruptDescriptorTable6handleEi
 
 		POP_GENERAL_PURPOSE_REGISTERS

@@ -14,9 +14,9 @@ namespace kernel {
 struct NullDescriptor {
 	friend class GlobalDescriptorTable;
 private:
-	U64 i;
+	U64 initializer;
 
-	NullDescriptor() : i(0) {}
+	NullDescriptor() : initializer(0) {}
 
 	NullDescriptor(const NullDescriptor&);
 	const NullDescriptor& operator = (const NullDescriptor&);

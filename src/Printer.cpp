@@ -21,7 +21,7 @@ Printer& Printer::printChar(char c) {
 		x = 0;
 		++y;
 	} else {
-		buffer[80 * y + x] = 0x0f00 | c;
+		buffer[80 * y + x] = COLOR | c;
 		++x;
 	}
 	if (x >= 80) {

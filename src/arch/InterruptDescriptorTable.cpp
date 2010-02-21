@@ -2,7 +2,7 @@
 #include "InterruptDescriptorTable.h"
 #include "GlobalDescriptorTable.h"
 #include "InterruptHandler.h"
-#include <generic/Memory.h>
+#include <generic/Utils.h>
 #include <generic/type.h>
 
 namespace kernel {
@@ -13,7 +13,7 @@ namespace kernel {
 extern "C" Address isrAddressTable[InterruptDescriptorTable::HANDLER_COUNT];
 
 InterruptDescriptorTable::InterruptDescriptor::InterruptDescriptor() {
-	Memory::memset(this, 0, sizeof(InterruptDescriptor));
+	Utils::memset(this, 0, sizeof(InterruptDescriptor));
 	selector = GlobalDescriptorTable::OFFSET_KERNEL_CODE;
 	/**
 	 * XXX Evil constants
@@ -29,7 +29,7 @@ InterruptDescriptorTable::InterruptDescriptorTable() {
 	for (int i = 0; i < HANDLER_COUNT; ++i) {
 		table[i].setOffset(isrAddressTable[i]);
 	}
-	Memory::memset(handler, 0, sizeof(handler));
+	Utils::memset(handler, 0, sizeof(handler));
 
 	setHandler(PAGE_FAULT, InterruptHandler<PAGE_FAULT>::handle);
 }

@@ -9,26 +9,24 @@
 namespace kernel {
 
 class PageMap {
-	friend class TestPageMap;
 public:
 	static void* mapTempPage(Address physicalAddress);
 	static Address unmapTempPage(void*);
 	static void reload();
-
-private:
-	template<int LEVEL>
-	static PagePointer<LEVEL>* getPointerToKernelAddress(Address virtualAddress) {
-		if (virtualAddress < KERNEL_VIRTUAL_BASE) {
-			BUG("Invalid virtualAddress " << virtualAddress);
-		}
-
-		Address alignedAddress = virtualAddress / PagePointer<LEVEL>::SIZE_OF_POINTED_MEMORY
-				* PagePointer<LEVEL>::SIZE_OF_POINTED_MEMORY;
-
-		U64 numberOfPointers = (-alignedAddress) / PagePointer<LEVEL>::SIZE_OF_POINTED_MEMORY;
-		U64 spaceUsed = numberOfPointers * sizeof(PagePointer<LEVEL>);
-		return (PagePointer<LEVEL>*)(-spaceUsed);
-	}
+//
+//	template<int LEVEL>
+//	static PagePointer<LEVEL>* getPointerToKernelAddress(Address virtualAddress) {
+//		if (virtualAddress < KERNEL_VIRTUAL_BASE) {
+//			BUG("Invalid kernel address " << virtualAddress);
+//		}
+//
+//		Address alignedAddress = virtualAddress / PagePointer<LEVEL>::SIZE_OF_POINTED_MEMORY
+//				* PagePointer<LEVEL>::SIZE_OF_POINTED_MEMORY;
+//
+//		U64 numberOfPointers = (-alignedAddress) / PagePointer<LEVEL>::SIZE_OF_POINTED_MEMORY;
+//		U64 spaceUsed = numberOfPointers * sizeof(PagePointer<LEVEL>);
+//		return (PagePointer<LEVEL>*)(-spaceUsed);
+//	}
 };
 
 } /* namespace kernel */

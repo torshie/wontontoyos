@@ -2,7 +2,7 @@
 #define KERNEL_ARCH_TASK_STATE_SEGMENT_DESCRIPTOR_H_INCLUDED
 
 #include <generic/type.h>
-#include <generic/Memory.h>
+#include <generic/Utils.h>
 #include <generic/getSingleInstance.h>
 #include <kernel/abi.h>
 #include "TaskStateSegment.h"
@@ -34,7 +34,7 @@ private:
 	TaskStateSegmentDescriptor() {
 		TaskStateSegment& tss = getSingleInstance<TaskStateSegment>();
 		tss.rsp[0] = KERNEL_VIRTUAL_BASE + KERNEL_PHYSICAL_BASE;
-		Memory::zeroize(this, sizeof(TaskStateSegmentDescriptor));
+		Utils::zeroize(this, sizeof(TaskStateSegmentDescriptor));
 		present = 1;
 		Size limit = sizeof(tss) - 1;
 		segmentLimit0 = limit;

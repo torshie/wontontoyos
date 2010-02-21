@@ -14,9 +14,9 @@ public:
 	void testAllocate() {
 		PhysicalPageAllocator& allocator
 				= getSingleInstance<PhysicalPageAllocator>();
-		Address first = allocator.allocate(1);
-		Address second = allocator.allocate(1);
-		Address third = allocator.allocate(1);
+		Address first = allocator.allocate(PAGE_SIZE);
+		Address second = allocator.allocate(PAGE_SIZE);
+		Address third = allocator.allocate(PAGE_SIZE);
 		UT_ASSERT_EQUAL(first + PAGE_SIZE, second);
 		UT_ASSERT_EQUAL(second + PAGE_SIZE, third);
 	}

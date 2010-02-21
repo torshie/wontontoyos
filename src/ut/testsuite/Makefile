@@ -1,10 +1,12 @@
 build: compile
 
-SUBDIR = runtime.type.information sexy.template memory.management unit.testing.framework
+SUBDIR = runtime.type.information sexy.template memory.management unit.testing.framework \
+		utilities
 
 INSTALLER = installTestSuite
 OBJS = $(INSTALLER).o
-CLEAN = $(INSTALLER).cpp
+MFILES = $(INSTALLER).mfile
+CLEAN = $(INSTALLER).cpp $(MFILES)
 
 include $(WONTON)/Makefile.variable
 include $(WONTON)/Makefile.inc

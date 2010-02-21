@@ -17,22 +17,18 @@ private:
 	U64 initializer; /* Used to initialize the descriptor */
 public:
 	struct {
-		U32 _zero0;
-		U8 _zero1;
-		U8 _zero2:2;
+		U64 __zero_0:42;
 		U8 conforming:1;
-		U8 _one0:1;
-		U8 _one1:1;
+		U8 __one_0:1;
+		U8 __one_1:1;
 		U8 dpl:2;
 		U8 present:1;
-		U8 _zero3:5;
+		U8 __zero_1:5;
 		U8 longMode:1;
-		U8 _zero4:1;
-		U8 _zero5:1;
-		U8 _zero6;
+		U16 __zero_2:10;
 	} __attribute__((packed));
 private:
-	CodeSegmentDescriptor() : initializer(0), _one0(1), _one1(1), present(1), longMode(1) {}
+	CodeSegmentDescriptor() : initializer(0), __one_0(1), __one_1(1), present(1), longMode(1) {}
 
 	CodeSegmentDescriptor(const CodeSegmentDescriptor&);
 	const CodeSegmentDescriptor& operator = (const CodeSegmentDescriptor&);

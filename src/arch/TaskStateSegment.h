@@ -3,7 +3,7 @@
 
 #include <generic/type.h>
 #include <generic/getSingleInstance.h>
-#include <generic/Memory.h>
+#include <generic/Utils.h>
 
 namespace kernel {
 
@@ -28,8 +28,8 @@ public:
 
 private:
 	TaskStateSegment() {
-		Memory::zeroize(this, sizeof(TaskStateSegment) - sizeof(ioMap));
-		Memory::memset(ioMap, 0xff, sizeof(ioMap));
+		Utils::zeroize(this, sizeof(TaskStateSegment) - sizeof(ioMap));
+		Utils::memset(ioMap, 0xff, sizeof(ioMap));
 		ioMapBase = (char*)&ioMapBase - (char*)this;
 	}
 
