@@ -15,7 +15,7 @@ SECTIONS{
 		*(.text)
 		. = ALIGN(ALIGNMENT);
 	}
-	
+
 	.rodata : AT(ADDR(.rodata) - BASE) {
 		*(.rodata*)
 		. = ALIGN(ALIGNMENT);

@@ -15,9 +15,7 @@ extern "C" Address isrAddressTable[InterruptDescriptorTable::HANDLER_COUNT];
 InterruptDescriptorTable::InterruptDescriptor::InterruptDescriptor() {
 	Utils::memset(this, 0, sizeof(InterruptDescriptor));
 	selector = GlobalDescriptorTable::OFFSET_KERNEL_CODE;
-	/**
-	 * XXX Evil constants
-	 */
+	// XXX Evil constants
 	type = 0xe;
 	present = 1;
 }

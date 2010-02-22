@@ -10,14 +10,14 @@ class TestUnion : public TestCase {
 public:
 	bool getTestPoint(TestPoint&, const char*&);
 
-	void testWithSingleUnion() {
+	void testSingleUnion() {
 		union Union {
 		};
 		Union u;
 		UT_ASSERT_EQUAL(typeid(u), typeid(Union));
 	}
 
-	void testWithTwoUnions() {
+	void testTwoUnions() {
 		union FirstUnion {
 		};
 		union SecondUnion {

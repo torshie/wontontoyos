@@ -9,14 +9,9 @@
 
 namespace kernel {
 
-/**
- * Task State Segment Descriptor
- *
- * Referer to AMD/Intel's system programming manual for more detailed information
- */
 struct TaskStateSegmentDescriptor {
 	friend class GlobalDescriptorTable;
-private:
+
 	U16 segmentLimit0;
 	U16 base0;
 	U8 base1;

@@ -6,9 +6,6 @@
 
 namespace kernel {
 
-/**
- * XXX Add support to UT_ASSERT_EQUAL(enum, int) call
- */
 class UnitTestingAssert {
 public:
 	static void assertTrue(bool value, const char* file, int line, const char* expression);
@@ -43,17 +40,13 @@ public:
 } /* namespace kernel */
 
 #define UT_ASSERT_TRUE(value) \
-	::kernel::UnitTestingAssert::assertTrue((value), __FILE__, __LINE__, \
-			#value)
-
+	::kernel::UnitTestingAssert::assertTrue((value), __FILE__, __LINE__, #value)
 #define UT_ASSERT_FALSE(value) UT_ASSERT_TRUE(!(value))
-
 #define UT_ASSERT_EQUAL(actual, expected) \
-	::kernel::UnitTestingAssert::assertEqual((actual), (expected), \
-			__FILE__, __LINE__, #actual, #expected)
-
+	::kernel::UnitTestingAssert::assertEqual((actual), (expected), __FILE__, __LINE__, \
+			#actual, #expected)
 #define UT_ASSERT_UNEQUAL(first, second) \
-	::kernel::UnitTestingAssert::assertUnequal((first), (second), \
-			__FILE__, __LINE__, #first, #second)
+	::kernel::UnitTestingAssert::assertUnequal((first), (second), __FILE__, __LINE__, \
+			#first, #second)
 
 #endif /* KERNEL_UT_FRAMEWORK_UNIT_TESTING_ASSERT_H_INCLUDED */

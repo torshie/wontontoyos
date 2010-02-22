@@ -1,5 +1,5 @@
-#ifndef KERNEL_EXE_ELF64_H_INCLUDED
-#define KERNEL_EXE_ELF64_H_INCLUDED
+#ifndef KERNEL_EXE_ELF64_HEADER_H_INCLUDED
+#define KERNEL_EXE_ELF64_HEADER_H_INCLUDED
 
 #include <generic/type.h>
 
@@ -78,53 +78,8 @@ struct SectionHeader {
 	};
 };
 
-struct Symbol {
-	U32 name;
-	U8 flags;
-	U8 reserved;
-	U16 sectionTableIndex;
-	U64 value;
-	U64 size;
-
-	enum {
-		BINDING_LOCAL = 0,
-		BINDING_GLOBAL = 1,
-		BINDING_WEAK = 2,
-
-		TYPE_NONE = 0,
-		TYPE_DATA_OBJECT = 1,
-		TYPE_FUNCTION = 2,
-		TYPE_SECTION = 3,
-		TYPE_FILE = 4
-	};
-};
-
-struct ProgramHeader {
-	U32 type;
-	U32 flags;
-	U64 offset;
-	U64 address;
-	U64 reserved;
-	U64 fileSize;
-	U64 memorySize;
-	U64 align;
-
-	enum {
-		TYPE_NULL = 0,
-		TYPE_LOADABLE = 1,
-		TYPE_DYNAMIC_LINKING = 2,
-		TYPE_INTERPRETER_NAME = 3,
-		TYPE_NOTE = 4,
-		TYPE_RESERVED = 5,
-		TYPE_PROGRAM_HEADER_TABLE = 6,
-
-		FLAG_EXECUTABLE = 1,
-		FLAG_WRITABLE = 2,
-		FLAG_READABLE = 3
-	};
-};
 
 } /* namespace kernel */
 
-#endif /* KERNEL_EXE_ELF64_H_INCLUDED */
+#endif /* KERNEL_EXE_ELF64_HEADER_H_INCLUDED */
 

@@ -7,11 +7,6 @@
 
 namespace kernel {
 
-/**
- * Task State Segment
- *
- * Referer to AMD/Intel's system programming manual for more detailed information
- */
 struct TaskStateSegment {
 	friend TaskStateSegment& getSingleInstance<TaskStateSegment>();
 private:

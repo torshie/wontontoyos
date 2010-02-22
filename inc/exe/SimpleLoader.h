@@ -1,7 +1,7 @@
 #ifndef KERNEL_EXE_SIMPLE_LOADER_H_INCLUDED
 #define KERNEL_EXE_SIMPLE_LOADER_H_INCLUDED
 
-#include <exe/elf64.h>
+#include <exe/Elf64Header.h>
 
 namespace kernel {
 /**

@@ -28,9 +28,6 @@ void main() {
 	runner.run(result);
 	result.show();
 
-	//PageTable<1>* table = PageTable<1>::create(PageTable<1>::BASE_ADDRESS + PAGE_SIZE);
-	//BUG(table);
-
 	console << "__ld_bss_end: " << &__ld_bss_end << "\n";
 }
 
@@ -39,9 +36,7 @@ void main() {
 extern "C" void startKernel() {
 	using namespace kernel;
 
-	/**
-	 * Remove the lower half of the page map, which can help us find out bugs
-	 */
+	// Remove the lower half of the page map, which can help us find out bugs
 	PagePointer<4>* levelFour = (PagePointer<4>*)PageTable<4>::LOWEST_TABLE_ADDRESS;
 	levelFour->present = 0;
 	PageMap::reload();

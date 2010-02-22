@@ -1,5 +1,3 @@
-/**
- * XXX Implement
- */
+// XXX Implement
 void operator delete(void*) {
 }

@@ -122,8 +122,11 @@ public:
 
 private:
 	enum {
-		COLOR = 0x0700
+		COLOR = 0x0700,
+		WIDTH = 80,
+		HEIGHT = 25
 	};
+
 	U16* buffer;
 	int x;
 	int y;

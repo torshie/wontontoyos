@@ -7,7 +7,7 @@ namespace kernel {
 Printer::Printer()
 		: buffer((U16*)(KERNEL_VIRTUAL_BASE + 0xb8000)),
 		x(0), y(0) {
-	for (int i = 0; i < 25; ++i) {
+	for (int i = 0; i < HEIGHT; ++i) {
 		scroll();
 	}
 }
@@ -21,28 +21,28 @@ Printer& Printer::printChar(char c) {
 		x = 0;
 		++y;
 	} else {
-		buffer[80 * y + x] = COLOR | c;
+		buffer[WIDTH * y + x] = COLOR | c;
 		++x;
 	}
-	if (x >= 80) {
+	if (x >= WIDTH) {
 		x = 0;
 		++y;
 	}
-	if (y >= 25) {
+	if (y >= HEIGHT) {
 		scroll();
-		y = 24;
+		y = HEIGHT - 1;
 	}
 	return *this;
 }
 
 void Printer::scroll() {
-	for (int i = 1; i < 25; ++i) {
-		for (int j = 0; j < 80; ++j) {
-			buffer[(i - 1) * 80 + j] = buffer[i * 80 + j];
+	for (int i = 1; i < HEIGHT; ++i) {
+		for (int j = 0; j < WIDTH; ++j) {
+			buffer[(i - 1) * WIDTH + j] = buffer[i * WIDTH + j];
 		}
 	}
-	for (int j = 0; j < 80; ++j) {
-		buffer[24 * 80 + j] = 0x0f00 | ' ';
+	for (int j = 0; j < WIDTH; ++j) {
+		buffer[(HEIGHT - 1) * WIDTH + j] = COLOR | ' ';
 	}
 }
 

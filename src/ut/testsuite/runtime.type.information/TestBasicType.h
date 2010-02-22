@@ -2,7 +2,7 @@
 #define KERNEL_RUNTIME_TYPE_INFORMATION_TEST_BASIC_TYPE_H_INCLUDED
 
 #include "ut/framework/UnitTesting.h"
-#include "cxx/rtti.h"
+#include <cxx/rtti.h>
 
 namespace kernel {
 

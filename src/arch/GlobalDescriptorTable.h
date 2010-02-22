@@ -57,7 +57,6 @@ private:
 	const GlobalDescriptorTable& operator=(const GlobalDescriptorTable&);
 
 public:
-
 	/**
 	 * Load the GDTR & TR
 	 *

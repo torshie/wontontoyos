@@ -6,11 +6,6 @@
 
 namespace kernel {
 
-/**
- * Code Segment Descriptor
- *
- * Referer to AMD/Intel's system programming manual for more detailed information
- */
 union CodeSegmentDescriptor {
 	friend class GlobalDescriptorTable;
 private:

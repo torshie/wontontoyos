@@ -3,6 +3,7 @@
 
 #include <generic/type.h>
 #include <generic/getSingleInstance.h>
+#include <generic/STATIC_ASSERT.h>
 
 namespace kernel {
 
@@ -67,17 +68,8 @@ private:
 	InterruptDescriptorTable(const InterruptDescriptorTable&);
 	const InterruptDescriptorTable& operator=(const InterruptDescriptorTable&);
 
-	/**
-	 * Yes, handle is private. We will use assembly to get access to it
-	 */
+	// Yes, handle is private. We will use assembly to get access to it
 	static void handle(int isrNumber);
-
-	/**
-	 * Used to make sure the data structure is correctly packed.
-	 *
-	 * If the data structure isn't packed as expected, we will get compile time error.
-	 */
-	typedef char StaticSizeChecker[sizeof(InterruptDescriptor) == 16 ? 1 : -1];
 } __attribute__((packed));
 
 inline void InterruptDescriptorTable::setHandler(int isrNumber, void (*h)(void)) {
