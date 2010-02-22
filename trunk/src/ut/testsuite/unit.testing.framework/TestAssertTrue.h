@@ -9,11 +9,11 @@ class TestAssertTrue : public TestCase {
 public:
 	bool getTestPoint(TestPoint&, const char*&);
 
-	void testAssertTrue() {
+	void testTrue() {
 		UT_ASSERT_TRUE(true);
 	}
 
-	void testAssertFalse() {
+	void testFalse() {
 //		UT_ASSERT_TRUE(false);
 	}
 };

@@ -11,19 +11,19 @@ class TestIS_CLASS : public TestCase {
 public:
 	bool getTestPoint(TestPoint&, const char*&);
 
-	void testWithClass() {
+	void testClass() {
 		UT_ASSERT_TRUE(IS_CLASS<TestCase>::value);
 	}
 
-	void testWithInteger() {
+	void testInteger() {
 		UT_ASSERT_FALSE(IS_CLASS<int>::value);
 	}
 
-	void testWithVoid() {
+	void testVoid() {
 		UT_ASSERT_FALSE(IS_CLASS<void>::value);
 	}
 
-	void testWithEnum() {
+	void testEnum() {
 		UT_ASSERT_FALSE(IS_CLASS<Enum>::value);
 	}
 };

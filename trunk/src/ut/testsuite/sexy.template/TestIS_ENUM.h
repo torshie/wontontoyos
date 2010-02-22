@@ -12,7 +12,7 @@ class TestIS_ENUM : public TestCase {
 public:
 	bool getTestPoint(TestPoint&, const char*&);
 
-	void testWithIntegerTypes() {
+	void testInteger() {
 		UT_ASSERT_FALSE(IS_ENUM<signed char>::value);
 		UT_ASSERT_FALSE(IS_ENUM<short>::value);
 		UT_ASSERT_FALSE(IS_ENUM<int>::value);
@@ -26,11 +26,11 @@ public:
 		UT_ASSERT_FALSE(IS_ENUM<unsigned long long>::value);
 	}
 
-	void testWithEnumTypes() {
+	void testEnum() {
 		UT_ASSERT_TRUE(IS_ENUM<NamedEnum>::value);
 	}
 
-	void testWithAnonymousEnum() {
+	void testAnonymousEnum() {
 		UT_ASSERT_TRUE(IS_ENUM<AnonymousEnum>::value);
 	}
 };

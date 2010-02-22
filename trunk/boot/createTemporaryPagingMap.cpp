@@ -1,35 +1,39 @@
+/**
+ * XXX We cannot link this file against other kernel source files, even when they are
+ * compiled into 32-bit object files. Find out why, and then remove all the duplications in
+ * this file.
+ */
+
 #include "arch/X64Constant.h"
 #include <kernel/abi.h>
 #include "mm/PagePointer.h"
 
 using namespace kernel;
 
-/**
- * Create a temporary paging map.
- *
- * @return The address of Page Map Level 4
- */
-/**
- * XXX We cannot link this file against other part of kernel source files, even when they are
- * compiled into 32-bit object files. Find out why, and then remove all the duplications in
- * this file.
- */
-extern "C" Offset createTemporaryPagingMap() {
-	enum {
-		NUMBER_OF_LEVEL_TWO_PAGE_POINTERS = 2,
-		NUMBER_OF_LEVEL_THREE_PAGE_POINTERS = 1,
-		NUMBER_OF_LEVEL_FOUR_PAGE_POINTERS = 1,
-		SIZE_OF_MAPPED_MEMORY = PagePointer<2>::SIZE_OF_POINTED_MEMORY
+enum {
+	NUMBER_OF_LEVEL_TWO_PAGE_POINTERS = 2,
+	NUMBER_OF_LEVEL_THREE_PAGE_POINTERS = 1,
+	NUMBER_OF_LEVEL_FOUR_PAGE_POINTERS = 1,
+	PAGING_MAP_SIZE = (NUMBER_OF_LEVEL_TWO_PAGE_POINTERS + NUMBER_OF_LEVEL_THREE_PAGE_POINTERS
+							+ NUMBER_OF_LEVEL_FOUR_PAGE_POINTERS + 1) * PAGE_SIZE,
+	SIZE_OF_MAPPED_MEMORY = PagePointer<2>::SIZE_OF_POINTED_MEMORY
 									* NUMBER_OF_LEVEL_TWO_PAGE_POINTERS,
-		PAGING_MAP_SIZE = (NUMBER_OF_LEVEL_TWO_PAGE_POINTERS
-							+ NUMBER_OF_LEVEL_THREE_PAGE_POINTERS
-							+ NUMBER_OF_LEVEL_FOUR_PAGE_POINTERS + 1) * PAGE_SIZE
-	};
+};
 
-	for (Offset i = KERNEL_RESERVED_MEMORY; i < PAGING_MAP_SIZE; ++i) {
-		*(char*)(KERNEL_RESERVED_MEMORY + i) = 0;
+static void zeroize(void* memory, Size size) {
+	char* p = (char*)memory;
+	char* end = p + size;
+	for (; p < end; ++p) {
+		*p = 0;
 	}
+}
 
+/**
+ * Create a temporary identity & higher-half paging map.
+ *
+ * @return The address of Level Four Paging Map of the paging map
+ */
+static PagePointer<4>* createIdentityAndHigherHalfPagingMap() {
 	Offset offset = KERNEL_RESERVED_MEMORY;
 	PagePointer<1>* levelOne = (PagePointer<1>*)offset;
 	for (unsigned int i = 0; i < SIZE_OF_MAPPED_MEMORY / PAGE_SIZE; ++i) {
@@ -56,27 +60,33 @@ extern "C" Offset createTemporaryPagingMap() {
 	levelThree[0].writable = 1;
 	offset += PAGE_SIZE * NUMBER_OF_LEVEL_FOUR_PAGE_POINTERS;
 
-	/**
-	 * Identity mapping the kernel
-	 */
 	PagePointer<4>* levelFour = (PagePointer<4>*)offset;
 	levelFour[0].physicalAddress = (Address)levelThree;
 	levelFour[0].present = 1;
 	levelFour[0].writable = 1;
 
-	/**
-	 * While identity mapping, we also map the kernel to higher half
-	 */
 	enum {
 		SIZE_OF_SPACE_ABOVE_BASE_ADDRESS = -KERNEL_VIRTUAL_BASE,
-		RIGHT_TO_LEFT_INDEX = SIZE_OF_SPACE_ABOVE_BASE_ADDRESS
-									/ PagePointer<4>::SIZE_OF_POINTED_MEMORY,
-		LEFT_TO_RIGHT_INDEX = PagePointer<4>::NUMBER_OF_POINTERS_PER_PAGE - RIGHT_TO_LEFT_INDEX
+		POINTERS_NEEDED = SIZE_OF_SPACE_ABOVE_BASE_ADDRESS / PagePointer<4>::SIZE_OF_POINTED_MEMORY,
+		HIGHER_HALF_ENTRY = PagePointer<4>::NUMBER_OF_POINTERS_PER_PAGE - POINTERS_NEEDED
 	};
-	levelFour[LEFT_TO_RIGHT_INDEX].physicalAddress = (Address)levelThree;
-	levelFour[LEFT_TO_RIGHT_INDEX].present = 1;
-	levelFour[LEFT_TO_RIGHT_INDEX].writable = 1;
+	levelFour[HIGHER_HALF_ENTRY].physicalAddress = (Address)levelThree;
+	levelFour[HIGHER_HALF_ENTRY].present = 1;
+	levelFour[HIGHER_HALF_ENTRY].writable = 1;
 
+	return levelFour;
+}
+
+/**
+ * Create a temporary paging map.
+ *
+ * @return The address of Level Four Paging Map of the temporary paging map
+ */
+extern "C" PagePointer<4>* createTemporaryPagingMap() {
+	// XXX Use kernel::Utils::zeroize instead
+	zeroize((void*)(KERNEL_RESERVED_MEMORY), PAGING_MAP_SIZE);
+
+	PagePointer<4>* levelFour = createIdentityAndHigherHalfPagingMap();
 	enum {
 		SELF_REFERENCE_ENTRY = PagePointer<4>::NUMBER_OF_POINTERS_PER_PAGE - 1
 	};
@@ -84,6 +94,6 @@ extern "C" Offset createTemporaryPagingMap() {
 	levelFour[SELF_REFERENCE_ENTRY].present = 1;
 	levelFour[SELF_REFERENCE_ENTRY].writable = 1;
 
-	return offset;
+	return levelFour;
 }
 

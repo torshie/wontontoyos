@@ -5,15 +5,9 @@
 
 namespace kernel {
 
-/**
- * Null Descriptor
- *
- * As required by the CPU specification, the first entry in Global Descriptor Table must be
- * a Null Descriptor
- */
 struct NullDescriptor {
 	friend class GlobalDescriptorTable;
-private:
+
 	U64 initializer;
 
 	NullDescriptor() : initializer(0) {}

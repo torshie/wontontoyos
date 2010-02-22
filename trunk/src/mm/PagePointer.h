@@ -68,16 +68,14 @@ public:
 		Address alignedAddress = virtualAddress / SIZE_OF_POINTED_MEMORY
 				* SIZE_OF_POINTED_MEMORY;
 
-		U64 numberOfPointers = (-alignedAddress) / SIZE_OF_POINTED_MEMORY;
-		U64 spaceUsed = numberOfPointers * sizeof(PagePointer);
+		U64 pointerCount = (-alignedAddress) / SIZE_OF_POINTED_MEMORY;
+		U64 spaceUsed = pointerCount * sizeof(PagePointer);
 		return (PagePointer*)(-spaceUsed);
 	}
 } __attribute__((packed));
 
-/**
- * XXX Find out why we need this to terminate template recursive instantiation, and remove
- * this template specialization
- */
+// XXX Find out why we need this to terminate template recursive instantiation, and remove
+// this template specialization
 template<>
 class PagePointer<0> {
 public:

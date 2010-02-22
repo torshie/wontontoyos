@@ -9,51 +9,51 @@ class TestAssertEqual : public TestCase {
 public:
 	bool getTestPoint(TestPoint&, const char*&);
 
-	void testWithEqualNumbers() {
+	void testEqualNumbers() {
 		UT_ASSERT_EQUAL(1, 1);
 	}
 
-	void testWithNotEqualNumbers() {
+	void testNotEqualNumbers() {
 //		UT_ASSERT_EQUAL(1, 2);
 	}
 
-	void testWithEqualIntegerVariableAndLiteral() {
+	void testEqualIntegerVariableAndLiteral() {
 		int i = 1;
 		UT_ASSERT_EQUAL(i, 1);
 	}
 
-	void testWithEqualStringLiterals() {
+	void testEqualStringLiterals() {
 		UT_ASSERT_EQUAL("Hello", "Hello");
 	}
 
-	void testWithNotEqualStringLiterals() {
+	void testNotEqualStringLiterals() {
 //		UT_ASSERT_EQUAL("Hello", "World");
 	}
 
-	void testWithEqualCharArrays() {
+	void testEqualCharArrays() {
 		char firstHello[] = "Hello";
 		char secondHello[] = "Hello";
 		UT_ASSERT_EQUAL(firstHello, secondHello);
 	}
 
-	void testWithNotEqualCharArrays() {
+	void testNotEqualCharArrays() {
 //		char hello[] = "Hello";
 //		char world[] = "World";
 //		UT_ASSERT_EQUAL(hello, world);
 	}
 
-	void testWithEqualCharArrayAndStringLiteral() {
+	void testEqualCharArrayAndStringLiteral() {
 		char hello[] = "Hello";
 		UT_ASSERT_EQUAL(hello, "Hello");
 	}
 
-	void testWithDifferentSizedEqualCharArrays() {
+	void testDifferentSizedEqualCharArrays() {
 		char firstHello[10] = "Hello";
 		char secondHello[20] = "Hello";
 		UT_ASSERT_EQUAL(firstHello, secondHello);
 	}
 
-	void testWithDifferentTypeOfIntegers() {
+	void testDifferentTypeOfIntegers() {
 		short s = -1;
 		int i = -1;
 		UT_ASSERT_EQUAL(s, i);

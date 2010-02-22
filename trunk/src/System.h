@@ -5,9 +5,7 @@ namespace kernel {
 
 class System {
 public:
-	/**
-	 * XXX Halt the CPU instead of looping forever
-	 */
+	// XXX Halt the CPU instead of looping forever
 	static void halt() {
 		for (;;)
 			;

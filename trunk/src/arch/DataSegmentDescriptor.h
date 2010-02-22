@@ -6,11 +6,6 @@
 
 namespace kernel {
 
-/**
- * Data Segment Descriptor
- *
- * Referer to AMD/Intel's system programming manual for more detailed information
- */
 union DataSegmentDescriptor {
 	friend class GlobalDescriptorTable;
 private:

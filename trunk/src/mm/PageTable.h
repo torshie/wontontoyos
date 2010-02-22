@@ -43,9 +43,7 @@ STATIC_ASSERT_EQUAL(sizeof(PageTable<2>), PAGE_SIZE)
 STATIC_ASSERT_EQUAL(sizeof(PageTable<3>), PAGE_SIZE)
 STATIC_ASSERT_EQUAL(sizeof(PageTable<4>), PAGE_SIZE)
 
-/**
- * XXX Test this method
- */
+// XXX Test this method
 template<int LEVEL>
 PageTable<LEVEL>* PageTable<LEVEL>::create(Address virtualAddress) {
 	if ((virtualAddress < LOWEST_TABLE_ADDRESS && virtualAddress != 0)

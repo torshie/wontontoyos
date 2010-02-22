@@ -14,8 +14,8 @@ template<typename T>
 class IS_ENUM {
 public:
 	enum {
-		value = !(IS_POINTER<T>::value || IS_REFERENCE<T>::value || IS_INTEGER<T>::value
-					|| IS_VOID<T>::value || IS_ARRAY<T>::value || IS_CLASS<T>::value)
+		value = ! (IS_POINTER<T>::value || IS_REFERENCE<T>::value || IS_INTEGER<T>::value
+							|| IS_VOID<T>::value || IS_ARRAY<T>::value || IS_CLASS<T>::value)
 	};
 };
 

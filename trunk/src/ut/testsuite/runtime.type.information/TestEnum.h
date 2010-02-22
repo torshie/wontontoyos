@@ -10,7 +10,7 @@ class TestEnum : public TestCase {
 public:
 	bool getTestPoint(TestPoint&, const char*&);
 
-	void testWithSingleEnumType() {
+	void testSingleEnum() {
 		enum Enumeration {
 			A, B
 		};
@@ -20,7 +20,7 @@ public:
 		UT_ASSERT_UNEQUAL(typeid(i), typeid(B));
 	}
 
-	void testWithTwoEnum() {
+	void testTwoEnums() {
 		enum FirstEnum {
 			A, B
 		};
@@ -33,7 +33,7 @@ public:
 		UT_ASSERT_UNEQUAL(typeid(A), typeid(C));
 	}
 
-	void testAnonymousEnum() {
+	void testAnonymousEnums() {
 		enum {
 			A, B
 		};

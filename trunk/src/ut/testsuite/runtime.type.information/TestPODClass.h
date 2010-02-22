@@ -10,7 +10,7 @@ class TestPODClass : public TestCase {
 public:
 	bool getTestPoint(TestPoint&, const char*&);
 
-	void testWithSingleClass() {
+	void testSingleClass() {
 		class Class {};
 		Class c, d;
 		UT_ASSERT_EQUAL(typeid(c), typeid(d));
@@ -18,7 +18,7 @@ public:
 		UT_ASSERT_UNEQUAL(typeid(c), typeid(int));
 	}
 
-	void testWithTwoClasses() {
+	void testTwoClasses() {
 		class First {};
 		class Second {};
 		First a;

@@ -50,7 +50,7 @@ bootstrap:
 	mov $__ld_kernel_stack__, %esp /* Defined in ld script */
 
 	call _createTemporaryPagingMap
-	pushl %eax /* Save return value which is the address of level four map */
+	push %eax /* Save return value which is the address of level four map */
 
 	xor %eax, %eax
 	bts $CR0_BIT_PROTECTION_ENABLED, %eax
@@ -90,10 +90,6 @@ _64bitMode:
 	mov $(dataSegmentDescriptor - globalDescriptorTable), %ax
 	mov %ax, %ds
 
-	/**
-	 * loadKernelImage() is compiled to 64-bit code, so use 64-bit
-	 * calling convention
-	 */
 	mov $kernelImage, %rdi
 	mov $(kernelImageEnd - kernelImage), %rsi
 	call loadKernelImage
@@ -105,4 +101,3 @@ _64bitMode:
 kernelImage:
 .incbin "../src/kernel.elf"
 kernelImageEnd:
-	.long 0

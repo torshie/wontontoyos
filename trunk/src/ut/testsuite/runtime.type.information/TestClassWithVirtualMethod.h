@@ -3,7 +3,6 @@
 
 #include "ut/framework/UnitTesting.h"
 #include "cxx/rtti.h"
-#include "cxx/new.h"
 
 namespace kernel {
 

@@ -10,27 +10,27 @@ class TestBasename : public TestCase {
 public:
 	bool getTestPoint(TestPoint&, const char*&);
 
-	void testWithSimpleRelativePath() {
+	void testSimpleRelativePath() {
 		UT_ASSERT_EQUAL(Utils::basename("dir/file"), "file");
 	}
 
-	void testWithNakedPath() {
+	void testNakedPath() {
 		UT_ASSERT_EQUAL(Utils::basename("file"), "file");
 	}
 
-	void testWithEmptyPath() {
+	void testEmptyPath() {
 		UT_ASSERT_EQUAL(Utils::basename(""), "");
 	}
 
-	void testWithAbsolutePath() {
+	void testAbsolutePath() {
 		UT_ASSERT_EQUAL(Utils::basename("/file"), "file");
 	}
 
-	void testWithDirectoryPath() {
+	void testDirectoryPath() {
 		UT_ASSERT_EQUAL(Utils::basename("/dir/"), "dir");
 	}
 
-	void testWithNullString() {
+	void testNullString() {
 		UT_ASSERT_EQUAL(Utils::basename(0), (const char*)0);
 	}
 };

@@ -3,6 +3,7 @@
 
 #include "InterruptDescriptorTable.h"
 #include "Printer.h"
+#include "System.h"
 #include <generic/type.h>
 
 namespace kernel {
@@ -18,8 +19,7 @@ public:
 		Printer& console = getSingleInstance<Printer>();
 		console << "#Page Fault: accessing " << linearAddress << "\n";
 
-		for (;;)
-			;
+		System::halt();
 	}
 
 private:
