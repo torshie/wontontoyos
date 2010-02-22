@@ -39,6 +39,9 @@ gch-clean:
 	@echo "  CLEAN.GCH" `basename $$PWD`
 	@rm -rf *.gch
 	
+$(LIBS):
+	$(FOREIGN_BUILD)
+	
 mfile-clean:
 	$(MAKE_IN_SUBDIR)
 	@echo "  CLEAN.MFILE" `basename $$PWD`
@@ -48,8 +51,5 @@ veryclean:
 	$(MAKE_IN_SUBDIR)
 	@echo "  VERYCLEAN" `basename $$PWD`
 	@rm -rf *.gch *.mfile *.o $(CLEAN)
-	
-$(LIBS):
-	@$(MAKE) -C `dirname $@` `basename $@`
 
 -include $(MFILES)

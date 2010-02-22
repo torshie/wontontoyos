@@ -11,15 +11,18 @@ build: $(IMAGE)
 include $(WONTON)/Makefile.variable
 include $(WONTON)/Makefile.inc
 
-$(IMAGE): $(OBJS) $(LIBS) $(LD_SCRIPT)
+$(IMAGE): $(OBJS) $(LIBS) $(LD_SCRIPT) $(FOREIGN_OBJS) $(LIBS)
 	@echo "  LD" $@
 	@$(LD) -T $(LD_SCRIPT) $(OBJS) $(FOREIGN_OBJS) $(LIBS) -o $@
 	@echo "  OBJCOPY" $@
 	@$(OBJCOPY) -O binary $@
 
-$(ELF_KERNEL):
-	@$(MAKE) -C ../src `basename $@`
+$(FOREIGN_OBJS):
+	$(FOREIGN_MAKE)
 
+$(ELF_KERNEL):
+	$(FOREIGN_BUILD)
+	
 createTemporaryPagingMap.o: $(OBJ32)
 	@cp $< $@
 

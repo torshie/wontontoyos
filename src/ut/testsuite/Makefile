@@ -1,8 +1,5 @@
 build: compile
 
-SUBDIR = runtime.type.information sexy.template memory.management unit.testing.framework \
-		utilities
-
 INSTALLER = installTestSuite
 OBJS = $(INSTALLER).o
 MFILES = $(INSTALLER).mfile
