@@ -1,8 +1,6 @@
-SUBDIR = cxx lib src boot inc
-
 all: build
 
-build:
+build: compile
 	$(MAKE_IN_SUBDIR)
 
 include $(WONTON)/Makefile.variable
