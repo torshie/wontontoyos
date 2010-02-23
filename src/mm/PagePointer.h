@@ -26,12 +26,10 @@ public:
 		DIRTY = 1 << 6,
 		GLOBAL = 1 << 8,
 		NO_EXECUTE = (U64)1 << 63,
-		NUMBER_OF_POINTERS_PER_PAGE = PAGE_SIZE / sizeof(U64),
+		POINTERS_PER_PAGE = PAGE_SIZE / sizeof(U64),
 
-		SIZE_OF_POINTED_MEMORY =
-				(LEVEL == 1) ? (U64)PAGE_SIZE
-						: (U64)NUMBER_OF_POINTERS_PER_PAGE
-								* PagePointer<LEVEL - 1>::SIZE_OF_POINTED_MEMORY
+		MEMORY_POINTED = (LEVEL == 1) ? (U64)PAGE_SIZE
+				: (U64)POINTERS_PER_PAGE * PagePointer<LEVEL - 1>::MEMORY_POINTED
 	};
 
 	union {
@@ -53,7 +51,7 @@ public:
 			U8 noExecute:1;
 		} __attribute__((packed));
 
-		U64 physicalAddress;
+		U64 address;
 	};
 
 	static PagePointer* getPointerToKernelAddress(void* pointer) {
@@ -65,10 +63,10 @@ public:
 			BUG("Invalid kernel address " << virtualAddress);
 		}
 
-		Address alignedAddress = virtualAddress / SIZE_OF_POINTED_MEMORY
-				* SIZE_OF_POINTED_MEMORY;
+		Address alignedAddress = virtualAddress / MEMORY_POINTED
+				* MEMORY_POINTED;
 
-		U64 pointerCount = (-alignedAddress) / SIZE_OF_POINTED_MEMORY;
+		U64 pointerCount = (-alignedAddress) / MEMORY_POINTED;
 		U64 spaceUsed = pointerCount * sizeof(PagePointer);
 		return (PagePointer*)(-spaceUsed);
 	}
@@ -80,7 +78,7 @@ template<>
 class PagePointer<0> {
 public:
 	enum {
-		SIZE_OF_POINTED_MEMORY = 1
+		MEMORY_POINTED = 1
 	};
 };
 
@@ -88,10 +86,10 @@ STATIC_ASSERT_EQUAL(sizeof(PagePointer<1>), 8)
 STATIC_ASSERT_EQUAL(sizeof(PagePointer<2>), 8)
 STATIC_ASSERT_EQUAL(sizeof(PagePointer<3>), 8)
 STATIC_ASSERT_EQUAL(sizeof(PagePointer<4>), 8)
-STATIC_ASSERT_EQUAL(PagePointer<1>::SIZE_OF_POINTED_MEMORY, PAGE_SIZE)
-STATIC_ASSERT_EQUAL(PagePointer<2>::SIZE_OF_POINTED_MEMORY, PAGE_SIZE * 512)
-STATIC_ASSERT_EQUAL(PagePointer<3>::SIZE_OF_POINTED_MEMORY, PAGE_SIZE * 512 * 512)
-STATIC_ASSERT_EQUAL(PagePointer<4>::SIZE_OF_POINTED_MEMORY, PAGE_SIZE * 512LL * 512 * 512)
+STATIC_ASSERT_EQUAL(PagePointer<1>::MEMORY_POINTED, PAGE_SIZE)
+STATIC_ASSERT_EQUAL(PagePointer<2>::MEMORY_POINTED, PAGE_SIZE * 512)
+STATIC_ASSERT_EQUAL(PagePointer<3>::MEMORY_POINTED, PAGE_SIZE * 512 * 512)
+STATIC_ASSERT_EQUAL(PagePointer<4>::MEMORY_POINTED, PAGE_SIZE * 512LL * 512 * 512)
 
 } /* namespace kernel */
 

@@ -22,7 +22,7 @@ void* PageMap::mapTempPage(Address physicalAddress) {
 	if (offset == KERNEL_TEMP_AREA_END) {
 		return 0;
 	}
-	freeVirtualPage->physicalAddress = physicalAddress;
+	freeVirtualPage->address = physicalAddress;
 	freeVirtualPage->present = 1;
 	freeVirtualPage->writable = 1;
 
@@ -46,7 +46,7 @@ Address PageMap::unmapTempPage(void* pointer) {
 
 void PageMap::reload() {
 	PageTable<4>* levelFour = (PageTable<4>*)(PageTable<4>::LOWEST_TABLE_ADDRESS);
-	Address address = levelFour->pointer[PagePointer<4>::NUMBER_OF_POINTERS_PER_PAGE - 1].page
+	Address address = levelFour->pointer[PagePointer<4>::POINTERS_PER_PAGE - 1].page
 								* PAGE_SIZE;
 	asm volatile("mov %0, %%cr3" : : "r"(address));
 }
