@@ -16,7 +16,7 @@ enum {
 	NUMBER_OF_LEVEL_FOUR_PAGE_POINTERS = 1,
 	PAGING_MAP_SIZE = (NUMBER_OF_LEVEL_TWO_PAGE_POINTERS + NUMBER_OF_LEVEL_THREE_PAGE_POINTERS
 							+ NUMBER_OF_LEVEL_FOUR_PAGE_POINTERS + 1) * PAGE_SIZE,
-	SIZE_OF_MAPPED_MEMORY = PagePointer<2>::SIZE_OF_POINTED_MEMORY
+	SIZE_OF_MAPPED_MEMORY = PagePointer<2>::MEMORY_POINTED
 									* NUMBER_OF_LEVEL_TWO_PAGE_POINTERS,
 };
 
@@ -48,29 +48,29 @@ static PagePointer<4>* createIdentityAndHigherHalfPagingMap() {
 
 	PagePointer<2>* levelTwo = (PagePointer<2>*)offset;
 	for (int i = 0; i < NUMBER_OF_LEVEL_TWO_PAGE_POINTERS; ++i) {
-		levelTwo[i].physicalAddress = (Address)levelOne + PAGE_SIZE * i;
+		levelTwo[i].address = (Address)levelOne + PAGE_SIZE * i;
 		levelTwo[i].writable = 1;
 		levelTwo[i].present = 1;
 	}
 	offset += PAGE_SIZE * NUMBER_OF_LEVEL_THREE_PAGE_POINTERS;
 
 	PagePointer<3>* levelThree = (PagePointer<3>*)offset;
-	levelThree[0].physicalAddress = (Address)levelTwo;
+	levelThree[0].address = (Address)levelTwo;
 	levelThree[0].present = 1;
 	levelThree[0].writable = 1;
 	offset += PAGE_SIZE * NUMBER_OF_LEVEL_FOUR_PAGE_POINTERS;
 
 	PagePointer<4>* levelFour = (PagePointer<4>*)offset;
-	levelFour[0].physicalAddress = (Address)levelThree;
+	levelFour[0].address = (Address)levelThree;
 	levelFour[0].present = 1;
 	levelFour[0].writable = 1;
 
 	enum {
 		SIZE_OF_SPACE_ABOVE_BASE_ADDRESS = -KERNEL_VIRTUAL_BASE,
-		POINTERS_NEEDED = SIZE_OF_SPACE_ABOVE_BASE_ADDRESS / PagePointer<4>::SIZE_OF_POINTED_MEMORY,
-		HIGHER_HALF_ENTRY = PagePointer<4>::NUMBER_OF_POINTERS_PER_PAGE - POINTERS_NEEDED
+		POINTERS_NEEDED = SIZE_OF_SPACE_ABOVE_BASE_ADDRESS / PagePointer<4>::MEMORY_POINTED,
+		HIGHER_HALF_ENTRY = PagePointer<4>::POINTERS_PER_PAGE - POINTERS_NEEDED
 	};
-	levelFour[HIGHER_HALF_ENTRY].physicalAddress = (Address)levelThree;
+	levelFour[HIGHER_HALF_ENTRY].address = (Address)levelThree;
 	levelFour[HIGHER_HALF_ENTRY].present = 1;
 	levelFour[HIGHER_HALF_ENTRY].writable = 1;
 
@@ -88,9 +88,9 @@ extern "C" PagePointer<4>* createTemporaryPagingMap() {
 
 	PagePointer<4>* levelFour = createIdentityAndHigherHalfPagingMap();
 	enum {
-		SELF_REFERENCE_ENTRY = PagePointer<4>::NUMBER_OF_POINTERS_PER_PAGE - 1
+		SELF_REFERENCE_ENTRY = PagePointer<4>::POINTERS_PER_PAGE - 1
 	};
-	levelFour[SELF_REFERENCE_ENTRY].physicalAddress = (Address)levelFour;
+	levelFour[SELF_REFERENCE_ENTRY].address = (Address)levelFour;
 	levelFour[SELF_REFERENCE_ENTRY].present = 1;
 	levelFour[SELF_REFERENCE_ENTRY].writable = 1;
 

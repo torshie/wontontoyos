@@ -27,15 +27,15 @@ public:
 				LEVEL == 1 ? 0xFFFFFF8000000000 : 0,
 	};
 
-	PagePointer<LEVEL> pointer[PagePointer<LEVEL>::NUMBER_OF_POINTERS_PER_PAGE];
+	PagePointer<LEVEL> pointer[PagePointer<LEVEL>::POINTERS_PER_PAGE];
 
 	static PageTable* create(Address virtualAddress);
+	static void destroy(PageTable* table);
 
 	static PageTable* create(void* pointer) {
 		return create((Address)pointer);
 	}
 
-	static void destroy(PageTable*);
 };
 
 STATIC_ASSERT_EQUAL(sizeof(PageTable<1>), PAGE_SIZE)
@@ -43,7 +43,6 @@ STATIC_ASSERT_EQUAL(sizeof(PageTable<2>), PAGE_SIZE)
 STATIC_ASSERT_EQUAL(sizeof(PageTable<3>), PAGE_SIZE)
 STATIC_ASSERT_EQUAL(sizeof(PageTable<4>), PAGE_SIZE)
 
-// XXX Test this method
 template<int LEVEL>
 PageTable<LEVEL>* PageTable<LEVEL>::create(Address virtualAddress) {
 	if ((virtualAddress < LOWEST_TABLE_ADDRESS && virtualAddress != 0)
@@ -59,14 +58,24 @@ PageTable<LEVEL>* PageTable<LEVEL>::create(Address virtualAddress) {
 	PageMap::unmapTempPage(pageTable);
 
 	if (virtualAddress != 0) {
-		PagePointer<1>* pagePointer = PagePointer<1>::getPointerToKernelAddress(virtualAddress);
-		pagePointer->page = physicalAddress / PAGE_SIZE;
-		pagePointer->present = 1;
-		pagePointer->writable = 1;
+		PagePointer<1>* pointer = PagePointer<1>::getPointerToKernelAddress(virtualAddress);
+		pointer->page = physicalAddress / PAGE_SIZE;
+		pointer->present = 1;
+		pointer->writable = 1;
 		PageMap::reload();
 	}
 
 	return (PageTable<LEVEL>*)virtualAddress;
+}
+
+template<int LEVEL>
+void PageTable<LEVEL>::destroy(PageTable* table) {
+	PagePointer<1>* pointer = PagePointer<1>::getPointerToKernelAddress(table);
+	Address physicalAddress = pointer->page * PAGE_SIZE;
+	pointer->present = 0;
+	PageMap::reload();
+	PhysicalPageAllocator& allocator = getSingleInstance<PhysicalPageAllocator>();
+	allocator.release(physicalAddress);
 }
 
 } /* namespace kernel */
