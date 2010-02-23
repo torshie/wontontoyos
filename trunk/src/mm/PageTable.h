@@ -59,8 +59,7 @@ PageTable<LEVEL>* PageTable<LEVEL>::create(Address virtualAddress) {
 	PageMap::unmapTempPage(pageTable);
 
 	if (virtualAddress != 0) {
-		PagePointer<LEVEL + 1>* pagePointer =
-				PagePointer<LEVEL + 1>::getPointerToKernelAddress(virtualAddress);
+		PagePointer<1>* pagePointer = PagePointer<1>::getPointerToKernelAddress(virtualAddress);
 		pagePointer->page = physicalAddress / PAGE_SIZE;
 		pagePointer->present = 1;
 		pagePointer->writable = 1;

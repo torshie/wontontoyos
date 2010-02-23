@@ -6,6 +6,7 @@
 namespace kernel {
 /**
  * A simple elf64 executable loader.
+ *
  * This simple loader can only load *static* linked elf64 executable. It lacks many necessary
  * checks, so it can only be used to load *trusted* elf64 binaries.
  */

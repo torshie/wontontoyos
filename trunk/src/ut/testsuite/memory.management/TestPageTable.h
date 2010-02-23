@@ -12,9 +12,11 @@ public:
 	bool getTestPoint(TestPoint&, const char*&);
 
 	void testCreateLevelThreePageTable() {
-//		PagePointer<4>* pointer = PagePointer<4>::getPointerToKernelAddress(KERNEL_VIRTUAL_BASE
-//				+ PagePointer<4>::SIZE_OF_POINTED_MEMORY);
-//		BUG(pointer);
+		PagePointer<3>* pointer = PagePointer<3>::getPointerToKernelAddress(KERNEL_VIRTUAL_BASE
+				+ PagePointer<4>::SIZE_OF_POINTED_MEMORY);
+		PageTable<3>* table = PageTable<3>::create(pointer);
+		UT_ASSERT_TRUE(pointer->present);
+		UT_ASSERT_TRUE(pointer->writable);
 	}
 };
 
