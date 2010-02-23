@@ -17,8 +17,7 @@ $(KERNEL): $(X64KERNEL)
 
 $(X64KERNEL): $(ALL_OBJS) $(LIBS) $(LD_SCRIPT)
 	@echo "  LD" $@
-	@$(LD) -T $(LD_SCRIPT) $(ALL_OBJS) \
-		$(LIBS) -o $@ -Map=$(MAP)
+	@$(LD) -T $(LD_SCRIPT) $(ALL_OBJS) $(LIBS) -o $@ -Map=$(MAP)
 
 dump: $(X64KERNEL)
 	$(OBJDUMP) $< -D --demangle | less

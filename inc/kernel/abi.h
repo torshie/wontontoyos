@@ -5,8 +5,7 @@
 
 BEGIN_DEFINE(KernelApplicationBinaryInterfaceConstant)
 
-/**
- * !!!!!!!!!!!!!!!
+/* !!!!!!!!!!!!!!!
  * !!! Warning !!!
  * !!!!!!!!!!!!!!!
  * If you want to change these variables, make sure you have also changed the corresponding

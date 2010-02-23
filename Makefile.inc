@@ -40,7 +40,7 @@ gch-clean:
 	@rm -rf *.gch
 	
 $(LIBS):
-	$(FOREIGN_BUILD)
+	@$(EXTERNAL_BUILD)
 	
 mfile-clean:
 	$(MAKE_IN_SUBDIR)

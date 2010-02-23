@@ -21,8 +21,8 @@ $(DISK): $(KERNEL)
 	@rm .tmp
 	@touch $(DISK)
 
-$(KERNEL): build
-	@$(MAKE) -C `dirname $@` `basename $@`
+$(KERNEL):
+	@$(EXTERNAL_MAKE)
 
 debug: $(DISK)
 	@$(QEMU) -S -s $< -monitor stdio
