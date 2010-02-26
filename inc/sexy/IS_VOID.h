@@ -3,16 +3,14 @@
 
 namespace kernel {
 
-template<typename T>
-class IS_VOID {
+template<typename T> class IS_VOID {
 public:
 	enum {
 		value = 0
 	};
 };
 
-template<>
-class IS_VOID<void> {
+template<> class IS_VOID<void> {
 public:
 	enum {
 		value = 1

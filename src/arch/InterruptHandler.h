@@ -8,11 +8,9 @@
 
 namespace kernel {
 
-template<int INTERUPT>
-class InterruptHandler;
+template<int INTERUPT> class InterruptHandler;
 
-template<>
-class InterruptHandler<InterruptDescriptorTable::PAGE_FAULT> {
+template<> class InterruptHandler<InterruptDescriptorTable::PAGE_FAULT> {
 public:
 	static void handle() {
 		U64 linearAddress = getControlRegister2();

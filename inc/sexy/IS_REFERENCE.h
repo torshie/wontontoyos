@@ -5,16 +5,14 @@
 
 namespace kernel {
 
-template<typename T>
-class IS_REFERENCE {
+template<typename T> class IS_REFERENCE {
 public:
 	enum {
 		value = 0
 	};
 };
 
-template<typename T>
-class IS_REFERENCE<T&> {
+template<typename T> class IS_REFERENCE<T&> {
 public:
 	enum {
 		value = 1

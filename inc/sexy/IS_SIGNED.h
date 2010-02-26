@@ -5,8 +5,7 @@
 
 namespace kernel {
 
-template<typename T>
-class IS_SIGNED {
+template<typename T> class IS_SIGNED {
 public:
 	enum {
 		value = 0
@@ -17,8 +16,7 @@ public:
 #error "SPECIALIZE_IS_SIGNED_VALUE is already defined"
 #else
 #define SPECIALIZE_IS_SIGNED_VALUE(type) \
-	template<> \
-	class IS_SIGNED<type> { \
+	template<> class IS_SIGNED<type> { \
 	public: \
 		enum { \
 			value = 1 \

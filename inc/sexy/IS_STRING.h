@@ -5,24 +5,21 @@
 
 namespace kernel {
 
-template<typename T>
-class IS_STRING {
+template<typename T> class IS_STRING {
 public:
 	enum {
 		value = 0
 	};
 };
 
-template<typename T>
-class IS_STRING<T&> {
+template<typename T> class IS_STRING<T&> {
 public:
 	enum {
 		value = IS_STRING<T>::value
 	};
 };
 
-template<typename T>
-class IS_STRING<const T> {
+template<typename T> class IS_STRING<const T> {
 public:
 	enum {
 		value = IS_STRING<T>::value
@@ -33,8 +30,7 @@ public:
 #	error "SPECIALIZE_IS_STRING_VALUE is already defined"
 #else
 #	define SPECIALIZE_IS_STRING_VALUE(type) \
-		template<> \
-		class IS_STRING<type> { \
+		template<> class IS_STRING<type> { \
 		public: \
 			enum { \
 				value = 1 \
@@ -47,16 +43,14 @@ SPECIALIZE_IS_STRING_VALUE(const char*)
 SPECIALIZE_IS_STRING_VALUE(char[])
 SPECIALIZE_IS_STRING_VALUE(const char[])
 
-template<int SIZE>
-class IS_STRING<char[SIZE]> {
+template<int SIZE> class IS_STRING<char[SIZE]> {
 public:
 	enum {
 		value = 1
 	};
 };
 
-template<int SIZE>
-class IS_STRING<const char[SIZE]> {
+template<int SIZE> class IS_STRING<const char[SIZE]> {
 public:
 	enum {
 		value = 1

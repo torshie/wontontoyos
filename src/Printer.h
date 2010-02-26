@@ -21,8 +21,7 @@ class Printer {
 	Printer(const Printer&);
 	const Printer& operator=(const Printer&);
 
-	template<typename Integer>
-	class UnsignedIntegerPrinter {
+	template<typename Integer> class UnsignedIntegerPrinter {
 	public:
 		static Printer& print(Integer data, Printer& printer) {
 			char tmp[sizeof(Integer) * 2 + 1] = {0};
@@ -39,8 +38,7 @@ class Printer {
 		}
 	};
 
-	template<typename Integer>
-	class SignedIntegerPrinter {
+	template<typename Integer> class SignedIntegerPrinter {
 	public:
 		/**
 		 * XXX Optimize
@@ -60,16 +58,14 @@ class Printer {
 		}
 	};
 
-	template<typename Integer>
-	class EnumPrinter {
+	template<typename Integer> class EnumPrinter {
 	public:
 		static Printer& print(Integer data, Printer& printer) {
 			return UnsignedIntegerPrinter<U64>::print((U64)data, printer);
 		}
 	};
 
-	template<typename String>
-	class StringPrinter {
+	template<typename String> class StringPrinter {
 	public:
 		static Printer& print(const String& data, Printer& printer) {
 			if (data == 0) {
@@ -83,24 +79,22 @@ class Printer {
 		}
 	};
 
-	template<typename Pointer>
-	class PointerPrinter {
+	template<typename Pointer> class PointerPrinter {
 	public:
 		static Printer& print(Pointer pointer, Printer& printer) {
 			return printer << (Address)pointer;
 		}
 	};
 
-	template<typename T>
-	class NullPrinter {
+	template<typename T> class NullPrinter {
 	public:
 		static Printer& print(const T&, Printer& printer) {
 			return printer;
 		}
 	};
+
 public:
-	template<typename T>
-	Printer& operator << (const T& data) {
+	template<typename T> Printer& operator << (const T& data) {
 		typedef typename TYPE_SELECTOR<IS_INTEGER<T>::value,
 							typename TYPE_SELECTOR<IS_SIGNED<T>::value,
 								SignedIntegerPrinter<T>,

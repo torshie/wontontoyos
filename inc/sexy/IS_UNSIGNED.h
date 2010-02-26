@@ -7,8 +7,7 @@
 
 namespace kernel {
 
-template<typename T>
-class IS_UNSIGNED {
+template<typename T> class IS_UNSIGNED {
 public:
 	enum {
 		value = IS_INTEGER<T>::value ? (!IS_SIGNED<T>::value) : 0

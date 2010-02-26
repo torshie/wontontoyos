@@ -3,8 +3,7 @@
 
 namespace kernel {
 
-template<typename T>
-class IS_INTEGER {
+template<typename T> class IS_INTEGER {
 public:
 	enum {
 		value = 0
@@ -15,8 +14,7 @@ public:
 #error "SPECIALIZE_IS_INTEGER_VALUE is already defined"
 #else
 #define SPECIALIZE_IS_INTEGER_VALUE(type) \
-	template<> \
-	class IS_INTEGER<type> { \
+	template<> class IS_INTEGER<type> { \
 	public: \
 		enum { \
 			value = 1 \

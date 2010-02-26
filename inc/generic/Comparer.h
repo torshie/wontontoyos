@@ -9,8 +9,7 @@
 
 namespace kernel {
 
-template<typename Left, typename Right>
-class Comparer {
+template<typename Left, typename Right> class Comparer {
 	class OldStringComparer {
 	public:
 		static bool equal(const char* a, const char* b) {
@@ -18,24 +17,21 @@ class Comparer {
 		}
 	};
 
-	template<typename L, typename R>
-	class PointerComparer {
+	template<typename L, typename R> class PointerComparer {
 	public:
 		static bool equal(L l, R r) {
 			return (Address)l == (Address)r;
 		}
 	};
 
-	template<typename L, typename R>
-	class OperatorComparer {
+	template<typename L, typename R> class OperatorComparer {
 	public:
 		static bool equal(const L& left, const R& right) {
 			return left == right;
 		}
 	};
 
-	template<typename Integer>
-	class IntegerComparer {
+	template<typename Integer> class IntegerComparer {
 	public:
 		static bool equal(const Integer& left, const Integer& right) {
 			return left == right;

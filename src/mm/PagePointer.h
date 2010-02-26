@@ -9,8 +9,7 @@
 
 namespace kernel {
 
-template<int LEVEL>
-class PagePointer {
+template<int LEVEL> class PagePointer {
 	PagePointer(const PagePointer&);
 	const PagePointer& operator = (const PagePointer&);
 public:
@@ -74,8 +73,7 @@ public:
 
 // XXX Find out why we need this to terminate template recursive instantiation, and remove
 // this template specialization
-template<>
-class PagePointer<0> {
+template<> class PagePointer<0> {
 public:
 	enum {
 		MEMORY_POINTED = 1
