@@ -5,32 +5,28 @@
 
 namespace kernel {
 
-template<typename T>
-class IS_ARRAY {
+template<typename T> class IS_ARRAY {
 public:
 	enum {
 		value = 0
 	};
 };
 
-template<typename T, U64 N>
-class IS_ARRAY<T[N]> {
+template<typename T, U64 N> class IS_ARRAY<T[N]> {
 public:
 	enum {
 		value = 1
 	};
 };
 
-template<typename T>
-class IS_ARRAY<T[]> {
+template<typename T> class IS_ARRAY<T[]> {
 public:
 	enum {
 		value = 1
 	};
 };
 
-template<typename T>
-class IS_ARRAY<T[0]> {
+template<typename T> class IS_ARRAY<T[0]> {
 public:
 	enum {
 		value = 1

@@ -6,16 +6,14 @@
 
 namespace kernel {
 
-template<typename T>
-class IS_POINTER {
+template<typename T> class IS_POINTER {
 public:
 	enum {
 		value = 0 | IS_POINTER_TO_MEMBER<T>::value
 	};
 };
 
-template<typename T>
-class IS_POINTER<T*> {
+template<typename T> class IS_POINTER<T*> {
 public:
 	enum {
 		value = 1
@@ -23,8 +21,7 @@ public:
 };
 
 
-template<typename T>
-class IS_POINTER<T const> {
+template<typename T> class IS_POINTER<T const> {
 public:
 	enum {
 		value = IS_POINTER<T>::value

@@ -3,8 +3,7 @@
 
 namespace kernel {
 
-template<typename T>
-class IS_CLASS {
+template<typename T> class IS_CLASS {
 	typedef char One;
 	typedef struct { char member[2]; } Two;
 

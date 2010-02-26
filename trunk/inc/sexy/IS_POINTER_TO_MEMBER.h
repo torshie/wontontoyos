@@ -3,16 +3,14 @@
 
 namespace kernel {
 
-template<typename T>
-class IS_POINTER_TO_MEMBER {
+template<typename T> class IS_POINTER_TO_MEMBER {
 public:
 	enum {
 		value = 0
 	};
 };
 
-template<typename T, typename Class>
-class IS_POINTER_TO_MEMBER<T Class::*> {
+template<typename T, typename Class> class IS_POINTER_TO_MEMBER<T Class::*> {
 public:
 	enum {
 		value = 1

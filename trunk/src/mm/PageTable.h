@@ -11,8 +11,7 @@
 
 namespace kernel {
 
-template<int LEVEL>
-class PageTable {
+template<int LEVEL> class PageTable {
 private:
 	PageTable() {}
 	PageTable(const PageTable&);
@@ -43,33 +42,28 @@ STATIC_ASSERT_EQUAL(sizeof(PageTable<2>), PAGE_SIZE)
 STATIC_ASSERT_EQUAL(sizeof(PageTable<3>), PAGE_SIZE)
 STATIC_ASSERT_EQUAL(sizeof(PageTable<4>), PAGE_SIZE)
 
-template<int LEVEL>
-PageTable<LEVEL>* PageTable<LEVEL>::create(Address virtualAddress) {
-	if ((virtualAddress < LOWEST_TABLE_ADDRESS && virtualAddress != 0)
-			|| virtualAddress % PAGE_SIZE != 0) {
-		BUG("Invalid virtual address: " << virtualAddress);
+template<int LEVEL> PageTable<LEVEL>* PageTable<LEVEL>::create(Address kernelAddress) {
+	if (kernelAddress < KERNEL_VIRTUAL_BASE) {
+		BUG("Address " << kernelAddress << " isn't a kernel space address");
 	}
 
+	Address tableAddress = (Address)PagePointer<LEVEL>::getPointerToKernelAddress(kernelAddress);
 	PhysicalPageAllocator& allocator = getSingleInstance<PhysicalPageAllocator>();
-
 	Address physicalAddress = (Address)allocator.allocate(PAGE_SIZE);
 	PageTable<LEVEL>* pageTable = (PageTable<LEVEL>*)PageMap::mapTempPage(physicalAddress);
 	new (pageTable)PageTable<LEVEL>();
 	PageMap::unmapTempPage(pageTable);
 
-	if (virtualAddress != 0) {
-		PagePointer<1>* pointer = PagePointer<1>::getPointerToKernelAddress(virtualAddress);
-		pointer->page = physicalAddress / PAGE_SIZE;
-		pointer->present = 1;
-		pointer->writable = 1;
-		PageMap::reload();
-	}
+	PagePointer<1>* pointer = PagePointer<1>::getPointerToKernelAddress(tableAddress);
+	pointer->page = physicalAddress / PAGE_SIZE;
+	pointer->present = 1;
+	pointer->writable = 1;
+	PageMap::reload();
 
-	return (PageTable<LEVEL>*)virtualAddress;
+	return (PageTable<LEVEL>*)tableAddress;
 }
 
-template<int LEVEL>
-void PageTable<LEVEL>::destroy(PageTable* table) {
+template<int LEVEL> void PageTable<LEVEL>::destroy(PageTable* table) {
 	PagePointer<1>* pointer = PagePointer<1>::getPointerToKernelAddress(table);
 	Address physicalAddress = pointer->page * PAGE_SIZE;
 	pointer->present = 0;

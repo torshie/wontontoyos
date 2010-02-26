@@ -10,8 +10,7 @@
 
 namespace kernel {
 
-template<typename T>
-class IS_ENUM {
+template<typename T> class IS_ENUM {
 public:
 	enum {
 		value = ! (IS_POINTER<T>::value || IS_REFERENCE<T>::value || IS_INTEGER<T>::value
