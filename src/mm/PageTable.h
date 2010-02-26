@@ -12,10 +12,19 @@
 namespace kernel {
 
 template<int LEVEL> class PageTable {
-private:
+	friend class TestPageTable;
+	friend class PageMap;
+
 	PageTable() {}
 	PageTable(const PageTable&);
 	const PageTable& operator = (const PageTable&);
+
+	static PageTable* create(Address virtualAddress);
+	static PageTable* create(void* pointer) {
+		return create((Address)pointer);
+	}
+
+	static void destroy(PageTable* table);
 
 public:
 	enum {
@@ -27,14 +36,6 @@ public:
 	};
 
 	PagePointer<LEVEL> pointer[PagePointer<LEVEL>::POINTERS_PER_PAGE];
-
-	static PageTable* create(Address virtualAddress);
-	static void destroy(PageTable* table);
-
-	static PageTable* create(void* pointer) {
-		return create((Address)pointer);
-	}
-
 };
 
 STATIC_ASSERT_EQUAL(sizeof(PageTable<1>), PAGE_SIZE)
