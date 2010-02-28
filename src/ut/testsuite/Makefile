@@ -6,7 +6,7 @@ MFILES = $(INSTALLER).mfile
 CLEAN = $(INSTALLER).cpp $(MFILES)
 
 include $(WONTON)/Makefile.variable
-include $(WONTON)/Makefile.inc
+include $(WONTON)/Makefile.rule
 
 INSTALLER_GENERATOR = $(WONTON)/src/ut/framework/GenerateSuiteInstaller.sh
 

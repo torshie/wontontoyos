@@ -1,4 +1,4 @@
 build: compile
 
 include $(WONTON)/Makefile.variable
-include $(WONTON)/Makefile.inc
+include $(WONTON)/Makefile.rule

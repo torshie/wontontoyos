@@ -3,7 +3,7 @@ all: build
 REQ_DIR = boot
 
 include $(WONTON)/Makefile.variable
-include $(WONTON)/Makefile.inc
+include $(WONTON)/Makefile.rule
 
 QEMU = qemu-system-x86_64
 DISK = disk.img

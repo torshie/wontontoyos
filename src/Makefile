@@ -7,7 +7,7 @@ LIBS = ../cxx/libcxx.a ../lib/libwonton.a
 REQ_DIR = ../cxx ../lib
 
 include $(WONTON)/Makefile.variable
-include $(WONTON)/Makefile.inc
+include $(WONTON)/Makefile.rule
 
 build: compile $(KERNEL)
 
