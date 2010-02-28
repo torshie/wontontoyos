@@ -1,23 +1,24 @@
 KERNEL = kernel.elf
 X64KERNEL = kernel.x64
-LD_SCRIPT = kernel.ld
 MAP = link.map.txt
-CLEAN = $(KERNEL) $(X64KERNEL) $(MAP)
+LIBRARY = libkernel.a
+CLEAN = $(KERNEL) $(X64KERNEL) $(MAP) $(LIBRARY)
 LIBS = ../cxx/libcxx.a ../lib/libwonton.a
-
-build: compile $(KERNEL)
+REQ_DIR = ../cxx ../lib
 
 include $(WONTON)/Makefile.variable
 include $(WONTON)/Makefile.inc
 
+build: compile $(KERNEL)
+
 $(KERNEL): $(X64KERNEL)
-	@echo "  OBJCOPY" $@
 	@cp $< $@
+	#  OBJCOPY $@
 	@$(OBJCOPY) -O elf64-little $@
 
-$(X64KERNEL): $(ALL_OBJS) $(LIBS) $(LD_SCRIPT)
-	@echo "  LD" $@
-	@$(LD) -T $(LD_SCRIPT) $(ALL_OBJS) $(LIBS) -o $@ -Map=$(MAP)
+$(X64KERNEL): $(LIBS) $(LIBRARY) $(LIBS) $(LD_SCRIPT)
+	#  LD $@
+	@$(LD) $(LIBRARY) $(LDFLAGS) -T $(LD_SCRIPT) -o $@ -Map=$(MAP)
 
 dump: $(X64KERNEL)
 	$(OBJDUMP) $< -D --demangle | less

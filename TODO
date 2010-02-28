@@ -1,4 +1,2 @@
-*** Add support to exceptions
-
-** Improve the build system. Currently, objects under directory ut/framework/testsuite get
-compiled twice
+*** Add kernel space virtual address allocator
+*** Add exception support

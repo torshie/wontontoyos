@@ -14,6 +14,7 @@ public:
 	static int strcmp(const char* first, const char* second);
 	static Size strlen(const char* string);
 	static const char* basename(const char* path);
+	static U64 ceilingDivide(U64 value, U64 round);
 };
 
 } /* namespace kernel */

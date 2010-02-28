@@ -1,34 +1,33 @@
 all: build
 
-build: compile
-	$(MAKE_IN_SUBDIR)
+REQ_DIR = boot
 
 include $(WONTON)/Makefile.variable
 include $(WONTON)/Makefile.inc
 
 QEMU = qemu-system-x86_64
 DISK = disk.img
-KERNEL = boot/image.mboot
+KERNEL = boot/kernel.mboot
 MOUNT = /Volumes/boss
 
 $(DISK): $(KERNEL)
-	@echo '  ATTACH' $@
+	#  ATTACH $(DISK)
 	@echo `hdiutil attach $@|grep boss|cut -f 1|sed 's/s1//'` > .tmp
-	@echo '  CP' $<
+	#  LOAD $(KERNEL)
 	@cp $(KERNEL) $(MOUNT)
-	@echo '  DETACH' $@
+	#  DETACH $(DISK)
 	@hdiutil detach `cat .tmp` > /dev/null
 	@rm .tmp
 	@touch $(DISK)
 
-$(KERNEL):
-	@$(EXTERNAL_MAKE)
+debug: debug-build $(DISK)
+	$(QEMU) -s $(DISK) -monitor stdio
 
-debug: $(DISK)
-	@$(QEMU) -S -s $< -monitor stdio
+debug-build:
+	@$(MAKE) DEBUG_BUILD=1 build
 
-run: $(DISK)
-	@$(QEMU) $<
-	
-bochs: $(DISK)
+run: build $(DISK)
+	$(QEMU) $(DISK)
+
+bochs: build $(DISK)
 	bochs

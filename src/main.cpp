@@ -33,6 +33,16 @@ void main() {
 
 } /* namespace kernel */
 
+#ifdef BUILD_DEBUG_MODE_KERNEL
+static void WAIT_FOR_DEBUGGER() {
+	volatile int go = 0;
+	while (go == 0)
+		;
+}
+#else
+#	define WAIT_FOR_DEBUGGER()
+#endif
+
 extern "C" void startKernel() {
 	using namespace kernel;
 
@@ -40,6 +50,8 @@ extern "C" void startKernel() {
 	PagePointer<4>* levelFour = (PagePointer<4>*)PageTable<4>::LOWEST_TABLE_ADDRESS;
 	levelFour->present = 0;
 	PageMap::reload();
+
+	WAIT_FOR_DEBUGGER();
 
 	initCxxSupport();
 

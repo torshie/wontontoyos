@@ -9,6 +9,8 @@
 
 namespace kernel {
 
+template<int LEVEL> class PageTable;
+
 template<int LEVEL> class PagePointer {
 	PagePointer(const PagePointer&);
 	const PagePointer& operator = (const PagePointer&);
@@ -59,15 +61,30 @@ public:
 
 	static PagePointer* getPointerToKernelAddress(Address virtualAddress) {
 		if (virtualAddress < KERNEL_VIRTUAL_BASE) {
-			BUG("Invalid kernel address " << virtualAddress);
+			BUG("Invalid kernel space address " << virtualAddress);
 		}
 
-		Address alignedAddress = virtualAddress / MEMORY_POINTED
-				* MEMORY_POINTED;
-
+		Address alignedAddress = virtualAddress / MEMORY_POINTED * MEMORY_POINTED;
 		U64 pointerCount = (-alignedAddress) / MEMORY_POINTED;
 		U64 spaceUsed = pointerCount * sizeof(PagePointer);
 		return (PagePointer*)(-spaceUsed);
+	}
+
+	static PagePointer* getPointerToUserAddress(void* pointer) {
+		return (PagePointer*)getPointerToUserAddress((Address)pointer);
+	}
+
+	static PagePointer* getPointerToUserAddress(Address virtualAddress) {
+		enum {
+			USER_ADDRESS_MAX = 0x00007FFFFFFFFFFFLL
+		};
+		if (virtualAddress > USER_ADDRESS_MAX) {
+			BUG("Invalid user space address: " << virtualAddress);
+		}
+
+		Address pointerOffset = virtualAddress / MEMORY_POINTED;
+		return (PagePointer*)(pointerOffset * sizeof(PagePointer)
+				+ PageTable<LEVEL>::LOWEST_TABLE_ADDRESS);
 	}
 } __attribute__((packed));
 
