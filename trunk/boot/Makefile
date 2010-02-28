@@ -7,7 +7,7 @@ EXTRA_OBJS = ../lib/exe/SimpleLoader.o ../lib/generic/Utils.o
 REQ_DIR = ../cxx ../src
 
 include $(WONTON)/Makefile.variable
-include $(WONTON)/Makefile.inc
+include $(WONTON)/Makefile.rule
 
 build: $(IMAGE)
 
