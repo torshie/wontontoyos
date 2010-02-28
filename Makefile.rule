@@ -33,7 +33,7 @@ $(CLEAN_SUBDIR) $(COMPILE_SUBDIR) $(VERYCLEAN_SUBDIR) $(MFILE_SUBDIR) $(BUILD_RE
 	@$(CXX) $(CXXFLAGS) -D__ASM__ -c -o $@ $<
 
 %.x86: %.cpp
-	#  CC-x86 $@
+	#  CC.X86 $@
 	@$(CXX) $(CXXFLAGS32) -c -o $@ $<
 	#  OBJCOPY $@
 	@$(OBJCOPY) -O elf64-x86-64 $@
