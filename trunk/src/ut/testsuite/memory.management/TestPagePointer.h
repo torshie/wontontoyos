@@ -3,6 +3,7 @@
 
 #include "ut/framework/UnitTesting.h"
 #include "mm/PagePointer.h"
+#include "mm/PageTable.h"
 
 namespace kernel {
 
@@ -44,6 +45,30 @@ public:
 		UT_ASSERT_EQUAL(three, LAST_POINTER);
 		UT_ASSERT_EQUAL(two, LAST_POINTER);
 		UT_ASSERT_EQUAL(one, LAST_POINTER - sizeof(PagePointer<1>));
+	}
+
+	void testGetPointerToUserAddressZero() {
+		PagePointer<1>* one = PagePointer<1>::getPointerToUserAddress((Address)0);
+		PagePointer<2>* two = PagePointer<2>::getPointerToUserAddress((Address)0);
+		PagePointer<3>* three = PagePointer<3>::getPointerToUserAddress((Address)0);
+		PagePointer<4>* four = PagePointer<4>::getPointerToUserAddress((Address)0);
+
+		UT_ASSERT_EQUAL(one, PageTable<1>::LOWEST_TABLE_ADDRESS);
+		UT_ASSERT_EQUAL(two, PageTable<2>::LOWEST_TABLE_ADDRESS);
+		UT_ASSERT_EQUAL(three, PageTable<3>::LOWEST_TABLE_ADDRESS);
+		UT_ASSERT_EQUAL(four, PageTable<4>::LOWEST_TABLE_ADDRESS);
+	}
+
+	void testGetPointerToUserAddressSecondPageAddress() {
+		PagePointer<1>* one = PagePointer<1>::getPointerToUserAddress((Address)PAGE_SIZE);
+		PagePointer<2>* two = PagePointer<2>::getPointerToUserAddress((Address)PAGE_SIZE);
+		PagePointer<3>* three = PagePointer<3>::getPointerToUserAddress((Address)PAGE_SIZE);
+		PagePointer<4>* four = PagePointer<4>::getPointerToUserAddress((Address)PAGE_SIZE);
+
+		UT_ASSERT_EQUAL(one, PageTable<1>::LOWEST_TABLE_ADDRESS + sizeof(PagePointer<1>));
+		UT_ASSERT_EQUAL(two, PageTable<2>::LOWEST_TABLE_ADDRESS);
+		UT_ASSERT_EQUAL(three, PageTable<3>::LOWEST_TABLE_ADDRESS);
+		UT_ASSERT_EQUAL(four, PageTable<4>::LOWEST_TABLE_ADDRESS);
 	}
 };
 

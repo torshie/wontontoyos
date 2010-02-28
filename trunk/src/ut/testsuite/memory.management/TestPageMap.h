@@ -20,6 +20,23 @@ public:
 		void* virtualAddress = PageMap::mapTempPage(physicalAddress);
 		UT_ASSERT_EQUAL(PageMap::unmapTempPage(virtualAddress), physicalAddress);
 	}
+
+	void testCreateKernelHierarchyMappedAddress() {
+		volatile bool b = true;
+		PageMap::createKernelHierarchy((Address)&b, PAGE_SIZE);
+		UT_ASSERT_TRUE(b);
+	}
+
+	void testCreateKernelHierarchySinglePage() {
+		Address address = KERNEL_VIRTUAL_BASE + PagePointer<4>::MEMORY_POINTED;
+		PageMap::createKernelHierarchy(address, PAGE_SIZE);
+		volatile int* first = (volatile int*)address;
+		volatile int* second = (volatile int*)(address + sizeof(int));
+		*first = 4321;
+		*second = 4321;
+		UT_ASSERT_EQUAL(*first, *second);
+		// XXX Destroy the created map hierarchy.
+	}
 };
 
 } /* namespace kernel */

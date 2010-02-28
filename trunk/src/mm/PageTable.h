@@ -3,7 +3,7 @@
 
 #include "arch/X64Constant.h"
 #include "PagePointer.h"
-#include "mm/PhysicalPageAllocator.h"
+#include "PhysicalPageAllocator.h"
 #include "PageMap.h"
 #include <generic/getSingleInstance.h>
 #include <generic/type.h>
@@ -27,7 +27,7 @@ template<int LEVEL> class PageTable {
 	static void destroy(PageTable* table);
 
 public:
-	enum {
+	enum __ {
 		LOWEST_TABLE_ADDRESS =
 				LEVEL == 4 ? 0xFFFFFFFFFFFFF000 :
 				LEVEL == 3 ? 0xFFFFFFFFFFE00000 :
@@ -51,8 +51,8 @@ template<int LEVEL> PageTable<LEVEL>* PageTable<LEVEL>::create(Address kernelAdd
 	Address tableAddress = (Address)PagePointer<LEVEL>::getPointerToKernelAddress(kernelAddress);
 	PhysicalPageAllocator& allocator = getSingleInstance<PhysicalPageAllocator>();
 	Address physicalAddress = (Address)allocator.allocate(PAGE_SIZE);
-	PageTable<LEVEL>* pageTable = (PageTable<LEVEL>*)PageMap::mapTempPage(physicalAddress);
-	new (pageTable)PageTable<LEVEL>();
+	PageTable* pageTable = (PageTable*)PageMap::mapTempPage(physicalAddress);
+	new (pageTable)PageTable();
 	PageMap::unmapTempPage(pageTable);
 
 	PagePointer<1>* pointer = PagePointer<1>::getPointerToKernelAddress(tableAddress);
@@ -61,7 +61,7 @@ template<int LEVEL> PageTable<LEVEL>* PageTable<LEVEL>::create(Address kernelAdd
 	pointer->writable = 1;
 	PageMap::reload();
 
-	return (PageTable<LEVEL>*)tableAddress;
+	return (PageTable*)tableAddress;
 }
 
 template<int LEVEL> void PageTable<LEVEL>::destroy(PageTable* table) {
@@ -72,6 +72,29 @@ template<int LEVEL> void PageTable<LEVEL>::destroy(PageTable* table) {
 	PhysicalPageAllocator& allocator = getSingleInstance<PhysicalPageAllocator>();
 	allocator.release(physicalAddress);
 }
+
+ //XXX Duplication! Remove it
+template<> class PageTable<0> {
+	friend class TestPageTable;
+	friend class PageMap;
+
+	PageTable() {}
+	PageTable(const PageTable&);
+	const PageTable& operator = (const PageTable&);
+
+public:
+	static PageTable* create(Address address) {
+		PagePointer<1>* pointer = PagePointer<1>::getPointerToKernelAddress(address);
+		PhysicalPageAllocator& allocator = getSingleInstance<PhysicalPageAllocator>();
+		Address physicalAddress = (Address)allocator.allocate(PAGE_SIZE);
+		pointer->page = physicalAddress / PAGE_SIZE;
+		pointer->present = 1;
+		pointer->writable = 1;
+		PageMap::reload();
+
+		return (PageTable*)address;
+	}
+};
 
 } /* namespace kernel */
 

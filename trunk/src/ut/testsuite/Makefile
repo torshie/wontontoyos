@@ -11,6 +11,6 @@ include $(WONTON)/Makefile.inc
 INSTALLER_GENERATOR = $(WONTON)/src/ut/framework/GenerateSuiteInstaller.sh
 
 $(INSTALLER).cpp: $(INSTALLER_GENERATOR)
+	#  GEN $@
 	@chmod +x $<
-	@echo "  GEN" $@
 	@$< $(SUBDIR)

@@ -1,55 +1,53 @@
-.PHONY: compile clean gch-clean mfile-clean veryclean gch
+CLEAN_SUBDIR = $(addsuffix /clean, $(SUBDIR))
+COMPILE_SUBDIR = $(addsuffix /compile, $(SUBDIR))
+VERYCLEAN_SUBDIR = $(addsuffix /veryclean, $(SUBDIR))
+MFILE_SUBDIR = $(addsuffix /mfile, $(SUBDIR))
+BUILD_REQ_DIR = $(addsuffix /build, $(REQ_DIR))
 
-.SUFFIXES: .mfile .h.gch
+.PHONY: compile clean veryclean mfile $(CLEAN_SUBDIR) $(COMPILE_SUBDIR) (VERYCLEAN_SUBDIR) \
+		(MFILE_SUBDIR) $(BUILD_REQ_DIR)
+		
+build: $(BUILD_REQ_DIR)
+
+clean: $(CLEAN_SUBDIR)
+	#  CLEAN $(CURDIR)
+	@rm -f *.o $(CLEAN)
+	
+veryclean: $(VERYCLEAN_SUBDIR)
+	#  VERYCLEAN $(CURDIR)
+	@rm -f *.o *.mfile $(CLEAN)
+
+compile: $(COMPILE_SUBDIR) $(OBJS)
+
+mfile: $(MFILE_SUBDIR) $(MFILES)
+
+$(CLEAN_SUBDIR) $(COMPILE_SUBDIR) $(VERYCLEAN_SUBDIR) $(MFILE_SUBDIR) $(BUILD_REQ_DIR):
+	@$(MAKE) -C $(@D) $(@F)
 
 %.o: %.cpp
-	@echo "  CC" $@
+	#  CC $@
 	@$(CXX) $(CXXFLAGS) -c -o $@ $<
-	
-%.h.gch: %.h
-	@echo "  GCH" $@
-	@$(CXX) $(CXXFLAGS) -o $@ $<
 
 %.o: %.S
-	@echo "  AS" $@
+	#  AS $@
 	@$(CXX) $(CXXFLAGS) -D__ASM__ -c -o $@ $<
 
-%.32: %.cpp
-	@echo "  CC32" $@
+%.x86: %.cpp
+	#  CC-x86 $@
 	@$(CXX) $(CXXFLAGS32) -c -o $@ $<
+	#  OBJCOPY $@
 	@$(OBJCOPY) -O elf64-x86-64 $@
 
 %.mfile: %.cpp
-	@echo "  MFILE" $@
+	#  Makefile $@
 	@$(CXX) $(CXXFLAGS) -M -MF $@ $<
 
-compile: $(OBJS)
-	$(MAKE_IN_SUBDIR)
-
-gch: $(GCHS)
-	$(MAKE_IN_SUBDIR)
-
-clean:
-	$(MAKE_IN_SUBDIR)
-	@echo "  CLEAN" `basename $$PWD`
-	@rm -rf *.o $(CLEAN)
+$(LIBRARY): $(ALL_OBJS)
+	#  AR $@
+	@$(AR) rcs $@ $(ALL_OBJS)
 	
-gch-clean:
-	$(MAKE_IN_SUBDIR)
-	@echo "  CLEAN.GCH" `basename $$PWD`
-	@rm -rf *.gch
-	
-$(LIBS):
-	@$(EXTERNAL_BUILD)
-	
-mfile-clean:
-	$(MAKE_IN_SUBDIR)
-	@echo "  CLEAN.MFILE" `basename $$PWD`
-	@rm -rf *.mfile
-	
-veryclean:
-	$(MAKE_IN_SUBDIR)
-	@echo "  VERYCLEAN" `basename $$PWD`
-	@rm -rf *.gch *.mfile *.o $(CLEAN)
-
+ifneq ($(MAKECMDGOALS), clean)
+ifneq ($(MAKECMDGOALS), veryclean)
 -include $(MFILES)
+endif
+endif

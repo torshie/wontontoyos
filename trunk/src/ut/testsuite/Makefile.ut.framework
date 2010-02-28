@@ -8,11 +8,11 @@ CASE_GENERATOR = $(WONTON)/src/ut/framework/GenerateTestCase.sh
 SUITE_GENERATOR = $(WONTON)/src/ut/framework/GenerateTestSuite.sh
 
 %.cpp: %.h
+	#  GEN $@
 	@chmod +x $(CASE_GENERATOR)
-	@echo "  GEN" $@
 	@$(CASE_GENERATOR) $<
 
 $(TEST_SUITE_INSTALLER): $(HEADERS)
+	#  GEN $@
 	@chmod +x $(SUITE_GENERATOR)
-	@echo "  GEN" $@
 	@$(SUITE_GENERATOR) $@
