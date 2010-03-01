@@ -5,11 +5,12 @@ namespace kernel {
 
 template <typename Load> class SimpleStack {
 public:
-	struct Node {
+	class Node {
 		friend class SimpleStack<Load>;
-		Load load;
-	private:
 		Node* next;
+
+	public:
+		Load load;
 	};
 
 	SimpleStack() : top(0) {}
@@ -20,6 +21,10 @@ public:
 	}
 
 	Node* pop() {
+		if (top == 0) {
+			return 0;
+		}
+
 		Node* result = top;
 		top = top->next;
 		return result;

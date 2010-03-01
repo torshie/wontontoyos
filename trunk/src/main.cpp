@@ -23,7 +23,7 @@ void main() {
 	getSingleInstance<InterruptDescriptorTable>().load();
 
 	TestRunner& runner = getSingleInstance<TestRunner>();
-	runner.verbose();
+	runner.keepQuiet();
 	TestResult result;
 	runner.run(result);
 	result.show();

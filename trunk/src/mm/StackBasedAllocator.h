@@ -1,12 +1,14 @@
 #ifndef KERNEL_MM_STACK_BASED_ALLOCATOR_H_INCLUDED
 #define KERNEL_MM_STACK_BASED_ALLOCATOR_H_INCLUDED
 
+#include "mm/SimpleStack.h"
 #include <generic/type.h>
 #include <cxx/new.h>
 
 namespace kernel {
 
 template<Size SLICE_SIZE> class StackBasedAllocator {
+	friend class TestStackBasedAllocator;
 	typedef char Load[SLICE_SIZE];
 public:
 	void addPool(void* pool, Size poolSize);
@@ -20,8 +22,9 @@ private:
 template<Size SLICE_SIZE> void StackBasedAllocator<SLICE_SIZE>::addPool(void* pool,
 		Size poolSize) {
 	for (char* position = (char*)pool; position < (char*)pool + poolSize;
-			position += sizeof(SimpleStack<Load>::Node)) {
-		SimpleStack<Load>::Node* node = new (position)SimpleStack<Load>::Node();
+			position += sizeof(typename SimpleStack<Load>::Node)) {
+		typename SimpleStack<Load>::Node* node =
+				new (position) (typename SimpleStack<Load>::Node)();
 		stack.push(node);
 	}
 }
@@ -31,11 +34,16 @@ template<Size SLICE_SIZE> void* StackBasedAllocator<SLICE_SIZE>::allocate(Size s
 		return 0;
 	}
 
-	return &(stack.pop()->load);
+	typename SimpleStack<Load>::Node* node = stack.pop();
+	if (node == 0) {
+		return 0;
+	} else {
+		return &(node->load);
+	}
 }
 
 template<Size SLICE_SIZE> void StackBasedAllocator<SLICE_SIZE>::release(void* pointer) {
-	SimpleStack<Load>::Node* node = new (pointer)SimpleStack<Load>::Node();
+	typename SimpleStack<Load>::Node* node = new (pointer)(typename SimpleStack<Load>::Node)();
 	stack.push(node);
 }
 
