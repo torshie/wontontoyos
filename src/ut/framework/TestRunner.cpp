@@ -22,8 +22,7 @@ void TestRunner::run(TestResult& r) {
 
 void TestRunner::runTestSuite(TestSuite& suite) {
 	for (int testCaseId = 0; testCaseId < suite.totalCase; ++testCaseId) {
-		message << "  Running test case "
-				<< suite.testCaseName[testCaseId] << "\n";
+	message << "  Running test case " << suite.testCaseName[testCaseId] << "\n";
 		runTestCase(suite, testCaseId);
 		result->totalCase++;
 		if (shouldStopTesting()) {
@@ -46,7 +45,8 @@ void TestRunner::runTestCase(TestSuite& suite, int testCaseId) {
 		if (!isTestPointClean()) {
 			testCaseClean = false;
 			result->failedTestPoint++;
-			message << "    " << suite.testPointName[testCaseId][testPointId]
+			Printer& console = getSingleInstance<Printer>();
+			console << "    " << suite.testPointName[testCaseId][testPointId]
 					<< ":  FAIL\n";
 			if (shouldStopTesting()) {
 				break;

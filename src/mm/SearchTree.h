@@ -1,15 +1,24 @@
 #ifndef KERNEL_MM_SEARCH_TREE_H_INCLUDED
 #define KERNEL_MM_SEARCH_TREE_H_INCLUDED
 
+#include "mm/NullAllocator.h"
+#include "mm/StackBasedAllocator.h"
+
 namespace kernel {
 
 // XXX Implement a red-black tree instead of a simple binary search tree
 // XXX Make this thread-safe
-template<typename Key, typename Data, typename Allocator> class SearchTree {
+template<typename Key, typename Data, typename Allocator> class SearchTree;
+
+template<typename Key, typename Data,
+		typename AllocatorParameter =
+				StackBasedAllocator<sizeof(SearchTree<Key, Data, NullAllocator>)> >
+class SearchTree {
 	friend class TestSearchTree;
 public:
+	typedef AllocatorParameter Allocator;
+
 	struct Node {
-		friend class SearchTree<Load>;
 	private:
 		Node* left;
 		Node* right;
@@ -40,13 +49,10 @@ public:
 		*cursor = node;
 	}
 
-	void remove(Node* node) {
+	void remove(Node* node);
+	void remove(const Key& key);
 
-	}
-
-	void remote(const Key& key);
-
-	bool search(const Key& key, Data& data) {
+	Data* search(const Key& key) {
 		Node* cursor = root;
 		while (cursor != 0 && cursor->key != key) {
 			if (key < cursor->key) {
@@ -57,10 +63,9 @@ public:
 		}
 
 		if (cursor != 0) {
-			data = cursor->data;
-			return true;
+			return (cursor->data);
 		} else {
-			return false;
+			return 0;
 		}
 	}
 
