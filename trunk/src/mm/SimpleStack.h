@@ -30,7 +30,7 @@ public:
 		return result;
 	}
 
-	Node* peek() const {
+	const Node* peek() const {
 		return top;
 	}
 
