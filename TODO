@@ -1,2 +1,5 @@
 *** Add kernel space virtual address allocator
 *** Add exception support
+
+* Remove temporary paging map. So the address space are available to kernel stack.
+* Remove class BinaryTreeNode. Make it a member class of SearchTree.
