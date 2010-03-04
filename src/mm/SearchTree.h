@@ -3,6 +3,7 @@
 
 #include "StackBasedAllocator.h"
 #include "BinaryTreeNode.h"
+#include <cxx/BUG.h>
 
 namespace kernel {
 
@@ -16,11 +17,45 @@ public:
 	typedef AllocatorParameter Allocator;
 
 	explicit SearchTree(Allocator& alloc) : root(0), allocator(alloc) {}
-	~SearchTree();
+
+	~SearchTree() {
+		if (root == 0) {
+			return;
+		}
+
+		BinaryTreeNode<Key, Data>* node = root;
+		while (true) {
+			while (node->left != 0 || node->right != 0) {
+				if (node->left != 0) {
+					node = node->left;
+				} else {
+					node = node->right;
+				}
+			}
+
+			BinaryTreeNode<Key, Data>** tmp = 0;
+			if (isLeftChild(node)) {
+				tmp = &(node->parent->left);
+			} else if (isRightChild(node)) {
+				tmp = &(node->parent->right);
+			}
+
+			if (node != root) {
+				node = node->parent;
+				(*tmp)->~BinaryTreeNode();
+				allocator.release(*tmp);
+				*tmp = 0;
+			} else {
+				node->~BinaryTreeNode();
+				allocator.release(node);
+				return;
+			}
+		}
+	}
 
 	void insert(const Key& key, const Data& data) {
 		void* buffer = allocator.allocate(sizeof(BinaryTreeNode<Key, Data>));
-		BinaryTreeNode<Key, Data>* node = new (buffer)BinaryTreeNode<Key, Data>(key, data);
+		BinaryTreeNode<Key, Data>* node = new (buffer) BinaryTreeNode<Key, Data>(key, data);
 		BinaryTreeNode<Key, Data>** cursor = &root;
 		while (*cursor != 0) {
 			node->parent = *cursor;
@@ -33,22 +68,7 @@ public:
 		*cursor = node;
 	}
 
-	void remove(BinaryTreeNode<Key, Data>* node) {
-		if (node->right == 0) {
-			node->left->parent = node->parent;
-
-			if (isLeftChild(node)) {
-				node->parent->left = node->left;
-			} else if (isRightChild(node)) {
-				node->parent->right = node->left;
-			} else {
-				// XXX Code here
-			}
-		} else {
-			// XXX Code here
-		}
-	}
-
+	void remove(BinaryTreeNode<Key, Data>* node);
 	void remove(const Key& key);
 
 	Data* search(const Key& key) {

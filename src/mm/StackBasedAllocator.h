@@ -21,7 +21,8 @@ private:
 
 template<Size SLICE_SIZE> void StackBasedAllocator<SLICE_SIZE>::addPool(void* pool,
 		Size poolSize) {
-	for (char* position = (char*)pool; position < (char*)pool + poolSize;
+	for (char* position = (char*)pool;
+			position <= (char*)pool + poolSize - sizeof(typename SimpleStack<Load>::Node);
 			position += sizeof(typename SimpleStack<Load>::Node)) {
 		typename SimpleStack<Load>::Node* node =
 				new (position) (typename SimpleStack<Load>::Node)();

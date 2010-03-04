@@ -31,3 +31,5 @@ run: build $(DISK)
 
 bochs: build $(DISK)
 	bochs
+	
+nothing:
