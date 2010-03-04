@@ -7,8 +7,8 @@
 
 namespace kernel {
 
-// XXX Call copy constructors, call destructors.
 template<typename Key, typename Data, typename Extender> class MaxHeap {
+	friend class TestMaxHeap;
 public:
 	struct Node {
 		Key key;
@@ -16,7 +16,14 @@ public:
 	};
 
 	MaxHeap(void* buffer, Size size, Extender xtender) : bufferSize(size), nodeCount(0),
-			base(buffer), extender(xtender) {}
+			base((Node*)buffer), extender(xtender) {}
+
+	~MaxHeap() {
+		for (Size i = 0; i < nodeCount; ++i) {
+			base[i].key.~Key();
+			base[i].data.~Data();
+		}
+	}
 
 	void insert(const Key& key, const Data& data) {
 		if (full()) {
@@ -24,8 +31,8 @@ public:
 			bufferSize += PAGE_SIZE;
 		}
 
-		base[nodeCount].key = key;
-		base[nodeCount].data = data;
+		new (&(base[nodeCount].key)) Key(key);
+		new (&(base[nodeCount].data)) Data(data);
 		bubble(nodeCount);
 		nodeCount += 1;
 	}
@@ -36,14 +43,18 @@ public:
 	}
 
 	void increase(Size index, const Key& key) {
-		base[index].key = base[index].key + key;
+		base[index].key += key;
 		bubble(index);
 	}
 
 	void remove(Size index) {
 		base[index].key = base[nodeCount - 1].key;
 		base[index].data = base[nodeCount - 1].data;
+
+		base[nodeCount - 1].key.~Key();
+		base[nodeCount - 1].data.~Data();
 		nodeCount -= 1;
+
 		sink(index);
 	}
 

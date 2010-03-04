@@ -43,6 +43,13 @@ public:
 				pool + OFFSET_OF(SimpleStack<Address>::Node, load));
 		UT_ASSERT_EQUAL(allocator->allocate(sizeof(Address)), 0);
 	}
+
+	void testAddPoolSmallerThanOneNode() {
+		char pool[1];
+		allocator->addPool(pool, sizeof(pool));
+
+		UT_ASSERT_EQUAL(allocator->allocate(sizeof(Address)), 0);
+	}
 };
 
 } // namespace kernel
