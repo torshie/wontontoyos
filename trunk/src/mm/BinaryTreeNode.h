@@ -11,6 +11,22 @@ template<typename Key, typename Data> struct BinaryTreeNode {
 	Data data;
 
 	BinaryTreeNode(const Key& k, const Data& d) : left(0), right(0), parent(0), key(k), data(d) {}
+
+	bool isLeftChild() const {
+		if (parent != 0) {
+			return parent->left == this;
+		} else {
+			return false;
+		}
+	}
+
+	bool isRightChild() const {
+		if (parent != 0) {
+			return parent->right == this;
+		} else {
+			return false;
+		}
+	}
 };
 
 } // namespace kernel

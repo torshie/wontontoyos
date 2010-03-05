@@ -3,7 +3,7 @@ TEST_SUITE_INSTALLER = $(TEST_SUITE_NAME)_installTestSuite.cpp
 HEADERS = $(wildcard *.h)
 OBJS += $(patsubst %.h, %.o, $(HEADERS)) $(TEST_SUITE_NAME)_installTestSuite.o
 CLEAN += $(patsubst %.h, %.cpp, $(HEADERS)) $(TEST_SUITE_INSTALLER)
-MFILES = $(patsubst %.h, %.mfile, $(HEADERS))
+MAK_FILES = $(patsubst %.h, %.mak, $(HEADERS))
 CASE_GENERATOR = $(WONTON)/src/ut/framework/GenerateTestCase.sh
 SUITE_GENERATOR = $(WONTON)/src/ut/framework/GenerateTestSuite.sh
 
