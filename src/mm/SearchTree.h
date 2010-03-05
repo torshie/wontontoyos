@@ -34,9 +34,9 @@ public:
 			}
 
 			BinaryTreeNode<Key, Data>** tmp = 0;
-			if (isLeftChild(node)) {
+			if (node->isLeftChild()) {
 				tmp = &(node->parent->left);
-			} else if (isRightChild(node)) {
+			} else if (node->isRightChild()) {
 				tmp = &(node->parent->right);
 			}
 
@@ -91,22 +91,6 @@ public:
 private:
 	BinaryTreeNode<Key, Data>* root;
 	Allocator& allocator;
-
-	bool isLeftChild(BinaryTreeNode<Key, Data>* node) {
-		if (node == 0 || node == root) {
-			return false;
-		} else {
-			return node->parent->left == node;
-		}
-	}
-
-	bool isRightChild(BinaryTreeNode<Key, Data>* node) {
-		if (node == 0 || node == root) {
-			return false;
-		} else {
-			return node->parent->right == node;
-		}
-	}
 };
 
 } // namespace kernel

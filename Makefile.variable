@@ -22,13 +22,19 @@ CXXFLAGS32 = $(COMMON_FLAGS) -m32 -D__X86_32__ -fleading-underscore -O2
 LDFLAGS = $(addprefix -L, $(dir $(LIBS))) \
 		$(addprefix -l, $(patsubst lib%, %, $(patsubst %.a, %, $(notdir $(LIBS)))))
 ifeq ($(DEBUG_BUILD), 1)
-CXXFLAGS = $(DEBUG_BUILD_FLAGS)
+  CXXFLAGS = $(DEBUG_BUILD_FLAGS)
 else
-CXXFLAGS = $(OPTIMIZE_BUILD_FLAGS)
+  CXXFLAGS = $(OPTIMIZE_BUILD_FLAGS)
 endif
 
 ALL_OBJS = $(shell find $(shell pwd) -type f|grep \.o$$)
 OBJS += $(patsubst %.cpp, %.o, $(wildcard *.cpp)) $(patsubst %.S, %.o, $(wildcard *.S))
-MFILES += $(patsubst %.cpp, %.mfile, $(wildcard *.cpp))
+MAK_FILES += $(patsubst %.cpp, %.mak, $(wildcard *.cpp))
 SUBDIR = $(shell find . -type d -path './*' -prune | grep -v '\./\.')
 LD_SCRIPT = $(wildcard *.ld)
+
+ifneq ($(shell uname -s | grep MINGW32),'')
+  SYSTEM = MINGW32
+else
+  SYSTEM = UNKNOWN
+endif

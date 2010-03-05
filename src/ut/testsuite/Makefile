@@ -2,8 +2,8 @@ build: compile
 
 INSTALLER = installTestSuite
 OBJS = $(INSTALLER).o
-MFILES = $(INSTALLER).mfile
-CLEAN = $(INSTALLER).cpp $(MFILES)
+MAK_FILESS = $(INSTALLER).mak
+CLEAN = $(INSTALLER).cpp $(MAK_FILESS)
 
 include $(WONTON)/Makefile.variable
 include $(WONTON)/Makefile.rule

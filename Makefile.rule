@@ -1,11 +1,11 @@
 CLEAN_SUBDIR = $(addsuffix /clean, $(SUBDIR))
 COMPILE_SUBDIR = $(addsuffix /compile, $(SUBDIR))
 VERYCLEAN_SUBDIR = $(addsuffix /veryclean, $(SUBDIR))
-MFILE_SUBDIR = $(addsuffix /mfile, $(SUBDIR))
+MAK_SUBDIR = $(addsuffix /mak, $(SUBDIR))
 BUILD_REQ_DIR = $(addsuffix /build, $(REQ_DIR))
 
-.PHONY: compile clean veryclean mfile $(CLEAN_SUBDIR) $(COMPILE_SUBDIR) (VERYCLEAN_SUBDIR) \
-		(MFILE_SUBDIR) $(BUILD_REQ_DIR)
+.PHONY: compile clean veryclean mak $(CLEAN_SUBDIR) $(COMPILE_SUBDIR) (VERYCLEAN_SUBDIR) \
+		(MAK_SUBDIR) $(BUILD_REQ_DIR)
 		
 build: $(BUILD_REQ_DIR)
 
@@ -15,13 +15,13 @@ clean: $(CLEAN_SUBDIR)
 	
 veryclean: $(VERYCLEAN_SUBDIR)
 	#  VERYCLEAN $(CURDIR)
-	@rm -f *.o *.mfile $(CLEAN)
+	@rm -f *.o *.mak $(CLEAN)
 
 compile: $(COMPILE_SUBDIR) $(OBJS)
 
-mfile: $(MFILE_SUBDIR) $(MFILES)
+mak: $(MAK_SUBDIR) $(MAK_FILES)
 
-$(CLEAN_SUBDIR) $(COMPILE_SUBDIR) $(VERYCLEAN_SUBDIR) $(MFILE_SUBDIR) $(BUILD_REQ_DIR):
+$(CLEAN_SUBDIR) $(COMPILE_SUBDIR) $(VERYCLEAN_SUBDIR) $(MAK_SUBDIR) $(BUILD_REQ_DIR):
 	@$(MAKE) -C $(@D) $(@F)
 
 %.o: %.cpp
@@ -38,8 +38,8 @@ $(CLEAN_SUBDIR) $(COMPILE_SUBDIR) $(VERYCLEAN_SUBDIR) $(MFILE_SUBDIR) $(BUILD_RE
 	#  OBJCOPY $@
 	@$(OBJCOPY) -O elf64-x86-64 $@
 
-%.mfile: %.cpp
-	#  Makefile $@
+%.mak: %.cpp
+	#  MAK $@
 	@$(CXX) $(CXXFLAGS) -M -MF $@ $<
 
 $(LIBRARY): $(ALL_OBJS)
@@ -48,6 +48,6 @@ $(LIBRARY): $(ALL_OBJS)
 	
 ifneq ($(MAKECMDGOALS), clean)
 ifneq ($(MAKECMDGOALS), veryclean)
--include $(MFILES)
+-include $(MAK_FILES)
 endif
 endif
