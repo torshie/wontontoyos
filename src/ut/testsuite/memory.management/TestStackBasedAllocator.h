@@ -5,6 +5,7 @@
 #include "mm/StackBasedAllocator.h"
 #include <generic/type.h>
 #include <generic/OFFSET_OF.h>
+#include <cxx/BUG.h>
 
 namespace kernel {
 
@@ -39,9 +40,21 @@ public:
 		char pool[sizeof(SimpleStack<Address>::Node)];
 		allocator->addPool(pool, sizeof(pool));
 
-		UT_ASSERT_EQUAL(allocator->allocate(sizeof(Address)),
-				pool + OFFSET_OF(SimpleStack<Address>::Node, load));
+		void* pointer = allocator->allocate(sizeof(Address));
+		UT_ASSERT_EQUAL(pointer, pool + OFFSET_OF(SimpleStack<Address>::Node, load));
 		UT_ASSERT_EQUAL(allocator->allocate(sizeof(Address)), 0);
+		allocator->release(pointer);
+	}
+
+	void testAllocateReleasedNode() {
+		char pool[sizeof(SimpleStack<Address>::Node)];
+		allocator->addPool(pool, sizeof(pool));
+
+		void* first = allocator->allocate(sizeof(Address));
+		allocator->release(first);
+		void* second = allocator->allocate(sizeof(Address));
+		UT_ASSERT_EQUAL(first, second);
+		allocator->release(second);
 	}
 
 	void testAddPoolSmallerThanOneNode() {
