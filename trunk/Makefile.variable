@@ -11,12 +11,12 @@ OBJDUMP = $(CROSS)objdump
 
 INCLUDE_FLAGS = -I$(WONTON)/lib -I$(WONTON) -I$(WONTON)/src
 WARNING_FLAGS = -W -Wall -Wextra -Werror -Wno-enum-compare
-OPTIMIZE_FLAGS = -O3 -fomit-frame-pointer -finline-limit=10000 -finline-functions-called-once
+OPTIMIZE_FLAGS = -O0 -g
 COMMON_FLAGS += -nostdlib -nostartfiles -nodefaultlibs -ansi -fno-exceptions -mno-red-zone \
 		$(INCLUDE_FLAGS) $(WARNING_FLAGS)
 OPTIMIZE_BUILD_FLAGS = $(COMMON_FLAGS) $(OPTIMIZE_FLAGS) -mcmodel=large \
 		-DBUILD_TEST_MODE_KERNEL
-DEBUG_FLAGS = -O0 -g -fno-omit-frame-pointer
+DEBUG_FLAGS = -O0 -g
 DEBUG_BUILD_FLAGS = $(COMMON_FLAGS) $(DEBUG_FLAGS) -mcmodel=large -DBUILD_DEBUG_MODE_KERNEL
 CXXFLAGS32 = $(COMMON_FLAGS) -m32 -D__X86_32__ -fleading-underscore -O2
 LDFLAGS = $(addprefix -L, $(dir $(LIBS))) \
@@ -33,8 +33,8 @@ MAK_FILES += $(patsubst %.cpp, %.mak, $(wildcard *.cpp))
 SUBDIR = $(shell find . -type d -path './*' -prune | grep -v '\./\.')
 LD_SCRIPT = $(wildcard *.ld)
 
-ifneq ($(shell uname -s | grep MINGW32),'')
-  SYSTEM = MINGW32
+ifeq ($(shell uname -s), Darwin)
+  SYSTEM = Darwin
 else
   SYSTEM = UNKNOWN
 endif

@@ -1,132 +1,234 @@
 #ifndef KERNEL_MM_MAX_HEAP_H_INCLUDED
 #define KERNEL_MM_MAX_HEAP_H_INCLUDED
 
-#include "PageTable.h"
-#include "PagePointer.h"
-#include <kernel/abi.h>
+#include "BinaryTreeNode.h"
+#include "StackBasedAllocator.h"
 
 namespace kernel {
 
-template<typename Key, typename Data, typename Extender> class MaxHeap {
+template<typename Key, typename Data,
+		typename AllocatorParameter =
+				StackBasedAllocator<sizeof(BinaryTreeNode<Key, Data>)> >
+class MaxHeap {
 	friend class TestMaxHeap;
+	typedef BinaryTreeNode<Key, Data> Node;
 public:
-	struct Node {
-		Key key;
-		Data data;
-	};
-
-	MaxHeap(void* buffer, Size size, Extender xtender) : bufferSize(size), nodeCount(0),
-			base((Node*)buffer), extender(xtender) {}
-
-	~MaxHeap() {
-		for (Size i = 0; i < nodeCount; ++i) {
-			base[i].key.~Key();
-			base[i].data.~Data();
-		}
-	}
+	typedef AllocatorParameter Allocator;
+	MaxHeap(Allocator& alloc) : root(0), nodeCount(0), allocator(alloc) {}
+	~MaxHeap() {}
 
 	void insert(const Key& key, const Data& data) {
-		if (full()) {
-			extender.extend((char*)base + bufferSize, PAGE_SIZE);
-			bufferSize += PAGE_SIZE;
-		}
+		void* buffer = allocator.allocate(sizeof(Node));
+		BinaryTreeNode<Key, Data>* node = new (buffer) Node(key, data);
 
-		new (&(base[nodeCount].key)) Key(key);
-		new (&(base[nodeCount].data)) Data(data);
-		bubble(nodeCount);
-		nodeCount += 1;
-	}
-
-	void decrease(Size index, const Key& key) {
-		base[index].key = base[index].key - key;
-		sink(index);
-	}
-
-	void increase(Size index, const Key& key) {
-		base[index].key += key;
-		bubble(index);
-	}
-
-	void remove(Size index) {
-		base[index].key = base[nodeCount - 1].key;
-		base[index].data = base[nodeCount - 1].data;
-
-		base[nodeCount - 1].key.~Key();
-		base[nodeCount - 1].data.~Data();
-		nodeCount -= 1;
-
-		sink(index);
-	}
-
-	const Node* peek(Size index) const {
-		if (index >= nodeCount) {
-			return 0;
+		++nodeCount;
+		Node* parent = getParentNode(nodeCount);
+		if (parent != 0) {
+			if (parent->left == 0) {
+				parent->left = node;
+			} else {
+				parent->right = node;
+			}
+			node->parent = parent;
+			bubble(node);
 		} else {
-			return base + index;
+			root = node;
 		}
 	}
 
 private:
-	Size bufferSize;
+	Node* root;
 	Size nodeCount;
-	Node* base;
-	Extender& extender;
+	Allocator& allocator;
 
-	bool full() const {
-		return (nodeCount + 1) * sizeof(Node) > bufferSize;
-	}
-
-	void sink(Size index) {
-		bool hasLeftChild = (leftChild(index) < nodeCount);
-		if (!hasLeftChild) {
-			return;
+	/**
+	 * Get a pointer to a node's parent.
+	 * The caller should make sure than the given node's parent does actually exist. But
+	 * the given node may not exist.
+	 *
+	 * @param index The index of the given node
+	 *
+	 * @return A pointer to the given node's parent.
+	 */
+	Node* getParentNode(Size index) {
+		Size parent = index / 2;
+		Size mask = 0x8000000000000000LL;
+		for (; (mask & parent) == 0 && mask > 0; mask >>= 1)
+			;
+		if (mask == 0) {
+			return 0;
 		}
-		bool hasRightChild = (rightChild(index) < nodeCount);
 
-		Size largest = index;
-		if (base[leftChild(index)].key > base[index].key) {
-			largest = leftChild(index);
-		}
-		if (hasRightChild) {
-			if (base[rightChild(index)].key > base[largest].key) {
-				largest = rightChild(index);
+		Node* cursor = root;
+		mask >>= 1;
+		for (; mask > 0; mask >>= 1) {
+			Size value = (mask & parent);
+			if (value != 0) {
+				cursor = cursor->right;
+			} else {
+				cursor = cursor->left;
 			}
 		}
 
-		if (largest != index) {
-			swap(index, largest);
-			sink(largest);
-		}
+		return cursor;
 	}
 
-	void bubble(Size index) {
-		if (index == 0 || base[index].key < base[parent(index)].key) {
+	void bubble(Node* node) {
+		if (node == root || node->key < node->parent->key) {
 			return;
 		}
 
-		swap(index, parent(index));
-		bubble(parent(index));
+		Node* parent = node->parent;
+		swap(node, parent);
+		bubble(parent);
 	}
 
-	void swap(Size first, Size second) {
-		Key key = base[first].key;
-		Data data = base[first].data;
-		base[first].key = base[second].key;
-		base[first].data = base[second].data;
-		base[second].key = key;
-		base[second].data = data;
+	static void exchangeChildren(Node* first, Node* second) {
+		if (second->left != 0) {
+			second->left->parent = first;
+		}
+		if (second->right != 0) {
+			second->right->parent = first;
+		}
+		Node* left = first->left;
+		Node* right = first->right;
+		first->left = second->left;
+		first->right = second->right;
+		second->left = left;
+		second->right = right;
+		if (left != 0) {
+			left->parent = second;
+		}
+		if (right != 0) {
+			right->parent = second;
+		}
 	}
 
-	static Size leftChild(Size index) {
-		return (index + 1) * 2 - 1;
+	void swapSeparateNodes(Node* first, Node* second) {
+		bool isLeftChild = second->isLeftChild();
+		Node* parent = second->parent;
+
+		if (first->isLeftChild()) {
+			first->parent->left = second;
+		} else if (first->isRightChild()) {
+			first->parent->right = second;
+		} else {
+			root = second;
+		}
+		second->parent = first->parent;
+		if (parent == 0) {
+			root = first;
+		} else if (isLeftChild) {
+			parent->left = first;
+		} else {
+			parent->right = first;
+		}
 	}
 
-	static Size rightChild(Size index) {
-		return (index + 1) * 2;
+	/**
+	 *                               grandpa
+	 *                                  |
+	 *                                parent
+	 *                                /    \
+	 *                             child  brother
+	 *                             /    \
+	 *                           left  right
+	 */
+	// XXX Duplication to swapRightChildAndParent()
+	void swapLeftChildAndParent(Node* child, Node* parent) {
+		Node* grandpa = parent->parent;
+		Node* brother = parent->right;
+		Node* left = child->left;
+		Node* right = child->right;
+
+		parent->left = left;
+		parent->right = right;
+		child->right = brother;
+
+		if (parent->isLeftChild()) {
+			grandpa->left = child;
+		} else if (parent->isRightChild()) {
+			grandpa->right = child;
+		} else {
+			root =  child;
+		}
+		child->parent = grandpa;
+		child->left = parent;
+		parent->parent = child;
+
+		if (left != 0) {
+			left->parent = parent;
+		}
+		if (right != 0) {
+			right->parent = parent;
+		}
+		if (brother != 0) {
+			brother->parent = child;
+		}
 	}
 
-	static Size parent(Size index) {
-		return (index - 1) / 2;
+	/**
+	 *                           grandpa
+	 *                              |
+	 *                            parent
+	 *                            /    \
+	 *                       brother  child
+	 *                                /   \
+	 *                             left   right
+	 */
+	// XXX Duplication to swapLeftChildAndParent
+	void swapRightChildAndParent(Node* child, Node* parent) {
+		Node* grandpa = parent->parent;
+		Node* brother = parent->left;
+		Node* left = child->left;
+		Node* right = child->right;
+
+		parent->left = left;
+		parent->right = right;
+		child->left = brother;
+
+		if (parent->isLeftChild()) {
+			grandpa->left = child;
+		} else if (parent->isRightChild()) {
+			grandpa->right = child;
+		} else {
+			root = child;
+		}
+		child->parent = grandpa;
+		child->right = parent;
+		parent->parent = child;
+
+		if (left != 0) {
+			left->parent = parent;
+		}
+		if (right != 0) {
+			right->parent = parent;
+		}
+		if (brother != 0) {
+			brother->parent = child;
+		}
+	}
+
+	// XXX swap() shouldn't be this complex? swap() of a typical array heap is very simple
+	// XXX Find minimal size of a node, where swapping pointers is faster than swapping data
+	//     members.
+	void swap(Node* first, Node* second) {
+		if (first == second) {
+			return;
+		}
+
+		if (first->parent == second) {
+			if (first->isLeftChild()) {
+				swapLeftChildAndParent(first, second);
+			} else {
+				swapRightChildAndParent(first, second);
+			}
+		} else if (second->parent == first) {
+			swap(second, first);
+		} else {
+			exchangeChildren(first, second);
+			swapSeparateNodes(first, second);
+		}
 	}
 };
 
