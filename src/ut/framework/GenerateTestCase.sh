@@ -17,8 +17,8 @@ namespace kernel {
 
 EOF
 
-methodList=`egrep 'void test[a-zA-Z0-9_]+ *\(\)' "$1" | sed 's/void//'\
-		| sed 's/[(){}]//g' | xargs`
+methodList=`egrep 'void test[a-zA-Z0-9_]+ *\(\)' "$1" | grep -v '//' \
+		| sed 's/void//' | sed 's/[(){}]//g' | xargs`
 
 if [ "z${methodList}" = "z" ]; then
 	cat >> ${sourcePath} << EOF
@@ -33,8 +33,6 @@ bool ${testName}::getTestPoint(TestPoint& point, const char*& name) {
 	switch (index) {
 EOF
 fi
-
-methodList=`egrep 'void test[a-zA-Z0-9_]+ *\(\)' "$1" | sed 's/void//'| sed 's/[(){}]//g'`
 
 methodIndex=0
 for method in ${methodList}; do

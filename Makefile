@@ -10,7 +10,7 @@ DISK = disk.img
 KERNEL = boot/kernel.mboot
 
 $(DISK): $(KERNEL)
-ifneq ($(SYSTEM), MINGW32)
+ifeq ($(SYSTEM), Darwin)
 	#  ATTACH $(DISK)
 	@echo `hdiutil attach $@|grep boss|cut -f 1|sed 's/s1//'` > .tmp
 	#  LOAD $(KERNEL)
@@ -30,7 +30,7 @@ else
 endif
 
 debug: debug-build $(DISK)
-ifneq ($(SYSTEM), MINGW32)
+ifeq ($(SYSTEM), Darwin)
 	$(QEMU) -s $(DISK) -monitor stdio
 else
 	$(QEMU) -s -fda $(DISK) -monitor stdio
@@ -40,7 +40,7 @@ debug-build:
 	@$(MAKE) DEBUG_BUILD=1 build
 
 run: build $(DISK)
-ifneq ($(SYSTEM), MINGW32)
+ifeq ($(SYSTEM), Darwin)
 	$(QEMU) $(DISK)
 else
 	$(QEMU) -fda $(DISK)

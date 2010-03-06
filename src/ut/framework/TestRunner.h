@@ -117,7 +117,8 @@ private:
 		failedAssertion++;
 		totalAssertion++;
 		const char* base = Utils::basename(file); // XXX Why cannot inline variable base?
-		message << base << ":" << line << " ASSERT(" << expression << ")\n";
+		Printer& console = getSingleInstance<Printer>();
+		console << base << ":" << line << " ASSERT(" << expression << ")\n";
 	}
 
 	template<typename First, typename Second>
@@ -127,7 +128,8 @@ private:
 		failedAssertion++;
 		totalAssertion++;
 		const char* base = Utils::basename(file); // XXX Why cannot inline variable base?
-		message << base << ":" << line << " " << firstExpression << "["
+		Printer& console = getSingleInstance<Printer>();
+		console << base << ":" << line << " " << firstExpression << "["
 				<< first << "] == " << secondExpression << "[" << second << "]\n";
 	}
 
@@ -138,7 +140,8 @@ private:
 		failedAssertion++;
 		totalAssertion++;
 		const char* base = Utils::basename(file); // XXX Why cannot inline variable base?
-		message << base << ":" << line << " " << firstExpression << "["
+		Printer& console = getSingleInstance<Printer>();
+		console << base << ":" << line << " " << firstExpression << "["
 				<< first << "] != " << secondExpression << "[" << second << "]\n";
 	}
 };
