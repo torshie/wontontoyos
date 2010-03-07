@@ -14,7 +14,7 @@ void TestRunner::addTestSuite(TestSuite& suite,
 void TestRunner::run(TestResult& r) {
 	result = &r;
 	for (int suiteId = 0; suiteId < totalSuite; ++suiteId) {
-		Message::brief << "Running test suite " << testSuiteName[suiteId] << "\n";
+		Message::info << "Running test suite " << testSuiteName[suiteId] << "\n";
 		result->totalSuite++;
 		runTestSuite(*(testSuite[suiteId]));
 	}

@@ -5,9 +5,7 @@ namespace kernel {
 
 // XXX Thread safety
 class Config {
-	Config();
-	Config(const Config&);
-	const Config& operator = (const Config&);
+	~Config();
 
 	template<int KEY, typename Value> class Attribute;
 public:
