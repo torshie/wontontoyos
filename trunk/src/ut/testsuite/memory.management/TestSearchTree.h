@@ -8,8 +8,15 @@
 
 namespace kernel {
 
+#define IS_RED_BLACK_TREE(rootKey, blackHeight) \
+	UT_ASSERT_EQUAL(tree->root->parent, 0); \
+	UT_ASSERT_TRUE(Node::isBlack(tree->root)); \
+	UT_ASSERT_EQUAL(tree->root->key, rootKey); \
+	UT_ASSERT_EQUAL(getBlackHeight(tree->root), blackHeight);
+
 class TestSearchTree : public TestCase {
 	typedef SearchTree<int, int>::Allocator Allocator;
+	typedef SearchTree<int, int>::Node Node;
 
 	char allocatorSite[sizeof(Allocator)];
 	Allocator* allocator;
@@ -17,6 +24,39 @@ class TestSearchTree : public TestCase {
 
 	char treeSite[sizeof(SearchTree<int, int>)];
 	SearchTree<int, int>* tree;
+
+	static int getBlackHeight(Node* node) {
+		if (node == 0) {
+			return 0;
+		}
+
+		int leftBlackHeight = getBlackHeight(node->left);
+		int rightBlackHeight = getBlackHeight(node->right);
+		if (leftBlackHeight != rightBlackHeight || leftBlackHeight == -1
+				|| rightBlackHeight == -1) {
+			return -1;
+		}
+
+		if (node->left != 0) {
+			if (node->left->key > node->key || node->left->parent != node) {
+				return -1;
+			}
+		}
+		if (node->right != 0) {
+			if (node->right->key < node->key || node->right->parent  != node) {
+				return -1;
+			}
+		}
+
+		if (Node::isRed(node)) {
+			if (Node::isRed(node->left) || Node::isRed(node->right)) {
+				return -1;
+			}
+			return leftBlackHeight;
+		} else {
+			return leftBlackHeight + 1;
+		}
+	}
 
 public:
 	bool getTestPoint(TestPoint&, const char*&);
@@ -35,70 +75,176 @@ public:
 
 	void testEmptyTree() {
 		UT_ASSERT_EQUAL(tree->root, 0);
+		UT_ASSERT_EQUAL(getBlackHeight(tree->root), 0);
 	}
 
-	void testInsertRoot() {
+	void testInsertOneNode() {
 		tree->insert(1, 1);
 
-		UT_ASSERT_UNEQUAL(tree->root, 0);
-
-		UT_ASSERT_EQUAL(tree->root->left, 0);
-		UT_ASSERT_EQUAL(tree->root->right, 0);
-		UT_ASSERT_EQUAL(tree->root->parent, 0);
-		UT_ASSERT_EQUAL(tree->root->key, 1);
-		UT_ASSERT_EQUAL(tree->root->data, 1);
+		IS_RED_BLACK_TREE(1, 1);
 	}
 
 	void testInsertLeftChild() {
 		tree->insert(2, 2);
 		tree->insert(1, 1);
 
-		UT_ASSERT_UNEQUAL(tree->root, 0);
-		UT_ASSERT_UNEQUAL(tree->root->left, 0);
+		IS_RED_BLACK_TREE(2, 1);
+	}
+
+	void testInesrtRightChild() {
+		tree->insert(2, 2);
+		tree->insert(3, 3);
+
+		IS_RED_BLACK_TREE(2, 1);
+	}
+
+	void testLeftRotateRoot() {
+		Node* root = tree->insert(1, 1);
+		tree->insert(2, 2);
+		tree->leftRotate(root);
 
 		UT_ASSERT_EQUAL(tree->root->key, 2);
 		UT_ASSERT_EQUAL(tree->root->data, 2);
+		UT_ASSERT_EQUAL(tree->root->parent, 0);
 		UT_ASSERT_EQUAL(tree->root->right, 0);
-
-		UT_ASSERT_EQUAL(tree->root->left->parent, tree->root);
-		UT_ASSERT_EQUAL(tree->root->left->left, 0);
-		UT_ASSERT_EQUAL(tree->root->left->right, 0);
 		UT_ASSERT_EQUAL(tree->root->left->key, 1);
 		UT_ASSERT_EQUAL(tree->root->left->data, 1);
+		UT_ASSERT_EQUAL(tree->root->left->left, 0);
+		UT_ASSERT_EQUAL(tree->root->left->right, 0);
+		UT_ASSERT_EQUAL(tree->root->left->parent, tree->root);
 	}
 
-	void testInsertRightChild() {
-		tree->insert(1, 1);
+	void testRightRotateRoot() {
+		Node* root = tree->insert(3, 3);
 		tree->insert(2, 2);
+		tree->rightRotate(root);
 
-		UT_ASSERT_UNEQUAL(tree->root, 0);
-		UT_ASSERT_UNEQUAL(tree->root->right, 0);
-
-		UT_ASSERT_EQUAL(tree->root->key, 1);
-		UT_ASSERT_EQUAL(tree->root->data, 1);
+		UT_ASSERT_EQUAL(tree->root->key, 2);
+		UT_ASSERT_EQUAL(tree->root->data, 2);
+		UT_ASSERT_EQUAL(tree->root->parent, 0);
 		UT_ASSERT_EQUAL(tree->root->left, 0);
-
-		UT_ASSERT_EQUAL(tree->root->right->parent, tree->root);
+		UT_ASSERT_EQUAL(tree->root->right->key, 3);
+		UT_ASSERT_EQUAL(tree->root->right->data, 3);
 		UT_ASSERT_EQUAL(tree->root->right->left, 0);
 		UT_ASSERT_EQUAL(tree->root->right->right, 0);
-		UT_ASSERT_EQUAL(tree->root->right->key, 2);
-		UT_ASSERT_EQUAL(tree->root->right->data, 2);
+		UT_ASSERT_EQUAL(tree->root->right->parent, tree->root);
 	}
 
-	void testInsertLeftRightChild() {
+	void testInsertLeftAndRightChildren() {
+		tree->insert(2, 2);
+		tree->insert(1, 1);
+		tree->insert(3, 3);
+
+		IS_RED_BLACK_TREE(2, 1);
+	}
+
+	void testInsertFixUp_LeftLeftUncleRed() {
+		tree->insert(3, 3);
+		tree->insert(2, 2);
+		tree->insert(4, 4);
+		tree->insert(1, 1);
+
+		IS_RED_BLACK_TREE(3, 2);
+	}
+
+	void testInsertFixUp_LeftRightUncleRed() {
+		tree->insert(3, 3);
+		tree->insert(1, 1);
+		tree->insert(4, 4);
+		tree->insert(2, 2);
+
+		IS_RED_BLACK_TREE(3, 2);
+	}
+
+	void testInertFixUp_RightRightUncleRed() {
+		tree->insert(2, 2);
+		tree->insert(1, 1);
+		tree->insert(3, 3);
+		tree->insert(4, 4);
+
+		IS_RED_BLACK_TREE(2, 2);
+	}
+
+	void testInsertFixUp_RightLeftUncleRed() {
+		tree->insert(2, 2);
+		tree->insert(1, 1);
+		tree->insert(4, 4);
+		tree->insert(3, 3);
+
+		IS_RED_BLACK_TREE(2, 2);
+	}
+
+	void testInsertFixUp_LeftLeftUncleBlack() {
+		tree->insert(3, 3);
+		tree->insert(2, 2);
+		tree->insert(1, 1);
+
+		IS_RED_BLACK_TREE(2, 1);
+	}
+
+
+	void testInsertFixUp_LeftRightUncleBlack() {
 		tree->insert(3, 3);
 		tree->insert(1, 1);
 		tree->insert(2, 2);
 
-		UT_ASSERT_UNEQUAL(tree->root, 0);
-		UT_ASSERT_UNEQUAL(tree->root->left, 0);
-		UT_ASSERT_UNEQUAL(tree->root->left->right, 0);
+		IS_RED_BLACK_TREE(2, 1);
+	}
 
-		UT_ASSERT_EQUAL(tree->root->key, 3);
-		UT_ASSERT_EQUAL(tree->root->left->key, 1);
-		UT_ASSERT_EQUAL(tree->root->left->right->key, 2);
-		UT_ASSERT_EQUAL(tree->root->left->right->data, 2);
-		UT_ASSERT_EQUAL(tree->root->left->right->parent, tree->root->left);
+	void testInsertFixUp_RightRightUncleBlack() {
+		tree->insert(1, 1);
+		tree->insert(2, 2);
+		tree->insert(3, 3);
+
+		IS_RED_BLACK_TREE(2, 1);
+	}
+
+	void testInsertFixUp_RightLeftUncleBlack() {
+		tree->insert(1, 1);
+		tree->insert(3, 3);
+		tree->insert(2, 2);
+
+		IS_RED_BLACK_TREE(2, 1);
+	}
+
+	void testInsertSequentialFourNodes() {
+		for (int i = 0; i < 4; ++i) {
+			tree->insert(i, i);
+		}
+
+		IS_RED_BLACK_TREE(1, 2);
+	}
+
+	void testInsertSequentialFiveNodes() {
+		for (int i = 0; i < 5; ++i) {
+			tree->insert(i, i);
+		}
+
+		IS_RED_BLACK_TREE(1, 2);
+	}
+
+	void testInsertSequentialSixNodes() {
+		for (int i = 0; i < 6; ++i) {
+			tree->insert(i, i);
+		}
+
+		IS_RED_BLACK_TREE(1, 2);
+	}
+
+	void testInsertSequentialSevenNodes() {
+		for (int i = 0; i < 7; ++i) {
+			tree->insert(i, i);
+		}
+
+		IS_RED_BLACK_TREE(1, 2);
+	}
+
+	void testInsertSequentialEightNodes() {
+		for (int i = 0; i < 8; ++i) {
+			tree->insert(i, i);
+		}
+
+		IS_RED_BLACK_TREE(3, 2);
 	}
 };
 

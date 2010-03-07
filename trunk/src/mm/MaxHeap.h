@@ -1,30 +1,73 @@
 #ifndef KERNEL_MM_MAX_HEAP_H_INCLUDED
 #define KERNEL_MM_MAX_HEAP_H_INCLUDED
 
-#include "BinaryTreeNode.h"
 #include "StackBasedAllocator.h"
+#include "TreeNodeHelper.h"
 #include <cxx/BUG.h>
 
 namespace kernel {
 
+template<typename Key, typename Data, typename Allocator> class MaxHeap;
+template<typename Key, typename Data> class HeapNode {
+	template<typename A, typename B, typename C> friend class MaxHeap;
+	friend class TreeNodeHelper;
+	friend class TestMaxHeap;
+
+private:
+	HeapNode* left;
+	HeapNode* right;
+	HeapNode* parent;
+
+public:
+	Key key;
+	Data data;
+
+	HeapNode(const Key& k, const Data& d) : left(0), right(0), parent(0), key(k), data(d) {}
+
+private:
+	template<typename Allocator> void releaseTree(Allocator& allocator) {
+		TreeNodeHelper::releaseTree(this, allocator);
+	}
+
+	bool isLeftChild() const {
+		return TreeNodeHelper::isLeftChild(this);
+	}
+
+	bool isRightChild() const {
+		return TreeNodeHelper::isRightChild(this);
+	}
+
+	void setLeftChild(HeapNode* left) {
+		TreeNodeHelper::setLeftChild(this, left);
+	}
+
+	void setRightChild(HeapNode* right) {
+		TreeNodeHelper::setRightChild(this, right);
+	}
+
+	void replaceWith(HeapNode* replacement) {
+		TreeNodeHelper::replaceWith(this, replacement);
+	}
+};
+
 template<typename Key, typename Data,
 		typename AllocatorParameter =
-				StackBasedAllocator<sizeof(BinaryTreeNode<Key, Data>)> >
+				StackBasedAllocator<sizeof(HeapNode<Key, Data>)> >
 class MaxHeap {
 	friend class TestMaxHeap;
 public:
-	typedef BinaryTreeNode<Key, Data> Node;
+	typedef HeapNode<Key, Data> Node;
 	typedef AllocatorParameter Allocator;
 
 	MaxHeap(Allocator& alloc) : root(0), nodeCount(0), allocator(alloc) {}
 
 	~MaxHeap() {
-		BinaryTreeNode<Key, Data>::releaseTree(root, allocator);
+		root->releaseTree(allocator);
 	}
 
 	Node* insert(const Key& key, const Data& data) {
 		void* buffer = allocator.allocate(sizeof(Node));
-		BinaryTreeNode<Key, Data>* node = new (buffer) Node(key, data);
+		HeapNode<Key, Data>* node = new (buffer) Node(key, data);
 
 		++nodeCount;
 		Node* parent = getParentNode(nodeCount);
@@ -48,6 +91,7 @@ public:
 
 		if (nodeCount == 0) {
 			if (node == root) {
+				root->~Node();
 				allocator.release(root);
 				root = 0;
 			} else {
@@ -56,24 +100,25 @@ public:
 			return;
 		}
 
-		Node* parent = getParentNode(nodeCount + 1);
-		Node* last;
-		bool leftChild = (parent->right == 0);
-		if (leftChild) {
-			last = parent->left;
+		Node* parentOfLastNode = getParentNode(nodeCount + 1);
+		Node* lastNode;
+		bool isLeftChild = (parentOfLastNode->right == 0);
+		if (isLeftChild) {
+			lastNode = parentOfLastNode->left;
 		} else {
-			last = parent->right;
+			lastNode = parentOfLastNode->right;
 		}
 
-		swap(last, node);
-		if (leftChild) {
+		swap(lastNode, node);
+		if (isLeftChild) {
 			node->parent->left = 0;
 		} else {
 			node->parent->right = 0;
 		}
+		node->~Node();
 		allocator.release(node);
 
-		sink(last);
+		sink(lastNode);
 	}
 
 	void decrease(Node* node, const Key& key) {
@@ -169,25 +214,38 @@ private:
 		}
 	}
 
-	void swapSeparateNodes(Node* first, Node* second) {
-		bool isLeftChild = second->isLeftChild();
-		Node* parent = second->parent;
+	void swapRootAndGrandChild(Node* node) {
+		node->replaceWith(root);
+		root = node;
+		node->parent = 0;
+	}
 
-		if (first->isLeftChild()) {
+	void swapSeparateNodes(Node* first, Node* second) {
+		if (first == root) {
+			swapRootAndGrandChild(second);
+			return;
+		}
+		if (second == root) {
+			swapRootAndGrandChild(first);
+			return;
+		}
+
+		Node* firstParent = first->parent;
+		bool firstNodeIsLeftChild = first->isLeftChild();
+		Node* secondParent = second->parent;
+		bool secondNodeIsLeftChild = second->isLeftChild();
+		if (firstNodeIsLeftChild) {
 			first->parent->left = second;
-		} else if (first->isRightChild()) {
+		} else {
 			first->parent->right = second;
-		} else {
-			root = second;
 		}
-		second->parent = first->parent;
-		if (parent == 0) {
-			root = first;
-		} else if (isLeftChild) {
-			parent->left = first;
+		second->parent = firstParent;
+		if (secondNodeIsLeftChild) {
+			second->parent->left = first;
 		} else {
-			parent->right = first;
+			second->parent->right = first;
 		}
+		first->parent = secondParent;
 	}
 
 	/**

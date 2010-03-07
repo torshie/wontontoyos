@@ -13,6 +13,7 @@ INCLUDE_FLAGS = -I$(WONTON)/lib -I$(WONTON) -I$(WONTON)/src
 WARNING_FLAGS = -W -Wall -Wextra -Werror -Wno-enum-compare
 OPTIMIZE_FLAGS = -O3 -fomit-frame-pointer -finline-limit=10000
 COMMON_FLAGS += -nostdlib -nostartfiles -nodefaultlibs -ansi -fno-exceptions -mno-red-zone \
+		-fshow-column -ftabstop=4 \
 		$(INCLUDE_FLAGS) $(WARNING_FLAGS)
 OPTIMIZE_BUILD_FLAGS = $(COMMON_FLAGS) $(OPTIMIZE_FLAGS) -mcmodel=large \
 		-DBUILD_TEST_MODE_KERNEL
