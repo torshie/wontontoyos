@@ -2,7 +2,7 @@
 #define KERNEL_MESSAGE_H_INCLUDED
 
 #include "Printer.h"
-#include "Config.h"
+#include "SpecializeConfig.h"
 
 namespace kernel {
 
