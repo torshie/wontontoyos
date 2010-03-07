@@ -2,7 +2,7 @@
 #define KERNEL_MM_STACK_BASED_ALLOCATOR_H_INCLUDED
 
 #include "SimpleStack.h"
-#include "Printer.h"
+#include "Message.h"
 #include <generic/type.h>
 #include <generic/OFFSET_OF.h>
 #include <cxx/new.h>
@@ -20,8 +20,7 @@ public:
 	StackBasedAllocator() : counter(0) {}
 	~StackBasedAllocator() {
 		if (counter != 0) {
-			Printer& console = getSingleInstance<Printer>();
-			console << "StackBasedAllocator<" << (int)SLICE_SIZE << ">::counter == "
+			Message::critical << "StackBasedAllocator<" << (int)SLICE_SIZE << ">::counter == "
 					<< counter << "\n";
 		}
 	}

@@ -17,6 +17,7 @@ namespace kernel {
  */
 class Printer {
 	friend Printer& getSingleInstance<Printer>();
+	friend class Message;
 	Printer();
 	Printer(const Printer&);
 	const Printer& operator=(const Printer&);
@@ -40,9 +41,7 @@ class Printer {
 
 	template<typename Integer> class SignedIntegerPrinter {
 	public:
-		/**
-		 * XXX Optimize
-		 */
+		// XXX Optimize
 		static Printer& print(Integer data, Printer& printer) {
 			if (data < 0) {
 				printer.printChar('-');
@@ -93,7 +92,6 @@ class Printer {
 		}
 	};
 
-public:
 	template<typename T> Printer& operator << (const T& data) {
 		typedef typename TYPE_SELECTOR<IS_INTEGER<T>::value,
 							typename TYPE_SELECTOR<IS_SIGNED<T>::value,

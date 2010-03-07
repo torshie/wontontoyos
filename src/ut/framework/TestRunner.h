@@ -3,7 +3,7 @@
 
 #include "TestSuite.h"
 #include "TestResult.h"
-#include "Printer.h"
+#include "Message.h"
 #include <generic/Utils.h>
 
 namespace kernel {
@@ -18,47 +18,11 @@ public:
 	void addTestSuite(TestSuite& suite, const char* name);
 	void run(TestResult& result);
 
-	/**
-	 * Do not display any information when running test cases
-	 */
-	void keepQuiet() {
-		quiet = true;
-	}
-
-	/**
-	 * Display detailed information when running test cases
-	 */
-	void verbose() {
-		quiet = false;
-	}
-
-	bool isQuiet() {
-		return quiet;
-	}
-
 	void stopWhenFailed(bool b) {
 		stop = b;
 	}
 
 private:
-	class MessageStream {
-	public:
-		MessageStream(TestRunner& r) : console(getSingleInstance<Printer>()), runner(r) {
-		}
-
-		template<typename T>
-		MessageStream& operator << (T& data) {
-			if (!runner.isQuiet()) {
-				console << data;
-			}
-			return *this;
-		}
-
-	private:
-		Printer& console;
-		TestRunner& runner;
-	};
-
 	TestRunner(const TestRunner&);
 	const TestRunner& operator = (const TestRunner&);
 
@@ -66,8 +30,6 @@ private:
 		MAX_TEST_SUITE = 128
 	};
 
-	MessageStream message;
-	bool quiet;
 	int totalSuite;
 	TestResult* result;
 	bool stop;
@@ -85,8 +47,7 @@ private:
 
 	void runTestCase(TestSuite& suite, int testCaseId);
 
-	TestRunner() : message(*this), quiet(false), totalSuite(0), result(0),
-			stop(false), totalAssertion(0), failedAssertion(0) {
+	TestRunner() : totalSuite(0), result(0), stop(false), totalAssertion(0), failedAssertion(0) {
 		installTestSuite();
 	}
 
@@ -116,9 +77,8 @@ private:
 			const char* expression) {
 		failedAssertion++;
 		totalAssertion++;
-		const char* base = Utils::basename(file); // XXX Why cannot inline variable base?
-		Printer& console = getSingleInstance<Printer>();
-		console << base << ":" << line << " ASSERT(" << expression << ")\n";
+		Message::warning << Utils::basename(file) << ":" << line
+				<< " ASSERT(" << expression << ")\n";
 	}
 
 	template<typename First, typename Second>
@@ -127,10 +87,8 @@ private:
 			const First& first, const Second& second) {
 		failedAssertion++;
 		totalAssertion++;
-		const char* base = Utils::basename(file); // XXX Why cannot inline variable base?
-		Printer& console = getSingleInstance<Printer>();
-		console << base << ":" << line << " " << firstExpression << "["
-				<< first << "] == " << secondExpression << "[" << second << "]\n";
+		Message::warning << Utils::basename(file) << ":" << line << " " << firstExpression
+				<< "[" << first << "] == " << secondExpression << "[" << second << "]\n";
 	}
 
 	template<typename First, typename Second>
@@ -139,10 +97,8 @@ private:
 			const First& first, const Second& second) {
 		failedAssertion++;
 		totalAssertion++;
-		const char* base = Utils::basename(file); // XXX Why cannot inline variable base?
-		Printer& console = getSingleInstance<Printer>();
-		console << base << ":" << line << " " << firstExpression << "["
-				<< first << "] != " << secondExpression << "[" << second << "]\n";
+		Message::warning << Utils::basename(file) << ":" << line << " " << firstExpression
+				<< "[" << first << "] != " << secondExpression << "[" << second << "]\n";
 	}
 };
 

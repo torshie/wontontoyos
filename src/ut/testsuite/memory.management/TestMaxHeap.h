@@ -8,25 +8,26 @@
 namespace kernel {
 
 class TestMaxHeap : public TestCase {
-	char buffer[sizeof(MaxHeap<int, int>)];
+	typedef MaxHeap<int, int>::Node Node;
+	typedef MaxHeap<int, int>::Allocator Allocator;
+	char heapSite[sizeof(MaxHeap<int, int>)];
 	MaxHeap<int, int>* heap;
 
 	char pool[4096];
-	MaxHeap<int, int>::Allocator allocator;
+	char allocatorSite[sizeof(Allocator)];
+	Allocator* allocator;
 public:
-	// XXX allocator should report error when being destructed
-	TestMaxHeap() {
-		allocator.addPool(pool, sizeof(pool));
-	}
-
 	bool getTestPoint(TestPoint&, const char*&);
 
 	void setUp() {
-		heap = new (buffer) MaxHeap<int, int>(allocator);
+		allocator = new (allocatorSite) Allocator();
+		allocator->addPool(pool, sizeof(pool));
+		heap = new (heapSite) MaxHeap<int, int>(*allocator);
 	}
 
 	void tearDown() {
 		heap->~MaxHeap();
+		allocator->~Allocator();
 	}
 
 	void testGetParentNodeOfRoot() {
@@ -132,7 +133,7 @@ public:
 		UT_ASSERT_EQUAL(heap->root->right->right, 0);
 	}
 
-	void testSwapNotDirectlyLinkedNodes() {
+	void testSwapUnlinkedNodes() {
 		heap->insert(8, 8);
 		heap->insert(7, 7);
 		heap->insert(6, 6);
@@ -148,17 +149,33 @@ public:
 		UT_ASSERT_EQUAL(heap->root->key, 8);
 		UT_ASSERT_EQUAL(heap->root->data, 8);
 
-		UT_ASSERT_EQUAL(heap->root->left->key, 1);
-		UT_ASSERT_EQUAL(heap->root->left->data, 1);
+		UT_ASSERT_EQUAL(heap->root->left->key, 6);
+		UT_ASSERT_EQUAL(heap->root->left->data, 6);
 		UT_ASSERT_EQUAL(heap->root->left->parent, heap->root);
-		UT_ASSERT_EQUAL(heap->root->left->left, 0);
-		UT_ASSERT_EQUAL(heap->root->left->right, 0);
 
-		UT_ASSERT_EQUAL(heap->root->right->key, 2);
-		UT_ASSERT_EQUAL(heap->root->right->data, 2);
+		UT_ASSERT_EQUAL(heap->root->right->key, 7);
+		UT_ASSERT_EQUAL(heap->root->right->data, 7);
 		UT_ASSERT_EQUAL(heap->root->right->parent, heap->root);
-		UT_ASSERT_EQUAL(heap->root->right->left, 0);
-		UT_ASSERT_EQUAL(heap->root->right->right, 0);
+
+		UT_ASSERT_EQUAL(heap->root->left->left->key, 1);
+		UT_ASSERT_EQUAL(heap->root->left->left->left, 0);
+		UT_ASSERT_EQUAL(heap->root->left->left->right, 0);
+		UT_ASSERT_EQUAL(heap->root->left->left->parent, heap->root->left);
+
+		UT_ASSERT_EQUAL(heap->root->left->right->key, 2);
+		UT_ASSERT_EQUAL(heap->root->left->right->left, 0);
+		UT_ASSERT_EQUAL(heap->root->left->right->right, 0);
+		UT_ASSERT_EQUAL(heap->root->left->right->parent, heap->root->left);
+
+		UT_ASSERT_EQUAL(heap->root->right->left->key, 3);
+		UT_ASSERT_EQUAL(heap->root->right->left->left, 0);
+		UT_ASSERT_EQUAL(heap->root->right->left->right, 0);
+		UT_ASSERT_EQUAL(heap->root->right->left->parent, heap->root->right);
+
+		UT_ASSERT_EQUAL(heap->root->right->right->key, 4);
+		UT_ASSERT_EQUAL(heap->root->right->right->left, 0);
+		UT_ASSERT_EQUAL(heap->root->right->right->right, 0);
+		UT_ASSERT_EQUAL(heap->root->right->right->parent, heap->root->right);
 	}
 
 	void testInsertThirdNodeLargerThanRoot() {
@@ -219,108 +236,145 @@ public:
 	}
 
 	void testComplexInsert() {
-//		int input[] = {2, 1, 4, 3, 3, 6};
-//
-//		for (Size i = 0; i < sizeof(input) / sizeof(int); ++i) {
-//			heap->insert(input[i], input[i]);
-//		}
-//
-//		UT_ASSERT_EQUAL(heap->nodeCount, 6);
-//
-//		UT_ASSERT_EQUAL(heap->root->key, 6);
-//		UT_ASSERT_EQUAL(heap->root->left->key, 3);
-//		UT_ASSERT_EQUAL(heap->root->right->key, 4);
-//		UT_ASSERT_EQUAL(heap->root->left->left->key, 1);
-//		UT_ASSERT_EQUAL(heap->root->left->right->key, 3);
-//		UT_ASSERT_EQUAL(heap->root->right->left->key, 2);
+		heap->insert(2, 2);
+		heap->insert(1, 1);
+		heap->insert(4, 4);
+		heap->insert(3, 3);
+		heap->insert(3, 3);
+		heap->insert(6, 6);
+
+		UT_ASSERT_EQUAL(heap->nodeCount, 6);
+
+		UT_ASSERT_EQUAL(heap->root->key, 6);
+		UT_ASSERT_EQUAL(heap->root->parent, 0);
+
+		UT_ASSERT_EQUAL(heap->root->left->key, 3);
+		UT_ASSERT_EQUAL(heap->root->left->parent, heap->root);
+
+		UT_ASSERT_EQUAL(heap->root->right->key, 4);
+		UT_ASSERT_EQUAL(heap->root->right->parent, heap->root);
+
+		UT_ASSERT_EQUAL(heap->root->left->left->key, 1);
+		UT_ASSERT_EQUAL(heap->root->left->left->parent, heap->root->left);
+
+		UT_ASSERT_EQUAL(heap->root->left->right->key, 3);
+		UT_ASSERT_EQUAL(heap->root->left->right->parent, heap->root->left);
+
+		UT_ASSERT_EQUAL(heap->root->right->left->key, 2);
+		UT_ASSERT_EQUAL(heap->root->right->left->parent, heap->root->right);
 	}
-//
-//	void testRemoveSingleNode() {
-//		heap->insert(1, 1);
-//		heap->remove(0);
-//
-//		UT_ASSERT_EQUAL(heap->nodeCount, 0);
-//	}
-//
-//	void testRemoveRootOfTwoNodeHeap() {
-//		heap->insert(1, 1);
-//		heap->insert(2, 2);
-//
-//		heap->remove(0);
-//
-//		UT_ASSERT_EQUAL(heap->nodeCount, 1);
-//		UT_ASSERT_EQUAL(heap->base[0].key, 1);
-//		UT_ASSERT_EQUAL(heap->base[0].data, 1);
-//	}
-//
-//	void testRemoveRootOfThreeNodeHeap() {
-//		heap->insert(3, 3);
-//		heap->insert(1, 1);
-//		heap->insert(2, 2);
-//
-//		heap->remove(0);
-//
-//		UT_ASSERT_EQUAL(heap->nodeCount, 2);
-//		UT_ASSERT_EQUAL(heap->base[0].key, 2);
-//		UT_ASSERT_EQUAL(heap->base[1].key, 1);
-//	}
-//
-//	void testSinkAfterRemove() {
-//		int input[] = {4, 2, 3, 1, 1};
-//		int result[] = {3, 2, 1, 1};
-//
-//		for (Size i = 0; i < sizeof(input) / sizeof(int); ++i) {
-//			heap->insert(input[i], input[i]);
-//		}
-//		heap->remove(0);
-//		for (Size i = 0; i < sizeof(result) / sizeof(int); ++i) {
-//			UT_ASSERT_EQUAL(heap->base[i].key, result[i]);
-//		}
-//	}
-//
-//	void testDecreaseLeaf() {
-//		heap->insert(3, 3);
-//		heap->insert(2, 2);
-//
-//		heap->decrease(1, 2);
-//
-//		UT_ASSERT_EQUAL(heap->base[0].key, 3);
-//		UT_ASSERT_EQUAL(heap->base[1].key, 0);
-//		UT_ASSERT_EQUAL(heap->base[1].data, 2);
-//	}
-//
-//	void testDecreaseRoot() {
-//		heap->insert(3, 3);
-//		heap->insert(2, 2);
-//
-//		heap->decrease(0, 2);
-//
-//		UT_ASSERT_EQUAL(heap->base[0].key, 2);
-//		UT_ASSERT_EQUAL(heap->base[1].key, 1);
-//		UT_ASSERT_EQUAL(heap->base[1].data, 3);
-//	}
-//
-//	void testIncreaseRoot() {
-//		heap->insert(2, 2);
-//		heap->insert(1, 1);
-//
-//		heap->increase(0, 2);
-//
-//		UT_ASSERT_EQUAL(heap->base[0].key, 4);
-//		UT_ASSERT_EQUAL(heap->base[0].data, 2);
-//		UT_ASSERT_EQUAL(heap->base[1].key, 1);
-//	}
-//
-//	void testIncreaseLeaf() {
-//		heap->insert(2, 2);
-//		heap->insert(1, 1);
-//
-//		heap->increase(1, 2);
-//
-//		UT_ASSERT_EQUAL(heap->base[0].key, 3);
-//		UT_ASSERT_EQUAL(heap->base[0].data, 1);
-//		UT_ASSERT_EQUAL(heap->base[1].key, 2);
-//	}
+
+	void testSinkRootOfTwoNodeHeap() {
+		heap->insert(2, 2);
+		heap->insert(1, 1);
+
+		heap->root->left->key = 3;
+		heap->root->left->data = 3;
+		heap->sink(heap->root);
+
+		UT_ASSERT_EQUAL(heap->root->key, 3);
+		UT_ASSERT_EQUAL(heap->root->parent, 0);
+		UT_ASSERT_EQUAL(heap->root->left->key, 2);
+		UT_ASSERT_EQUAL(heap->root->left->parent, heap->root);
+	}
+
+
+	void testRemoveSingleNode() {
+		Node* node = heap->insert(1, 1);
+		heap->remove(node);
+
+		UT_ASSERT_EQUAL(heap->nodeCount, 0);
+		UT_ASSERT_EQUAL(heap->root, 0);
+	}
+
+	void testRemoveLeftChild() {
+		heap->insert(2, 2);
+		Node* left = heap->insert(1, 1);
+		heap->remove(left);
+
+		UT_ASSERT_EQUAL(heap->nodeCount, 1);
+		UT_ASSERT_EQUAL(heap->root->left, 0);
+		UT_ASSERT_EQUAL(heap->root->right, 0);
+		UT_ASSERT_EQUAL(heap->root->parent, 0);
+		UT_ASSERT_EQUAL(heap->root->key, 2);
+		UT_ASSERT_EQUAL(heap->root->data, 2);
+	}
+
+	void testRemoveRightChild() {
+		heap->insert(3, 3);
+		heap->insert(2, 2);
+		Node* right = heap->insert(1, 1);
+		heap->remove(right);
+
+		UT_ASSERT_EQUAL(heap->nodeCount, 2);
+		UT_ASSERT_EQUAL(heap->root->right, 0);
+		UT_ASSERT_EQUAL(heap->root->key, 3);
+		UT_ASSERT_EQUAL(heap->root->left->key, 2);
+	}
+
+	void testRemoveRootOfTwoNodeHeap() {
+		Node* root = heap->insert(2, 2);
+		heap->insert(1, 1);
+		heap->remove(root);
+
+		UT_ASSERT_EQUAL(heap->nodeCount, 1);
+		UT_ASSERT_EQUAL(heap->root->key, 1);
+		UT_ASSERT_EQUAL(heap->root->data, 1);
+		UT_ASSERT_EQUAL(heap->root->left, 0);
+		UT_ASSERT_EQUAL(heap->root->parent, 0);
+		UT_ASSERT_EQUAL(heap->root->right, 0);
+	}
+
+	void testRemoveRootOfThreeNodeHeap() {
+		Node* root = heap->insert(3, 3);
+		heap->insert(1, 1);
+		heap->insert(2, 2);
+		heap->remove(root);
+
+		UT_ASSERT_EQUAL(heap->nodeCount, 2);
+		UT_ASSERT_EQUAL(heap->root->key, 2);
+		UT_ASSERT_EQUAL(heap->root->right, 0);
+		UT_ASSERT_EQUAL(heap->root->left->key, 1);
+	}
+
+	void testSinkAfterRemove() {
+		Node* root = heap->insert(4, 4);
+		heap->insert(3, 3);
+		heap->insert(2, 2);
+		heap->insert(1, 1);
+		heap->insert(1, 1);
+		heap->remove(root);
+
+		UT_ASSERT_EQUAL(heap->nodeCount, 4);
+		UT_ASSERT_EQUAL(heap->root->key, 3);
+		UT_ASSERT_EQUAL(heap->root->right->key, 2);
+		UT_ASSERT_EQUAL(heap->root->left->key, 1);
+		UT_ASSERT_EQUAL(heap->root->left->left->key, 1);
+	}
+
+	void testDecreaseRoot() {
+		Node* root = heap->insert(3, 3);
+		heap->insert(2, 2);
+
+		heap->decrease(root, 2);
+
+		UT_ASSERT_EQUAL(heap->root->key, 2);
+		UT_ASSERT_EQUAL(heap->root->left->key, 1);
+		UT_ASSERT_EQUAL(heap->root->left->data, 3);
+	}
+
+
+	void testIncreaseLeaf() {
+		heap->insert(2, 2);
+		Node* leaf = heap->insert(1, 1);
+
+		heap->increase(leaf, 2);
+
+		UT_ASSERT_EQUAL(heap->root->key, 3);
+		UT_ASSERT_EQUAL(heap->root->data, 1);
+		UT_ASSERT_EQUAL(heap->root->left->data, 2);
+		UT_ASSERT_EQUAL(heap->root->left->key, 2);
+	}
 };
 
 } // namespace kernel

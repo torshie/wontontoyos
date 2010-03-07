@@ -3,6 +3,7 @@
 
 #include "BinaryTreeNode.h"
 #include "StackBasedAllocator.h"
+#include <cxx/BUG.h>
 
 namespace kernel {
 
@@ -11,13 +12,17 @@ template<typename Key, typename Data,
 				StackBasedAllocator<sizeof(BinaryTreeNode<Key, Data>)> >
 class MaxHeap {
 	friend class TestMaxHeap;
-	typedef BinaryTreeNode<Key, Data> Node;
 public:
+	typedef BinaryTreeNode<Key, Data> Node;
 	typedef AllocatorParameter Allocator;
-	MaxHeap(Allocator& alloc) : root(0), nodeCount(0), allocator(alloc) {}
-	~MaxHeap() {}
 
-	void insert(const Key& key, const Data& data) {
+	MaxHeap(Allocator& alloc) : root(0), nodeCount(0), allocator(alloc) {}
+
+	~MaxHeap() {
+		BinaryTreeNode<Key, Data>::releaseTree(root, allocator);
+	}
+
+	Node* insert(const Key& key, const Data& data) {
 		void* buffer = allocator.allocate(sizeof(Node));
 		BinaryTreeNode<Key, Data>* node = new (buffer) Node(key, data);
 
@@ -34,6 +39,51 @@ public:
 		} else {
 			root = node;
 		}
+
+		return node;
+	}
+
+	void remove(Node* node) {
+		--nodeCount;
+
+		if (nodeCount == 0) {
+			if (node == root) {
+				allocator.release(root);
+				root = 0;
+			} else {
+				BUG("node != root");
+			}
+			return;
+		}
+
+		Node* parent = getParentNode(nodeCount + 1);
+		Node* last;
+		bool leftChild = (parent->right == 0);
+		if (leftChild) {
+			last = parent->left;
+		} else {
+			last = parent->right;
+		}
+
+		swap(last, node);
+		if (leftChild) {
+			node->parent->left = 0;
+		} else {
+			node->parent->right = 0;
+		}
+		allocator.release(node);
+
+		sink(last);
+	}
+
+	void decrease(Node* node, const Key& key) {
+		node->key -= key;
+		sink(node);
+	}
+
+	void increase(Node* node, const Key& key) {
+		node->key += key;
+		bubble(node);
 	}
 
 private:
@@ -74,13 +124,28 @@ private:
 	}
 
 	void bubble(Node* node) {
-		if (node == root || node->key < node->parent->key) {
+		if ((node == root) || (node->key <= node->parent->key)) {
 			return;
 		}
 
 		Node* parent = node->parent;
 		swap(node, parent);
-		bubble(parent);
+		bubble(node);
+	}
+
+	void sink(Node* node) {
+		Node* largest = node;
+		if (node->left != 0 && largest->key < node->left->key) {
+			largest = node->left;
+		}
+		if (node->right != 0 && largest->key < node->right->key) {
+			largest = node->right;
+		}
+
+		if (largest != node) {
+			swap(largest, node);
+			sink(largest);
+		}
 	}
 
 	static void exchangeChildren(Node* first, Node* second) {
