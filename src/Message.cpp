@@ -1,15 +1,14 @@
 #include "Message.h"
-#include "MessageLevel.h"
 
 namespace kernel {
 
-Message Message::debug(MessageLevel::DEBUG);
-Message Message::verbose(MessageLevel::VERBOSE);
-Message Message::info(MessageLevel::INFO);
-Message Message::brief(MessageLevel::BRIEF);
-Message Message::warning(MessageLevel::WARNING);
-Message Message::error(MessageLevel::ERROR);
-Message Message::critical(MessageLevel::CRITICAL);
-Message Message::fatal(MessageLevel::FATAL);
+Message Message::debug(Message::DEBUG);
+Message Message::verbose(Message::VERBOSE);
+Message Message::info(Message::INFO);
+Message Message::brief(Message::BRIEF);
+Message Message::warning(Message::WARNING);
+Message Message::error(Message::ERROR);
+Message Message::critical(Message::CRITICAL);
+Message Message::fatal(Message::FATAL);
 
 } // namespace kernel
