@@ -15,64 +15,48 @@ class SearchTree {
 	friend class TestSearchTree;
 public:
 	typedef AllocatorParameter Allocator;
+	typedef BinaryTreeNode<Key, Data> Node;
 
 	explicit SearchTree(Allocator& alloc) : root(0), allocator(alloc) {}
 
 	~SearchTree() {
-		if (root == 0) {
-			return;
-		}
+		Node::releaseTree(root, allocator);
+	}
 
-		BinaryTreeNode<Key, Data>* node = root;
-		while (true) {
-			while (node->left != 0 || node->right != 0) {
-				if (node->left != 0) {
-					node = node->left;
+	Node* insert(const Key& key, const Data& data) {
+		void* buffer = allocator.allocate(sizeof(Node));
+		Node* node = new (buffer) Node(key, data);
+
+		if (root != 0) {
+			Node* cursor = root;
+			while (node->parent == 0) {
+				if (key < cursor->key) {
+					if (cursor->left != 0) {
+						cursor = cursor->left;
+					} else {
+						cursor->left = node;
+						node->parent = cursor;
+					}
 				} else {
-					node = node->right;
+					if (cursor->right != 0) {
+						cursor = cursor->right;
+					} else {
+						cursor->right = node;
+						node->parent = cursor;
+					}
 				}
 			}
-
-			BinaryTreeNode<Key, Data>** tmp = 0;
-			if (node->isLeftChild()) {
-				tmp = &(node->parent->left);
-			} else if (node->isRightChild()) {
-				tmp = &(node->parent->right);
-			}
-
-			if (node != root) {
-				node = node->parent;
-				(*tmp)->~BinaryTreeNode();
-				allocator.release(*tmp);
-				*tmp = 0;
-			} else {
-				node->~BinaryTreeNode();
-				allocator.release(node);
-				return;
-			}
+		} else {
+			root = node;
 		}
+
+		return node;
 	}
 
-	void insert(const Key& key, const Data& data) {
-		void* buffer = allocator.allocate(sizeof(BinaryTreeNode<Key, Data>));
-		BinaryTreeNode<Key, Data>* node = new (buffer) BinaryTreeNode<Key, Data>(key, data);
-		BinaryTreeNode<Key, Data>** cursor = &root;
-		while (*cursor != 0) {
-			node->parent = *cursor;
-			if (key < (*cursor)->key) {
-				cursor = &((*cursor)->left);
-			} else {
-				cursor = &((*cursor)->right);
-			}
-		}
-		*cursor = node;
-	}
+	void remove(Node* node);
 
-	void remove(BinaryTreeNode<Key, Data>* node);
-	void remove(const Key& key);
-
-	Data* search(const Key& key) {
-		BinaryTreeNode<Key, Data>* cursor = root;
+	Node* search(const Key& key) {
+		Node* cursor = root;
 		while (cursor != 0 && cursor->key != key) {
 			if (key < cursor->key) {
 				cursor = cursor->left;
@@ -82,14 +66,14 @@ public:
 		}
 
 		if (cursor != 0) {
-			return (cursor->data);
+			return cursor;
 		} else {
 			return 0;
 		}
 	}
 
 private:
-	BinaryTreeNode<Key, Data>* root;
+	Node* root;
 	Allocator& allocator;
 };
 

@@ -11,24 +11,26 @@ namespace kernel {
 class TestSearchTree : public TestCase {
 	typedef SearchTree<int, int>::Allocator Allocator;
 
-	Allocator allocator;
+	char allocatorSite[sizeof(Allocator)];
+	Allocator* allocator;
 	char pool[1024];
-	char buffer[sizeof(SearchTree<int, int>)];
+
+	char treeSite[sizeof(SearchTree<int, int>)];
 	SearchTree<int, int>* tree;
 
 public:
-	TestSearchTree() {
-		allocator.addPool(pool, sizeof(pool));
-	}
-
 	bool getTestPoint(TestPoint&, const char*&);
 
 	void setUp() {
-		tree = new (buffer) SearchTree<int, int>(allocator);
+		allocator = new (allocatorSite)Allocator();
+		allocator->addPool(pool, sizeof(pool));
+
+		tree = new (treeSite) SearchTree<int, int>(*allocator);
 	}
 
 	void tearDown() {
 		tree->~SearchTree();
+		allocator->~Allocator();
 	}
 
 	void testEmptyTree() {

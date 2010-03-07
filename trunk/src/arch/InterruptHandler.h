@@ -14,8 +14,7 @@ template<> class InterruptHandler<InterruptDescriptorTable::PAGE_FAULT> {
 public:
 	static void handle() {
 		U64 linearAddress = getControlRegister2();
-		Printer& console = getSingleInstance<Printer>();
-		console << "#Page Fault: accessing " << linearAddress << "\n";
+		Message::critical << "#Page Fault: accessing " << linearAddress << "\n";
 
 		System::halt();
 	}

@@ -1,5 +1,6 @@
 #include "TestRunner.h"
 #include "Printer.h"
+#include "Message.h"
 
 namespace kernel {
 
@@ -13,16 +14,15 @@ void TestRunner::addTestSuite(TestSuite& suite,
 void TestRunner::run(TestResult& r) {
 	result = &r;
 	for (int suiteId = 0; suiteId < totalSuite; ++suiteId) {
-		message << "Running test suite " << testSuiteName[suiteId] << "\n";
+		Message::brief << "Running test suite " << testSuiteName[suiteId] << "\n";
 		result->totalSuite++;
 		runTestSuite(*(testSuite[suiteId]));
 	}
 }
 
-
 void TestRunner::runTestSuite(TestSuite& suite) {
 	for (int testCaseId = 0; testCaseId < suite.totalCase; ++testCaseId) {
-	message << "  Running test case " << suite.testCaseName[testCaseId] << "\n";
+	Message::verbose << "  Running test case " << suite.testCaseName[testCaseId] << "\n";
 		runTestCase(suite, testCaseId);
 		result->totalCase++;
 		if (shouldStopTesting()) {
@@ -45,8 +45,7 @@ void TestRunner::runTestCase(TestSuite& suite, int testCaseId) {
 		if (!isTestPointClean()) {
 			testCaseClean = false;
 			result->failedTestPoint++;
-			Printer& console = getSingleInstance<Printer>();
-			console << "    " << suite.testPointName[testCaseId][testPointId]
+			Message::warning << "    " << suite.testPointName[testCaseId][testPointId]
 					<< ":  FAIL\n";
 			if (shouldStopTesting()) {
 				break;

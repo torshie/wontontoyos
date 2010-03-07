@@ -1,4 +1,4 @@
-#include "Printer.h"
+#include "Message.h"
 #include "cxx/initCxxSupport.h"
 #include "arch/GlobalDescriptorTable.h"
 #include "arch/InterruptDescriptorTable.h"
@@ -14,21 +14,17 @@ namespace kernel {
 
 extern "C" int __ld_bss_end;
 void main() {
-	Printer& console = getSingleInstance<Printer>();
-
-	console << "Welcome\n";
-	console << "to the hell!\n";
+	Message::brief << "Welcome to the hell!\n";
 
 	getSingleInstance<GlobalDescriptorTable>().load();
 	getSingleInstance<InterruptDescriptorTable>().load();
 
 	TestRunner& runner = getSingleInstance<TestRunner>();
-	runner.keepQuiet();
 	TestResult result;
 	runner.run(result);
 	result.show();
 
-	console << "__ld_bss_end: " << &__ld_bss_end << "\n";
+	Message::brief << "__ld_bss_end: " << &__ld_bss_end << "\n";
 }
 
 } /* namespace kernel */

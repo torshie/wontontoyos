@@ -1,4 +1,4 @@
-#include "Printer.h"
+#include "Message.h"
 #include "InterruptDescriptorTable.h"
 #include "GlobalDescriptorTable.h"
 #include "InterruptHandler.h"
@@ -56,13 +56,12 @@ void InterruptDescriptorTable::handle(int isrNumber) {
 		"#XM SIMD Floating-Point Exception"
 	};
 
-	Printer& console = getSingleInstance<Printer>();
 	InterruptDescriptorTable& idt = getSingleInstance<InterruptDescriptorTable>();
 	if (idt.handler[isrNumber] != 0) {
 		idt.handler[isrNumber]();
 	} else {
 		if (isrNumber != DOUBLE_FAULT) {
-			console << ISR_NAME[isrNumber];
+			Message::critical << ISR_NAME[isrNumber];
 			for (;;)
 				;
 		}
