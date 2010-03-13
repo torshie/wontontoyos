@@ -13,11 +13,15 @@ template<Size SLICE_SIZE> class StackBasedAllocator {
 	friend class TestStackBasedAllocator;
 	typedef char Load[SLICE_SIZE];
 public:
-
-#if defined(BUILD_TEST_MODE_KERNEL)
+#ifdef BUILD_TEST_MODE_KERNEL
 	int counter;
 
 	StackBasedAllocator() : counter(0) {}
+
+	StackBasedAllocator(void* buffer, Size size) : counter(0) {
+		addPool(buffer, size);
+	}
+
 	~StackBasedAllocator() {
 		if (counter != 0) {
 			Message::critical << "StackBasedAllocator<" << (int)SLICE_SIZE << ">::counter == "
@@ -50,16 +54,16 @@ template<Size SLICE_SIZE> void* StackBasedAllocator<SLICE_SIZE>::allocate(Size s
 		return 0;
 	}
 
-	typename SimpleStack<Load>::Node* node = stack.pop();
-	if (node == 0) {
-		return 0;
-	} else {
 
+	typename SimpleStack<Load>::Node* node = stack.pop();
+	if (node != 0) {
 #if defined(BUILD_TEST_MODE_KERNEL)
 		++counter;
 #endif
-
 		return &(node->load);
+	} else {
+		// XXX Use GenericAllocator to allocate more memory instead of return 0
+		return 0;
 	}
 }
 
@@ -67,7 +71,6 @@ template<Size SLICE_SIZE> void StackBasedAllocator<SLICE_SIZE>::release(void* po
 #ifdef BUILD_TEST_MODE_KERNEL
 	--counter;
 #endif
-
 	void* tmp = (char*)pointer - OFFSET_OF(typename SimpleStack<Load>::Node, load);
 	typename SimpleStack<Load>::Node* node = new (tmp)(typename SimpleStack<Load>::Node)();
 	stack.push(node);

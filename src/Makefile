@@ -18,7 +18,7 @@ $(KERNEL): $(X64KERNEL)
 
 $(X64KERNEL): $(LIBS) $(LIBRARY) $(LIBS) $(LD_SCRIPT)
 	#  LD $@
-	@$(LD) $(LIBRARY) $(LDFLAGS) -T $(LD_SCRIPT) -o $@ -Map=$(MAP)
+	@$(LD) mm/GenericAllocator.o $(LIBRARY) $(LDFLAGS) -T $(LD_SCRIPT) -o $@ -Map=$(MAP)
 
 dump: $(X64KERNEL)
 	$(OBJDUMP) $< -D --demangle | less

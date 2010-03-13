@@ -26,36 +26,7 @@ class TestSearchTree : public TestCase {
 	SearchTree<int, int>* tree;
 
 	static int getBlackHeight(Node* node) {
-		if (node == 0) {
-			return 0;
-		}
-
-		int leftBlackHeight = getBlackHeight(node->left);
-		int rightBlackHeight = getBlackHeight(node->right);
-		if (leftBlackHeight != rightBlackHeight || leftBlackHeight == -1
-				|| rightBlackHeight == -1) {
-			return -1;
-		}
-
-		if (node->left != 0) {
-			if (node->left->key > node->key || node->left->parent != node) {
-				return -1;
-			}
-		}
-		if (node->right != 0) {
-			if (node->right->key < node->key || node->right->parent  != node) {
-				return -1;
-			}
-		}
-
-		if (Node::isRed(node)) {
-			if (Node::isRed(node->left) || Node::isRed(node->right)) {
-				return -1;
-			}
-			return leftBlackHeight;
-		} else {
-			return leftBlackHeight + 1;
-		}
+		return SearchTree<int, int>::getBlackHeight(node);
 	}
 
 public:

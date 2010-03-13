@@ -32,9 +32,10 @@ template<int LEVEL> void PageMap::CreateKernelHierarchyHelper<LEVEL>::run(Addres
 		Size size) {
 	CreateKernelHierarchyHelper<LEVEL + 1>::run(base, size);
 
-	Size pointerCount = Utils::ceilingDivide(size, PagePointer<LEVEL>::MEMORY_POINTED);
-	for (Size i = 0; i < pointerCount; ++i) {
-		Address address = base + i * PagePointer<LEVEL>::MEMORY_POINTED;
+	Address start = Utils::roundDown(base, PagePointer<LEVEL>::MEMORY_POINTED);
+	Address end = Utils::roundUp(base + size, PagePointer<LEVEL>::MEMORY_POINTED);
+	for (Address address = start; address < end;
+			address += PagePointer<LEVEL>::MEMORY_POINTED) {
 		PagePointer<LEVEL>* pointer = PagePointer<LEVEL>::getPointerToKernelAddress(address);
 		if (pointer->present) {
 			continue;

@@ -7,9 +7,9 @@
 namespace kernel {
 
 // Defined in ld script
-extern "C" char __ld_bss_end, __ld_image_start;
+extern "C" char __ld_image_end, __ld_image_start;
 PhysicalPageAllocator::PhysicalPageAllocator() {
-	Size imageSize = (Address)&__ld_bss_end - (Address)&__ld_image_start;
+	Size imageSize = (Address)&__ld_image_end - (Address)&__ld_image_start;
 	available = imageSize + KERNEL_RESERVED_MEMORY + KERNEL_TEMP_AREA + KERNEL_STACK_SIZE;
 }
 

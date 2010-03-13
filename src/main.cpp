@@ -9,10 +9,11 @@
 #include "mm/PagePointer.h"
 #include "mm/PageMap.h"
 #include "mm/PageTable.h"
+#include "mm/GenericAllocator.h"
 
 namespace kernel {
 
-extern "C" int __ld_bss_end;
+extern "C" char __ld_image_end;
 void main() {
 	Message::brief << "Welcome to the hell!\n";
 
@@ -24,7 +25,7 @@ void main() {
 	runner.run(result);
 	result.show();
 
-	Message::brief << "__ld_bss_end: " << &__ld_bss_end << "\n";
+	Message::brief << "__ld_bss_end: " << (Address)&__ld_image_end << "\n";
 }
 
 } /* namespace kernel */

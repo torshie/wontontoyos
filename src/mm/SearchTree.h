@@ -11,6 +11,7 @@ template<typename Key, typename Data> class RedBlackTreeNode {
 	template<typename A, typename B, typename C> friend class SearchTree;
 	friend class TreeNodeHelper;
 	friend class TestSearchTree;
+	friend class GenericAllocator;
 
 	RedBlackTreeNode* left;
 	RedBlackTreeNode* right;
@@ -137,6 +138,10 @@ public:
 
 		node->~Node();
 		allocator.release(node);
+
+#ifdef BUILD_TEST_MODE_KERNEL
+		checkRedBlackTree();
+#endif
 	}
 
 private:
@@ -241,6 +246,49 @@ private:
 			}
 		}
 	}
+
+#ifdef BUILD_TEST_MODE_KERNEL
+	void checkRedBlackTree() {
+		int height = getBlackHeight(root);
+		if (height < 0) {
+			BUG("SearchTree isn't a valid red-black tree.");
+		}
+	}
+
+	static int getBlackHeight(Node* node) {
+		if (node == 0) {
+			return 0;
+		}
+
+		int leftBlackHeight = getBlackHeight(node->left);
+		int rightBlackHeight = getBlackHeight(node->right);
+		if (leftBlackHeight != rightBlackHeight || leftBlackHeight == -1
+				|| rightBlackHeight == -1) {
+			return -1;
+		}
+
+		if (node->left != 0) {
+			if (node->left->key > node->key || node->left->parent != node) {
+				return -1;
+			}
+		}
+		if (node->right != 0) {
+			if (node->right->key < node->key || node->right->parent  != node) {
+				return -1;
+			}
+		}
+
+		if (Node::isRed(node)) {
+			if (Node::isRed(node->left) || Node::isRed(node->right)) {
+				return -1;
+			}
+			return leftBlackHeight;
+		} else {
+			return leftBlackHeight + 1;
+		}
+	}
+#endif
+
 };
 
 /**
@@ -318,6 +366,11 @@ RedBlackTreeNode<Key, Data>* SearchTree<Key, Data, MemoryAllocator>::insert(cons
 	}
 
 	root->red = false;
+
+#ifdef BUILD_TEST_MODE_KERNEL
+		checkRedBlackTree();
+#endif
+
 	return node;
 }
 
