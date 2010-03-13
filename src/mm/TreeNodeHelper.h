@@ -27,7 +27,9 @@ template<typename TreeNode> void TreeNodeHelper::replaceWith(TreeNode* node,
 	} else {
 		node->parent->right = replacement;
 	}
-	replacement->parent = node->parent;
+	if (replacement != 0) {
+		replacement->parent = node->parent;
+	}
 }
 
 template<typename TreeNode> void TreeNodeHelper::setLeftChild(TreeNode* node, TreeNode* left) {

@@ -246,6 +246,160 @@ public:
 
 		IS_RED_BLACK_TREE(3, 2);
 	}
+
+	void testGetSuccessor() {
+		tree->insert(3, 3);
+		tree->insert(1, 1);
+		tree->insert(4, 4);
+		tree->insert(2, 2);
+
+		IS_RED_BLACK_TREE(3, 2);
+		UT_ASSERT_EQUAL((SearchTree<int, int>::getSuccessor(tree->root)), tree->root->right);
+		UT_ASSERT_EQUAL((SearchTree<int, int>::getSuccessor(tree->root->left->right)),
+				tree->root);
+		UT_ASSERT_EQUAL((SearchTree<int, int>::getSuccessor(tree->root->right)), 0);
+	}
+
+	void testRemoveSingleNode() {
+		tree->insert(1, 1);
+		tree->remove(tree->root);
+
+		UT_ASSERT_EQUAL(tree->root, 0);
+	}
+
+	void testTwoNodeTree_RemoveRoot_1() {
+		tree->insert(2, 2);
+		tree->insert(1, 1);
+		tree->remove(tree->root);
+		IS_RED_BLACK_TREE(1, 1);
+	}
+
+	void testTwoNodeTree_RemoveRoot_2() {
+		tree->insert(2, 2);
+		tree->insert(3, 3);
+		tree->remove(tree->root);
+		IS_RED_BLACK_TREE(3, 1);
+	}
+
+	void testTwoNodeTree_RemoveLeftChild() {
+		tree->insert(2, 2);
+		tree->insert(1, 1);
+		tree->remove(tree->root->left);
+		IS_RED_BLACK_TREE(2, 1);
+	}
+
+	void testRemovedNodeIsLeftChildAndOnlyHasLeftChild() {
+		tree->insert(2, 2);
+		tree->insert(1, 1);
+		tree->insert(3, 3);
+		tree->insert(0, 0);
+		tree->remove(tree->root->left);
+		IS_RED_BLACK_TREE(2, 2);
+	}
+
+	void testRemovedNodeIsLeftChildAndOnlyHasRightChild() {
+		tree->insert(2, 2);
+		tree->insert(0, 0);
+		tree->insert(3, 3);
+		tree->insert(1, 1);
+		tree->remove(tree->root->left);
+		IS_RED_BLACK_TREE(2, 2);
+	}
+
+	void testRemovedNodeIsRightChildAndOnlyHasLeftChild() {
+		tree->insert(2, 2);
+		tree->insert(1, 1);
+		tree->insert(4, 4);
+		tree->insert(3, 3);
+		tree->remove(tree->root->right);
+		IS_RED_BLACK_TREE(2, 2);
+	}
+
+	void testRemovedNodeIsRightChildAndOnlyHasRightChild() {
+		tree->insert(2, 2);
+		tree->insert(1, 1);
+		tree->insert(3, 3);
+		tree->insert(4, 4);
+		tree->remove(tree->root->right);
+		IS_RED_BLACK_TREE(2, 2);
+	}
+
+	void testRemoveRootOfThreeNodeTree() {
+		tree->insert(2, 2);
+		tree->insert(1, 1);
+		tree->insert(3, 3);
+		tree->remove(tree->root);
+		IS_RED_BLACK_TREE(3, 1);
+	}
+
+	void testFixUpRemoveLeft_1() {
+		tree->insert(2, 2);
+		tree->insert(1, 1);
+		tree->insert(3, 3);
+		tree->insert(4, 4);
+		tree->remove(tree->root->right->right);
+		IS_RED_BLACK_TREE(2, 2);
+	}
+
+	void testFixUpRemoveLeft_2() {
+		tree->insert(2, 2);
+		tree->insert(1, 1);
+		tree->insert(4, 4);
+		tree->insert(3, 3);
+		tree->remove(tree->root->right->left);
+		IS_RED_BLACK_TREE(2, 2);
+	}
+
+	void testFixUpRemoveRight_1() {
+		tree->insert(3, 3);
+		tree->insert(4, 4);
+		tree->insert(2, 2);
+		tree->insert(1, 1);
+		tree->remove(tree->root->left->left);
+		IS_RED_BLACK_TREE(3, 2);
+	}
+
+	void testFixUpRemoveRight_2() {
+		tree->insert(3, 3);
+		tree->insert(4, 4);
+		tree->insert(1, 1);
+		tree->insert(2, 2);
+		tree->remove(tree->root->left->right);
+		IS_RED_BLACK_TREE(3, 2);
+	}
+
+	void testRemoveRootOfThreeBlack() {
+		tree->insert(2, 2);
+		tree->insert(1, 1);
+		tree->insert(3, 3);
+		tree->root->left->red = false;
+		tree->root->right->red = false;
+
+		tree->remove(tree->root);
+		IS_RED_BLACK_TREE(3, 1);
+	}
+
+	void testRemoveLeftOfTreeBlack() {
+		tree->insert(2, 2);
+		tree->insert(1, 1);
+		tree->insert(3, 3);
+		tree->root->left->red = false;
+		tree->root->right->red = false;
+
+		tree->remove(tree->root->left);
+		IS_RED_BLACK_TREE(2, 1);
+	}
+
+	void testRemoveRightOfTreeBlack() {
+		tree->insert(2, 2);
+		tree->insert(1, 1);
+		tree->insert(3, 3);
+		tree->root->left->red = false;
+		tree->root->right->red = false;
+
+		tree->remove(tree->root->right);
+		IS_RED_BLACK_TREE(2, 1);
+	}
 };
 
 } // namespace kernel

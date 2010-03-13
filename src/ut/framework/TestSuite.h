@@ -16,8 +16,8 @@ public:
 
 private:
 	enum {
-		MAX_TEST_CASE = 128,
-		MAX_TEST_POINT = 32
+		MAX_TEST_CASE = 64,
+		MAX_TEST_POINT = 64
 	};
 
 	int totalCase;
