@@ -27,9 +27,9 @@ public:
 		UT_ASSERT_TRUE(b);
 	}
 
-	void testCreateKernelHierarchySinglePage() {
-		Address address = KERNEL_VIRTUAL_BASE + PagePointer<4>::MEMORY_POINTED;
-		PageMap::createKernelHierarchy(address, PAGE_SIZE);
+	void testCreateKernelHierarchy() {
+		Address address = KERNEL_VIRTUAL_BASE + PagePointer<4>::MEMORY_POINTED + PAGE_SIZE;
+		PageMap::createKernelHierarchy(address, PagePointer<2>::MEMORY_POINTED);
 		volatile int* first = (volatile int*)address;
 		volatile int* second = (volatile int*)(address + sizeof(int));
 		*first = 4321;

@@ -87,4 +87,16 @@ U64 Utils::ceilingDivide(U64 value, U64 round) {
 	}
 }
 
+Size Utils::roundUp(Size size, Size round) {
+	if (size % round == 0) {
+		return size;
+	} else {
+		return (size / round + 1) * round;
+	}
+}
+
+Size Utils::roundDown(Size size, Size round) {
+	return size / round * round;
+}
+
 } /* namespace kernel */

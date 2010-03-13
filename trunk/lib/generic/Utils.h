@@ -15,6 +15,8 @@ public:
 	static Size strlen(const char* string);
 	static const char* basename(const char* path);
 	static U64 ceilingDivide(U64 value, U64 round);
+	static Size roundUp(Size size, Size round);
+	static Size roundDown(Size size, Size round);
 };
 
 } /* namespace kernel */

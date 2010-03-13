@@ -12,6 +12,7 @@ template<typename Key, typename Data> class HeapNode {
 	template<typename A, typename B, typename C> friend class MaxHeap;
 	friend class TreeNodeHelper;
 	friend class TestMaxHeap;
+	friend class GenericAllocator;
 
 private:
 	HeapNode* left;
@@ -129,6 +130,10 @@ public:
 	void increase(Node* node, const Key& key) {
 		node->key += key;
 		bubble(node);
+	}
+
+	Node* peek() {
+		return root;
 	}
 
 private:

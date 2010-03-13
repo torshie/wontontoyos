@@ -3,8 +3,6 @@
 
 #include <generic/type.h>
 
-inline void* operator new(kernel::Size, void* p) {
-	return p;
-}
+void* operator new(kernel::Size, void* p);
 
 #endif /* KERNEL_CXX_NEW_H_INCLUDED */
