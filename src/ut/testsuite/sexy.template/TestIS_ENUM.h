@@ -1,6 +1,3 @@
-#ifndef KERNEL_SEXY_TEMPLATE_IS_ENUM_H_INCLUDED
-#define KERNEL_SEXY_TEMPLATE_IS_ENUM_H_INCLUDED
-
 #include <sexy/IS_ENUM.h>
 #include "ut/framework/UnitTesting.h"
 
@@ -36,5 +33,3 @@ public:
 };
 
 } /* namespace kernel */
-
-#endif /* KERNEL_SEXY_TEMPLATE_IS_ENUM_H_INCLUDED */

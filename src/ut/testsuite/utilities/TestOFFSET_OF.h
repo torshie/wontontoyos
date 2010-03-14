@@ -1,6 +1,3 @@
-#ifndef KERNEL_UTILITIES_TEST_OFFSET_OF_H_INCLUDED
-#define KERNEL_UTILITIES_TEST_OFFSET_OF_H_INCLUDED
-
 #include "ut/framework/UnitTesting.h"
 #include <generic/OFFSET_OF.h>
 #include <generic/type.h>
@@ -37,5 +34,3 @@ public:
 };
 
 } // namespace kernel
-
-#endif // KERNEL_UTILITIES_TEST_OFFSET_OF_H_INCLUDED

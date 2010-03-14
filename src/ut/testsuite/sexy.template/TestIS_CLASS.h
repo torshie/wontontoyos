@@ -1,6 +1,3 @@
-#ifndef KERNEL_SEXY_TEMPLATE_TEST_IS_CLASS_H_INCLUDED
-#define KERNEL_SEXY_TEMPLATE_TEST_IS_CLASS_H_INCLUDED
-
 #include "ut/framework/UnitTesting.h"
 #include <sexy/IS_CLASS.h>
 
@@ -29,5 +26,3 @@ public:
 };
 
 } /* namespace kernel */
-
-#endif /* KERNEL_SEXY_TEMPLATE_TEST_IS_CLASS_H_INCLUDED */

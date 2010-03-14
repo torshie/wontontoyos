@@ -51,6 +51,7 @@ private:
 	}
 };
 
+// XXX Refine access privileges of the members
 template<typename Key, typename Data,
 		typename AllocatorParameter =
 				StackBasedAllocator<sizeof(HeapNode<Key, Data>)> >

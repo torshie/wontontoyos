@@ -1,6 +1,3 @@
-#ifndef KERNEL_MEMORY_MANAGEMENT_TEST_PHYSICAL_PAGE_ALLOCATOR_H_INCLUDED
-#define KERNEL_MEMORY_MANAGEMENT_TEST_PHYSICAL_PAGE_ALLOCATOR_H_INCLUDED
-
 #include "ut/framework/UnitTesting.h"
 #include "mm/PhysicalPageAllocator.h"
 #include "arch/X64Constant.h"
@@ -23,5 +20,3 @@ public:
 };
 
 } /* namespace kernel */
-
-#endif

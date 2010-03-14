@@ -65,6 +65,7 @@ private:
 
 // XXX Make the tree implementation thread-safe
 // XXX Remove duplication.
+// XXX Refine access privileges of the members
 template<typename Key, typename Data,
 		typename MemoryAllocator = StackBasedAllocator<sizeof(RedBlackTreeNode<Key, Data>)> >
 class SearchTree {
@@ -144,6 +145,47 @@ public:
 #endif
 	}
 
+	Node* search(const Key& key) const {
+		Node* cursor = root;
+		while (cursor != 0) {
+			if (key < cursor->key) {
+				cursor = cursor->left;
+			} else if (key == cursor->key) {
+				break;
+			} else {
+				cursor = cursor->right;
+			}
+		}
+		return cursor;
+	}
+
+
+	static Node* getSuccessor(const Node* node) {
+		if (node->right != 0) {
+			return getMinimum(node->right);
+		} else {
+			Node* parent = node->parent;
+			while (parent != 0 && parent->right == node) {
+				node = parent;
+				parent = node->parent;
+			}
+			return parent;
+		}
+	}
+
+	static Node* getPredecessor(const Node* node) {
+		if (node->left != 0) {
+			return node->left;
+		}
+
+		Node* parent = node->parent;
+		while (parent != 0 && node->isLeftChild()) {
+			node = parent;
+			parent = node->parent;
+		}
+		return parent;
+	}
+
 private:
 	Node* root;
 	Allocator& allocator;
@@ -158,19 +200,6 @@ private:
 			cursor = cursor->left;
 		}
 		return cursor;
-	}
-
-	static Node* getSuccessor(Node* node) {
-		if (node->right != 0) {
-			return getMinimum(node->right);
-		} else {
-			Node* parent = node->parent;
-			while (parent != 0 && parent->right == node) {
-				node = parent;
-				parent = node->parent;
-			}
-			return parent;
-		}
 	}
 
 	void fixUpRemove(Node* fix, bool left) {

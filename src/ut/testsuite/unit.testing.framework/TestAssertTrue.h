@@ -1,6 +1,3 @@
-#ifndef KERNEL_UNIT_TESTING_FRAMEWORK_TEST_ASSERT_TRUE_H_INCLUDED
-#define KERNEL_UNIT_TESTING_FRAMEWORK_TEST_ASSERT_TRUE_H_INCLUDED
-
 #include "ut/framework/UnitTesting.h"
 
 namespace kernel {
@@ -19,5 +16,3 @@ public:
 };
 
 } /* namespace kernel */
-
-#endif /* KERNEL_UNIT_TESTING_FRAMEWORK_TEST_ASSERT_TRUE_H_INCLUDED */

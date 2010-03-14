@@ -1,6 +1,3 @@
-#ifndef KERNEL_UNIT_TEST_FRAMEWORK_TEST_METHOD_CALL_H_INCLUDED
-#define KERNEL_UNIT_TEST_FRAMEWORK_TEST_METHOD_CALL_H_INCLUDED
-
 #include "ut/framework/UnitTesting.h"
 #include "Printer.h"
 
@@ -16,5 +13,3 @@ public:
 };
 
 } /* namespace kernel */
-
-#endif /* KERNEL_UNIT_TEST_FRAMEWORK_TEST_METHOD_CALL_H_INCLUDED */

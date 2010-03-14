@@ -1,6 +1,3 @@
-#ifndef KERNEL_MEMORY_MANAGEMENT_TEST_SIMPLE_STACK_H_INCLUDED
-#define KERNEL_MEMORY_MANAGEMENT_TEST_SIMPLE_STACK_H_INCLUDED
-
 #include "ut/framework/UnitTesting.h"
 #include "mm/SimpleStack.h"
 #include <cxx/new.h>
@@ -41,5 +38,3 @@ public:
 };
 
 } // namespace kernel
-
-#endif // KERNEL_MEMORY_MANAGEMENT_TEST_SIMPLE_STACK_H_INCLUDED

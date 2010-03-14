@@ -11,6 +11,7 @@ namespace kernel {
 
 extern "C" char __ld_image_end;
 
+// XXX Thread-safety
 class GenericAllocator {
 	friend GenericAllocator& getSingleInstance<GenericAllocator>();
 
@@ -42,15 +43,13 @@ class GenericAllocator {
 		linearAddressEnd += CHUNK_SIZE;
 	}
 
-#ifdef BUILD_TEST_MODE_KERNEL
-	int counter;
-#endif
-
 public:
 	void* allocate(Size size);
+	void release(void* address);
 
-	// XXX Implement release()
-	void release(void*) {}
+private:
+	void merge(Tree::Node* first, Tree::Node* second);
+	Size getMemorySliceSize(const Tree::Node* node) const;
 };
 
 } // namespace kernel

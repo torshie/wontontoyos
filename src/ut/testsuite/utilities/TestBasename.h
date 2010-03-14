@@ -1,6 +1,3 @@
-#ifndef KERNEL_UTILITIES_TEST_BASENAME_H_INCLUDED
-#define KERNEL_UTILITIES_TEST_BASENAME_H_INCLUDED
-
 #include "ut/framework/UnitTesting.h"
 #include <generic/Utils.h>
 
@@ -36,5 +33,3 @@ public:
 };
 
 } /* namespace kernel */
-
-#endif /* KERNEL_UTILITIES_TEST_BASENAME_H_INCLUDED */

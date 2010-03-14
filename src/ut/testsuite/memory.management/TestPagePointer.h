@@ -1,6 +1,3 @@
-#ifndef KERNEL_MEMORY_MANAGEMENT_TEST_PAGE_POINTER_H_INCLUDED
-#define KERNEL_MEMORY_MANAGEMENT_TEST_PAGE_POINTER_H_INCLUDED
-
 #include "ut/framework/UnitTesting.h"
 #include "mm/PagePointer.h"
 #include "mm/PageTable.h"
@@ -73,5 +70,3 @@ public:
 };
 
 } /* namespace kernel */
-
-#endif /* KERNEL_MEMORY_MANAGEMENT_TEST_PAGE_POINTER_H_INCLUDED */
