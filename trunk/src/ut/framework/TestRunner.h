@@ -27,7 +27,7 @@ private:
 	const TestRunner& operator = (const TestRunner&);
 
 	enum {
-		MAX_TEST_SUITE = 128
+		MAX_TEST_SUITE = 32
 	};
 
 	int totalSuite;

@@ -1,6 +1,3 @@
-#ifndef KERNEL_MEMORY_MANAGEMENT_TEST_MAX_HEAP_H_INCLUDED
-#define KERNEL_MEMORY_MANAGEMENT_TEST_MAX_HEAP_H_INCLUDED
-
 #include "mm/MaxHeap.h"
 #include "ut/framework/UnitTesting.h"
 #include <cxx/new.h>
@@ -322,5 +319,3 @@ public:
 };
 
 } // namespace kernel
-
-#endif // KERNEL_MEMORY_MANAGEMENT_TEST_MAX_HEAP_H_INCLUDED

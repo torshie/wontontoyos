@@ -1,6 +1,3 @@
-#ifndef KERNEL_RUNTIME_TYPE_INFORMATION_TEST_UNION_H_INCLUDED
-#define KERNEL_RUNTIME_TYPE_INFORMATION_TEST_UNION_H_INCLUDED
-
 #include "ut/framework/UnitTesting.h"
 #include "cxx/rtti.h"
 
@@ -35,5 +32,3 @@ public:
 };
 
 } /* namespace kernel */
-
-#endif /* KERNEL_RUNTIME_TYPE_INFORMATION_TEST_UNION_H_INCLUDED */

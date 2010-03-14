@@ -1,6 +1,3 @@
-#ifndef KERNEL_UNIT_TESTING_FRAMEWORK_TEST_SETUP_AND_TEARDOWN_H_INCLUDED
-#define KERNEL_UNIT_TESTING_FRAMEWORK_TEST_SETUP_AND_TEARDOWN_H_INCLUDED
-
 #include "ut/framework/UnitTesting.h"
 #include "Printer.h"
 
@@ -27,5 +24,3 @@ public:
 };
 
 } /* namespace kernel */
-
-#endif

@@ -1,6 +1,3 @@
-#ifndef KERNEL_MEMORY_MANAGEMENT_TEST_STACK_BASED_ALLOCATOR_H_INCLUDED
-#define KERNEL_MEMORY_MANAGEMENT_TEST_STACK_BASED_ALLOCATOR_H_INCLUDED
-
 #include "ut/framework/UnitTesting.h"
 #include "mm/StackBasedAllocator.h"
 #include <generic/type.h>
@@ -66,5 +63,3 @@ public:
 };
 
 } // namespace kernel
-
-#endif // KERNEL_MEMORY_MANAGEMENT_TEST_STACK_BASED_ALLOCATOR_H_INCLUDED

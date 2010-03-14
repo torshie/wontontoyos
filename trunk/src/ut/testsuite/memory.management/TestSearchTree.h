@@ -1,6 +1,3 @@
-#ifndef KERNEL_MEMORY_MANAGEMENT_TEST_SEARCH_TREE_H_INCLUDED
-#define KERNEL_MEMORY_MANAGEMENT_TEST_SEARCH_TREE_H_INCLUDED
-
 #include "ut/framework/UnitTesting.h"
 #include "mm/SearchTree.h"
 #include "mm/StackBasedAllocator.h"
@@ -374,5 +371,3 @@ public:
 };
 
 } // namespace kernel
-
-#endif // KERNEL_MEMORY_MANAGEMENT_TEST_SEARCH_TREE_H_INCLUDED

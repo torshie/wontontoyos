@@ -1,6 +1,3 @@
-#ifndef KERNEL_MEMORY_MANAGEMENT_TEST_PAGE_TABLE_H_INCLUDED
-#define KERNEL_MEMORY_MANAGEMENT_TEST_PAGE_TABLE_H_INCLUDED
-
 #include "ut/framework/UnitTesting.h"
 #include "mm/PageTable.h"
 #include <cxx/BUG.h>
@@ -23,5 +20,3 @@ public:
 };
 
 } /* namespace kernel */
-
-#endif /* KERNEL_MEMORY_MANAGEMENT_TEST_PAGE_TABLE_H_INCLUDED */
