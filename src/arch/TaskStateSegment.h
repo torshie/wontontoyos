@@ -24,7 +24,7 @@ public:
 private:
 	TaskStateSegment() {
 		Utils::zeroize(this, sizeof(TaskStateSegment) - sizeof(ioMap));
-		Utils::memset(ioMap, 0xff, sizeof(ioMap));
+		Utils::memset(ioMap, 0, sizeof(ioMap));
 		ioMapBase = (char*)&ioMapBase - (char*)this;
 	}
 

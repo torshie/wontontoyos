@@ -5,7 +5,7 @@ REQ_DIR = boot
 include $(WONTON)/Makefile.variable
 include $(WONTON)/Makefile.rule
 
-QEMU = qemu-system-x86_64
+QEMU = qemu-system-x86_64 -vga std
 DISK = disk.img
 KERNEL = boot/kernel.mboot
 
