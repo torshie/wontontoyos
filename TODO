@@ -1,4 +1,5 @@
 *** Add exception support
+*** Implement PhysicalPageAllocator
 
 ** Enhance linear address allocator. Change swap() method of MaxHeap.
 ** Test the linear address allocator.
