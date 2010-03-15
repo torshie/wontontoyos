@@ -68,7 +68,7 @@ SECTIONS {
 	. = ALIGN(PAGE_SIZE);
 	__ld_image_end = .;
 
-/*	/DISCARD/ : {
+	/DISCARD/ : {
 		*(.comment)
-	} */
+	}
 }

@@ -8,43 +8,39 @@
 
 namespace kernel {
 
+// XXX Implement destroy
 class PageMap {
 	~PageMap() {}
 
-	template<int LEVEL> class CreateKernelHierarchyHelper {
+	template<int LEVEL> class PageMapHelper {
 	public:
-		static void run(Address base, Size size);
+		static void create(Address base, Size size);
 	};
 
 public:
 	static void* mapTempPage(Address physicalAddress);
 	static Address unmapTempPage(void*);
 	static void reload();
-	static void createKernelHierarchy(Address base, Size size) {
-		CreateKernelHierarchyHelper<1>::run(base, size);
-	}
-	static void createKernelHierarchy(void* base, Size size) {
-		createKernelHierarchy((Address)base, size);
+	static void createKernelMap(Address base, Size size) {
+		PageMapHelper<4>::create(base, size);
+		PageMapHelper<3>::create(base, size);
+		PageMapHelper<2>::create(base, size);
+		PageMapHelper<1>::create(base, size);
 	}
 };
 
-template<int LEVEL> void PageMap::CreateKernelHierarchyHelper<LEVEL>::run(Address base,
+template<int LEVEL> void PageMap::PageMapHelper<LEVEL>::create(Address base,
 		Size size) {
-	CreateKernelHierarchyHelper<LEVEL + 1>::run(base, size);
-
 	Address start = Utils::roundDown(base, PagePointer<LEVEL>::MEMORY_POINTED);
 	Address end = Utils::roundUp(base + size, PagePointer<LEVEL>::MEMORY_POINTED);
 	for (Address address = start; address < end;
 			address += PagePointer<LEVEL>::MEMORY_POINTED) {
-		PagePointer<LEVEL>* pointer = PagePointer<LEVEL>::getPointerToKernelAddress(address);
-		if (pointer->present) {
-			continue;
+		PagePointer<LEVEL>* pointer = PagePointer<LEVEL>::getPointerTo(address);
+		if (!(pointer->present)) {
+			PageTable<LEVEL - 1>::create(address);
 		}
-		PageTable<LEVEL - 1>::create(address);
 	}
 }
-
-template<> inline void PageMap::CreateKernelHierarchyHelper<5>::run(Address, Size) {}
 
 } /* namespace kernel */
 

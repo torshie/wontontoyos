@@ -18,21 +18,34 @@ public:
 		UT_ASSERT_EQUAL(PageMap::unmapTempPage(virtualAddress), physicalAddress);
 	}
 
-	void testCreateKernelHierarchyMappedAddress() {
+	void testCreateKernelMap_MappedAddress() {
 		volatile bool b = true;
-		PageMap::createKernelHierarchy((Address)&b, PAGE_SIZE);
+		PageMap::createKernelMap((Address)&b, PAGE_SIZE);
 		UT_ASSERT_TRUE(b);
 	}
 
-	void testCreateKernelHierarchy() {
+	void testCreateKernelMap_NewAddress() {
 		Address address = KERNEL_VIRTUAL_BASE + PagePointer<4>::MEMORY_POINTED + PAGE_SIZE;
-		PageMap::createKernelHierarchy(address, PagePointer<2>::MEMORY_POINTED);
+		Size size = PagePointer<2>::MEMORY_POINTED;
+		PageMap::createKernelMap(address, size);
 		volatile int* first = (volatile int*)address;
 		volatile int* second = (volatile int*)(address + sizeof(int));
 		*first = 4321;
 		*second = 4321;
 		UT_ASSERT_EQUAL(*first, *second);
-		// XXX Destroy the created map hierarchy.
+		// XXX Destroy the created map hierarchy
+	}
+
+	void testCreateUserMap_NewAddress() {
+		Address base = PagePointer<4>::MEMORY_POINTED + PAGE_SIZE;
+		Size size = PagePointer<2>::MEMORY_POINTED;
+		PageMap::createKernelMap(base, size);
+		volatile int* first = (volatile int*)base;
+		volatile int* second = (volatile int*)(base + sizeof(int));
+		*first = 1234;
+		*second = 1234;
+		UT_ASSERT_EQUAL(*first, *second);
+		// XXX Destroy the created map hierarchy
 	}
 };
 

@@ -1,7 +1,10 @@
 *** Add exception support
 *** Implement PhysicalPageAllocator
 
+** Implement a loader that checks the input image.
 ** Enhance linear address allocator. Change swap() method of MaxHeap.
 ** Test the linear address allocator.
+** Redesign kernel memory layout.
 
 * Remove temporary paging map. So the address space are available to kernel stack.
+* RME remember to copy license

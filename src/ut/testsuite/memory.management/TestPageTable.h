@@ -15,7 +15,7 @@ public:
 		UT_ASSERT_FALSE(table->pointer[1].present);
 		UT_ASSERT_FALSE(table->pointer[PagePointer<3>::POINTERS_PER_PAGE - 1].present);
 
-		PageTable<3>::destroy(table);
+		PageTable<3>::destroy((Address)table);
 	}
 };
 

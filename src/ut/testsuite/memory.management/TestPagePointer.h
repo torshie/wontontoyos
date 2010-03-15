@@ -13,17 +13,16 @@ public:
 	bool getTestPoint(TestPoint&, const char*&);
 
 	void testGetPointerToKernelAddressUnalignedAddress() {
-		PagePointer<1>* aligned = PagePointer<1>::getPointerToKernelAddress(KERNEL_VIRTUAL_BASE);
-		PagePointer<1>* unaligned = PagePointer<1>::getPointerToKernelAddress(
-				KERNEL_VIRTUAL_BASE + 1);
+		PagePointer<1>* aligned = PagePointer<1>::getPointerTo(KERNEL_VIRTUAL_BASE);
+		PagePointer<1>* unaligned = PagePointer<1>::getPointerTo(KERNEL_VIRTUAL_BASE + 1);
 		UT_ASSERT_EQUAL(aligned, unaligned);
 	}
 
 	void testGetPointerToKernelAddressHighestAddress() {
-		PagePointer<1>* one = PagePointer<1>::getPointerToKernelAddress(HIGHEST_ADDRESS);
-		PagePointer<2>* two = PagePointer<2>::getPointerToKernelAddress(HIGHEST_ADDRESS);
-		PagePointer<3>* three= PagePointer<3>::getPointerToKernelAddress(HIGHEST_ADDRESS);
-		PagePointer<4>* four = PagePointer<4>::getPointerToKernelAddress(HIGHEST_ADDRESS);
+		PagePointer<1>* one = PagePointer<1>::getPointerTo(HIGHEST_ADDRESS);
+		PagePointer<2>* two = PagePointer<2>::getPointerTo(HIGHEST_ADDRESS);
+		PagePointer<3>* three= PagePointer<3>::getPointerTo(HIGHEST_ADDRESS);
+		PagePointer<4>* four = PagePointer<4>::getPointerTo(HIGHEST_ADDRESS);
 
 		UT_ASSERT_EQUAL(one, LAST_POINTER);
 		UT_ASSERT_EQUAL(two, LAST_POINTER);
@@ -33,10 +32,10 @@ public:
 
 	void testGetPointerToKernelAddressLastButOnePageAddress() {
 		const static U64 ADDRESS = HIGHEST_ADDRESS - PAGE_SIZE;
-		PagePointer<1>* one = PagePointer<1>::getPointerToKernelAddress(ADDRESS);
-		PagePointer<2>* two = PagePointer<2>::getPointerToKernelAddress(ADDRESS);
-		PagePointer<3>* three= PagePointer<3>::getPointerToKernelAddress(ADDRESS);
-		PagePointer<4>* four = PagePointer<4>::getPointerToKernelAddress(ADDRESS);
+		PagePointer<1>* one = PagePointer<1>::getPointerTo(ADDRESS);
+		PagePointer<2>* two = PagePointer<2>::getPointerTo(ADDRESS);
+		PagePointer<3>* three= PagePointer<3>::getPointerTo(ADDRESS);
+		PagePointer<4>* four = PagePointer<4>::getPointerTo(ADDRESS);
 
 		UT_ASSERT_EQUAL(four, LAST_POINTER);
 		UT_ASSERT_EQUAL(three, LAST_POINTER);
@@ -45,10 +44,10 @@ public:
 	}
 
 	void testGetPointerToUserAddressZero() {
-		PagePointer<1>* one = PagePointer<1>::getPointerToUserAddress((Address)0);
-		PagePointer<2>* two = PagePointer<2>::getPointerToUserAddress((Address)0);
-		PagePointer<3>* three = PagePointer<3>::getPointerToUserAddress((Address)0);
-		PagePointer<4>* four = PagePointer<4>::getPointerToUserAddress((Address)0);
+		PagePointer<1>* one = PagePointer<1>::getPointerTo((Address)0);
+		PagePointer<2>* two = PagePointer<2>::getPointerTo((Address)0);
+		PagePointer<3>* three = PagePointer<3>::getPointerTo((Address)0);
+		PagePointer<4>* four = PagePointer<4>::getPointerTo((Address)0);
 
 		UT_ASSERT_EQUAL(one, PageTable<1>::LOWEST_TABLE_ADDRESS);
 		UT_ASSERT_EQUAL(two, PageTable<2>::LOWEST_TABLE_ADDRESS);
@@ -57,10 +56,10 @@ public:
 	}
 
 	void testGetPointerToUserAddressSecondPageAddress() {
-		PagePointer<1>* one = PagePointer<1>::getPointerToUserAddress((Address)PAGE_SIZE);
-		PagePointer<2>* two = PagePointer<2>::getPointerToUserAddress((Address)PAGE_SIZE);
-		PagePointer<3>* three = PagePointer<3>::getPointerToUserAddress((Address)PAGE_SIZE);
-		PagePointer<4>* four = PagePointer<4>::getPointerToUserAddress((Address)PAGE_SIZE);
+		PagePointer<1>* one = PagePointer<1>::getPointerTo((Address)PAGE_SIZE);
+		PagePointer<2>* two = PagePointer<2>::getPointerTo((Address)PAGE_SIZE);
+		PagePointer<3>* three = PagePointer<3>::getPointerTo((Address)PAGE_SIZE);
+		PagePointer<4>* four = PagePointer<4>::getPointerTo((Address)PAGE_SIZE);
 
 		UT_ASSERT_EQUAL(one, PageTable<1>::LOWEST_TABLE_ADDRESS + sizeof(PagePointer<1>));
 		UT_ASSERT_EQUAL(two, PageTable<2>::LOWEST_TABLE_ADDRESS);
