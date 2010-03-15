@@ -39,7 +39,7 @@ class GenericAllocator {
 		Heap::Node* heapNode = heap.insert(CHUNK_SIZE, 0);
 		Tree::Node* treeNode = tree.insert(linearAddressEnd, heapNode);
 		heapNode->data = treeNode;
-		PageMap::createKernelHierarchy(linearAddressEnd, CHUNK_SIZE);
+		PageMap::createKernelMap(linearAddressEnd, CHUNK_SIZE);
 		linearAddressEnd += CHUNK_SIZE;
 	}
 

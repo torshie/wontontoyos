@@ -11,6 +11,7 @@
 
 namespace kernel {
 
+// XXX Tune call of reload()
 template<int LEVEL> class PageTable {
 	friend class TestPageTable;
 	friend class PageMap;
@@ -20,11 +21,8 @@ template<int LEVEL> class PageTable {
 	const PageTable& operator = (const PageTable&);
 
 	static PageTable* create(Address virtualAddress);
-	static PageTable* create(void* pointer) {
-		return create((Address)pointer);
-	}
 
-	static void destroy(PageTable* table);
+	static void destroy(Address table);
 
 public:
 	enum __ {
@@ -43,31 +41,44 @@ STATIC_ASSERT_EQUAL(sizeof(PageTable<2>), PAGE_SIZE)
 STATIC_ASSERT_EQUAL(sizeof(PageTable<3>), PAGE_SIZE)
 STATIC_ASSERT_EQUAL(sizeof(PageTable<4>), PAGE_SIZE)
 
-template<int LEVEL> PageTable<LEVEL>* PageTable<LEVEL>::create(Address kernelAddress) {
-	if (kernelAddress < KERNEL_VIRTUAL_BASE) {
-		BUG("Address " << kernelAddress << " isn't a kernel space address");
+// XXX Check canonical form
+// XXX Check when should the userSpace bit be set.
+template<int LEVEL> PageTable<LEVEL>* PageTable<LEVEL>::create(Address linearAddress) {
+	Address pagePointerAddress =
+			(Address)PagePointer<LEVEL>::getPointerTo(linearAddress);
+	bool userSpace;
+	if (linearAddress < KERNEL_VIRTUAL_BASE) {
+		userSpace = true;
+	} else {
+		userSpace = false;
 	}
 
-	Address tableAddress = (Address)PagePointer<LEVEL>::getPointerToKernelAddress(kernelAddress);
 	PhysicalPageAllocator& allocator = getSingleInstance<PhysicalPageAllocator>();
 	Address physicalAddress = (Address)allocator.allocate(PAGE_SIZE);
-	PageTable* pageTable = (PageTable*)PageMap::mapTempPage(physicalAddress);
-	new (pageTable)PageTable();
-	PageMap::unmapTempPage(pageTable);
-
-	PagePointer<1>* pointer = PagePointer<1>::getPointerToKernelAddress(tableAddress);
-	pointer->page = physicalAddress / PAGE_SIZE;
-	pointer->present = 1;
-	pointer->writable = 1;
+	PagePointer<1>* tmp = PagePointer<1>::getPointerTo(pagePointerAddress);
+	tmp->page = physicalAddress / PAGE_SIZE;
+	tmp->present = 1;
+	tmp->writable = 1;
+	if (userSpace) {
+		tmp->userSpace = 1;
+	}
+	PageMap::reload();
+	new ((void*)pagePointerAddress)PageTable();
 	PageMap::reload();
 
-	return (PageTable*)tableAddress;
+	return (PageTable*)pagePointerAddress;
 }
 
-template<int LEVEL> void PageTable<LEVEL>::destroy(PageTable* table) {
-	PagePointer<1>* pointer = PagePointer<1>::getPointerToKernelAddress(table);
-	Address physicalAddress = pointer->page * PAGE_SIZE;
-	pointer->present = 0;
+template<int LEVEL> void PageTable<LEVEL>::destroy(Address table) {
+	for (Size i = 0; i < PagePointer<LEVEL>::POINTERS_PER_PAGE; ++i) {
+		if (((PageTable*)(table))->pointer[i].present) {
+			return;
+		}
+	}
+
+	PagePointer<1>* tmp = PagePointer<1>::getPointerTo(table);
+	Address physicalAddress = tmp->page * PAGE_SIZE;
+	tmp->present = 0;
 	PageMap::reload();
 	PhysicalPageAllocator& allocator = getSingleInstance<PhysicalPageAllocator>();
 	allocator.release(physicalAddress);
@@ -83,16 +94,26 @@ template<> class PageTable<0> {
 	const PageTable& operator = (const PageTable&);
 
 public:
-	static PageTable* create(Address address) {
-		PagePointer<1>* pointer = PagePointer<1>::getPointerToKernelAddress(address);
+	static PageTable* create(Address linearAddress) {
+		PagePointer<1>* tmp = PagePointer<1>::getPointerTo(linearAddress);
+		bool userSpace;
+		if (linearAddress < KERNEL_VIRTUAL_BASE) {
+			userSpace = true;
+		} else {
+			userSpace = false;
+		}
+
 		PhysicalPageAllocator& allocator = getSingleInstance<PhysicalPageAllocator>();
 		Address physicalAddress = (Address)allocator.allocate(PAGE_SIZE);
-		pointer->page = physicalAddress / PAGE_SIZE;
-		pointer->present = 1;
-		pointer->writable = 1;
+		tmp->page = physicalAddress / PAGE_SIZE;
+		tmp->present = 1;
+		tmp->writable = 1;
+		if (userSpace) {
+			tmp->userSpace = 1;
+		}
 		PageMap::reload();
 
-		return (PageTable*)address;
+		return (PageTable*)linearAddress;
 	}
 };
 

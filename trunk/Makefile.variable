@@ -32,7 +32,9 @@ endif
 ALL_OBJS = $(shell find $(shell pwd) -type f|grep \.o$$)
 OBJS += $(patsubst %.cpp, %.o, $(wildcard *.cpp)) $(patsubst %.S, %.o, $(wildcard *.S))
 MAK_FILES += $(patsubst %.cpp, %.mak, $(wildcard *.cpp))
-SUBDIR = $(shell find . -type d -path './*' -prune | grep -v '\./\.')
+ifndef SUBDIR
+  SUBDIR = $(shell find . -type d -path './*' -prune | grep -v '\./\.')
+endif
 LD_SCRIPT = $(wildcard *.ld)
 
 ifeq ($(shell uname -s), Darwin)

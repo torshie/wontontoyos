@@ -11,8 +11,7 @@ void* PageMap::mapTempPage(Address physicalAddress) {
 		BUG("Invalid physicalAddress: " << physicalAddress);
 	}
 
-	PagePointer<1>* freeVirtualPage = PagePointer<1>::getPointerToKernelAddress(
-															KERNEL_TEMP_AREA_BEGIN);
+	PagePointer<1>* freeVirtualPage = PagePointer<1>::getPointerTo(KERNEL_TEMP_AREA_BEGIN);
 	Offset offset = KERNEL_TEMP_AREA_BEGIN;
 	for (; offset < KERNEL_TEMP_AREA_END; offset += PAGE_SIZE, ++freeVirtualPage) {
 		if (!freeVirtualPage->present) {
@@ -36,7 +35,7 @@ Address PageMap::unmapTempPage(void* pointer) {
 		BUG("Invalid virtual address: " << pointer);
 	}
 
-	PagePointer<1>* pagePointer = PagePointer<1>::getPointerToKernelAddress((Address)pointer);
+	PagePointer<1>* pagePointer = PagePointer<1>::getPointerTo((Address)pointer);
 	pagePointer->present = 0;
 
 	reload();

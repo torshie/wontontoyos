@@ -47,7 +47,7 @@ $(LIBRARY): $(ALL_OBJS)
 	@$(AR) rcs $@ $(ALL_OBJS)
 	
 ifneq ($(MAKECMDGOALS), clean)
-ifneq ($(MAKECMDGOALS), veryclean)
--include $(MAK_FILES)
-endif
+  ifneq ($(MAKECMDGOALS), veryclean)
+    -include $(MAK_FILES)
+  endif
 endif
