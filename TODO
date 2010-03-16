@@ -8,3 +8,4 @@
 
 * Remove temporary paging map. So the address space are available to kernel stack.
 * RME remember to copy license
+* Find out why mm/GeneralAllocator.o is so special what we have to pass it as an argument to ld

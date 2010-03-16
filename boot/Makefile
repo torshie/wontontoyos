@@ -14,8 +14,6 @@ build: $(IMAGE)
 $(IMAGE): $(OBJS) $(LIBS) $(LD_SCRIPT) $(EXTRA_OBJS)
 	#  LD $@
 	@$(LD) $(OBJS) $(EXTRA_OBJS) $(LDFLAGS) -T $(LD_SCRIPT) -o $@
-	#  OBJCOPY $@
-	@$(OBJCOPY) -O binary $@
 
 createTemporaryPagingMap.o: $(OBJ32)
 	@cp $< $@

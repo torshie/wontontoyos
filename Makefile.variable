@@ -22,14 +22,15 @@ DEBUG_BUILD_FLAGS = $(COMMON_FLAGS) $(DEBUG_FLAGS) -mcmodel=large -DBUILD_DEBUG_
 		-DBUILD_TEST_MODE_KERNEL
 CXXFLAGS32 = $(COMMON_FLAGS) -m32 -D__X86_32__ -fleading-underscore -O2
 LDFLAGS = $(addprefix -L, $(dir $(LIBS))) \
-		$(addprefix -l, $(patsubst lib%, %, $(patsubst %.a, %, $(notdir $(LIBS)))))
+		$(addprefix -l, $(patsubst lib%, %, $(patsubst %.a, %, $(notdir $(LIBS))))) \
+		-z max-page-size=0x1000
 ifeq ($(DEBUG_BUILD), 1)
   CXXFLAGS = $(DEBUG_BUILD_FLAGS)
 else
   CXXFLAGS = $(OPTIMIZE_BUILD_FLAGS)
 endif
 
-ALL_OBJS = $(shell find $(shell pwd) -type f|grep \.o$$)
+ALL_OBJS = $(shell find $(CURDIR) -type f|grep \.o$$)
 OBJS += $(patsubst %.cpp, %.o, $(wildcard *.cpp)) $(patsubst %.S, %.o, $(wildcard *.S))
 MAK_FILES += $(patsubst %.cpp, %.mak, $(wildcard *.cpp))
 ifndef SUBDIR

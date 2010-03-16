@@ -1,4 +1,4 @@
-TEST_SUITE_NAME = $(shell basename `pwd` | sed s/\\./_/g)
+TEST_SUITE_NAME = $(shell basename $(CURDIR) | sed s/\\./_/g)
 TEST_SUITE_INSTALLER = $(TEST_SUITE_NAME)_installTestSuite.cpp
 HEADERS = $(wildcard *.h)
 OBJS += $(patsubst %.h, %.o, $(HEADERS)) $(TEST_SUITE_NAME)_installTestSuite.o
