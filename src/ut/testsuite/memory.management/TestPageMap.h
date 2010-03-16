@@ -20,14 +20,14 @@ public:
 
 	void testCreateKernelMap_MappedAddress() {
 		volatile bool b = true;
-		PageMap::createKernelMap((Address)&b, PAGE_SIZE);
+		PageMap::create((Address)&b, PAGE_SIZE);
 		UT_ASSERT_TRUE(b);
 	}
 
 	void testCreateKernelMap_NewAddress() {
 		Address address = KERNEL_VIRTUAL_BASE + PagePointer<4>::MEMORY_POINTED + PAGE_SIZE;
 		Size size = PagePointer<2>::MEMORY_POINTED;
-		PageMap::createKernelMap(address, size);
+		PageMap::create(address, size);
 		volatile int* first = (volatile int*)address;
 		volatile int* second = (volatile int*)(address + sizeof(int));
 		*first = 4321;
@@ -39,7 +39,7 @@ public:
 	void testCreateUserMap_NewAddress() {
 		Address base = PagePointer<4>::MEMORY_POINTED + PAGE_SIZE;
 		Size size = PagePointer<2>::MEMORY_POINTED;
-		PageMap::createKernelMap(base, size);
+		PageMap::create(base, size);
 		volatile int* first = (volatile int*)base;
 		volatile int* second = (volatile int*)(base + sizeof(int));
 		*first = 1234;
