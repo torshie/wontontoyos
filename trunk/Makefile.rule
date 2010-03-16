@@ -3,6 +3,7 @@ COMPILE_SUBDIR = $(addsuffix /compile, $(SUBDIR))
 VERYCLEAN_SUBDIR = $(addsuffix /veryclean, $(SUBDIR))
 MAK_SUBDIR = $(addsuffix /mak, $(SUBDIR))
 BUILD_REQ_DIR = $(addsuffix /build, $(REQ_DIR))
+BUILD_SUBDIR = $(addsuffix /build, $(SUBDIR))
 
 .PHONY: compile clean veryclean mak $(CLEAN_SUBDIR) $(COMPILE_SUBDIR) (VERYCLEAN_SUBDIR) \
 		(MAK_SUBDIR) $(BUILD_REQ_DIR)

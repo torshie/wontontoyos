@@ -1,0 +1,11 @@
+SERVER = $(notdir $(CURDIR))
+SERVER_FILE = $(SERVER).elf
+USER_LD = $(WONTON)/server/user.ld
+START = $(WONTON)/server/start.o
+CLEAN = $(SERVER_FILE)
+
+build: compile $(SERVER_FILE)
+
+$(SERVER_FILE): $(ALL_OBJS) $(START)
+	$(LD) -T $(USER_LD) $(LDFLAGS) $(ALL_OBJS) $(START) -o $@
+
