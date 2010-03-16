@@ -3,7 +3,7 @@ MAP = link.map.txt
 LIBRARY = libkernel.a
 CLEAN = $(KERNEL) $(X64KERNEL) $(MAP) $(LIBRARY)
 LIBS = ../cxx/libcxx.a ../lib/libwonton.a
-REQ_DIR = ../cxx ../lib
+REQ_DIR = ../cxx ../lib ../server
 
 include $(WONTON)/Makefile.variable
 include $(WONTON)/Makefile.rule
@@ -16,3 +16,5 @@ $(KERNEL): $(LIBS) $(LIBRARY) $(LIBS) $(LD_SCRIPT)
 
 dump: $(X64KERNEL)
 	$(OBJDUMP) $< -D --demangle | less
+
+server.o: server.S ../server/build

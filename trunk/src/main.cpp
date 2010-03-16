@@ -10,10 +10,13 @@
 #include "mm/PageMap.h"
 #include "mm/PageTable.h"
 #include "mm/GenericAllocator.h"
+#include "exe/SimpleLoader.h"
 
 namespace kernel {
 
 extern "C" char __ld_image_end;
+
+extern "C" int sample_server;
 void main() {
 	Message::brief << "Welcome to the hell!\n";
 
@@ -26,6 +29,19 @@ void main() {
 	result.show();
 
 	Message::brief << "__ld_bss_end: " << (Address)&__ld_image_end << "\n";
+
+	SimpleLoader loader;
+	loader.parse(&sample_server, 0);
+	Address base = loader.getBaseAddress();
+	Size size = loader.getMemoryImageSize();
+
+	Message::brief << "Server sample, base: " << base << " size: " << size << "\n";
+
+	PageMap::create(base, size);
+	Address entry = loader.load((void*)base, size);
+	Message::brief << "Entry: " << entry << "\n";
+
+	asm volatile ("jmp *%0" : : "r"(entry));
 }
 
 } /* namespace kernel */
@@ -53,6 +69,4 @@ extern "C" void startKernel() {
 	initCxxSupport();
 
 	main();
-
-	System::halt();
 }

@@ -21,7 +21,7 @@ public:
 	static void* mapTempPage(Address physicalAddress);
 	static Address unmapTempPage(void*);
 	static void reload();
-	static void createKernelMap(Address base, Size size) {
+	static void create(Address base, Size size) {
 		PageMapHelper<4>::create(base, size);
 		PageMapHelper<3>::create(base, size);
 		PageMapHelper<2>::create(base, size);
