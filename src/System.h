@@ -12,6 +12,6 @@ public:
 	}
 };
 
-} /* namespace kernel */
+} // namespace kernel
 
-#endif /* KERNEL_SYSTEM_H_INCLUDED */
+#endif // KERNEL_SYSTEM_H_INCLUDED

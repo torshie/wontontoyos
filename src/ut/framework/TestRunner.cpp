@@ -61,4 +61,4 @@ void TestRunner::runTestCase(TestSuite& suite, int testCaseId) {
 	}
 }
 
-} /* namespace kernel */
+} // namespace kernel

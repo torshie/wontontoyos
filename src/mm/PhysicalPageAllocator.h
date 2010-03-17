@@ -16,6 +16,6 @@ private:
 	Size available;
 };
 
-} /* namespace kernel */
+} // namespace kernel
 
-#endif /* KERNEL_MM_PHYSICAL_PAGE_ALLOCATOR_H_INCLUDED */
+#endif // KERNEL_MM_PHYSICAL_PAGE_ALLOCATOR_H_INCLUDED

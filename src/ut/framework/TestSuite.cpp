@@ -19,4 +19,4 @@ void TestSuite::addTestCase(TestCase& tc, const char* name) {
 	++totalCase;
 }
 
-} /* namespace kernel */
+} // namespace kernel

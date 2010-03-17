@@ -26,6 +26,6 @@ STATIC_ASSERT_FALSE(IS_UNSIGNED<long>::value)
 STATIC_ASSERT_FALSE(IS_UNSIGNED<long long>::value)
 STATIC_ASSERT_FALSE(IS_UNSIGNED<void>::value)
 
-} /* namespace kernel */
+} // namespace kernel
 
-#endif /* KERNEL_SEXY_IS_UNSIGNED_H_INCLUDED */
+#endif // KERNEL_SEXY_IS_UNSIGNED_H_INCLUDED

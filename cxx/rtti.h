@@ -117,9 +117,9 @@ public:
 	const __class_type_info* __context;
 };
 
-} /* namespace __cxxabiv1 */
+} // namespace __cxxabiv1
 
 namespace abi = __cxxabiv1;
 
-#endif /* KERNEL_CXX_RTTI_H_INCLUDED */
+#endif // KERNEL_CXX_RTTI_H_INCLUDED
 

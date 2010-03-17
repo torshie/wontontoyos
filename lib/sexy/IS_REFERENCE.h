@@ -22,6 +22,6 @@ public:
 STATIC_ASSERT_TRUE(IS_REFERENCE<char&>::value)
 STATIC_ASSERT_FALSE(IS_REFERENCE<char>::value)
 
-} /* namespace kernel */
+} // namespace kernel
 
-#endif /* KERNEL_SEXY_IS_REFERENCE_H_INCLUDED */
+#endif // KERNEL_SEXY_IS_REFERENCE_H_INCLUDED

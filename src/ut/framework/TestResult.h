@@ -20,6 +20,6 @@ public:
 	int failedAssertion;
 };
 
-} /* namespace kernel */
+} // namespace kernel
 
-#endif /* KERNEL_UT_FRAMEWORK_TEST_RESULT_H_INCLUDED */
+#endif // KERNEL_UT_FRAMEWORK_TEST_RESULT_H_INCLUDED

@@ -31,6 +31,6 @@ private:
 
 STATIC_ASSERT_EQUAL(sizeof(CodeSegmentDescriptor), 8)
 
-} /* namespace kernel */
+} // namespace kernel
 
-#endif /* KERNEL_ARCH_CODE_SEGMENT_DESCRIPTOR_H_INCLUDED */
+#endif // KERNEL_ARCH_CODE_SEGMENT_DESCRIPTOR_H_INCLUDED

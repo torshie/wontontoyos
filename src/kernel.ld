@@ -6,7 +6,7 @@ ENTRY(_start)
  * !!!!!!!!!!!!!!!
  * !!! Warning !!!
  * !!!!!!!!!!!!!!!
- * If you want to change load address, make sure you have changed <kernel/abi.h>
+ * If you want to change load address, make sure <kernel/abi.h> is consistent
  */
 BASE = 0xFFFF800000000000 + 0x100000 + 0xA000 + 0x6000;
 /*           ^                  ^         ^        ^

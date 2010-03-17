@@ -41,12 +41,6 @@ private:
 		U32 offset2;
 		U32 ignored1;
 
-		/**
-		 * XXX Event InterruptDescriptor must have a default constructor, we
-		 * still have to make the interface of InterruptDescriptor to be like
-		 * this. Although C++0x support initialize array members, C++0x are
-		 * always unavailable.
-		 */
 		InterruptDescriptor();
 
 		void setOffset(Address offset) {
@@ -68,7 +62,7 @@ private:
 	InterruptDescriptorTable(const InterruptDescriptorTable&);
 	const InterruptDescriptorTable& operator=(const InterruptDescriptorTable&);
 
-	// Yes, handle is private. We will use assembly to get access to it
+	// Yes, handle is private. Assembly is used to get access to this static method
 	static void handle(int isrNumber);
 } __attribute__((packed));
 
@@ -80,6 +74,6 @@ inline void InterruptDescriptorTable::load() const {
 	asm volatile("lidt %0; sti" : : "m"(limit));
 }
 
-} /* namespace kernel */
+} // namespace kernel
 
-#endif /* KERNEL_ARCH_INTERRUPT_DESCRIPTOR_TABLE_H_INCLUDED */
+#endif // KERNEL_ARCH_INTERRUPT_DESCRIPTOR_TABLE_H_INCLUDED

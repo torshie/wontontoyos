@@ -76,6 +76,6 @@ STATIC_ASSERT_FALSE(IS_STRING<char>::value)
 STATIC_ASSERT_FALSE(IS_STRING<char**>::value)
 STATIC_ASSERT_FALSE(IS_STRING<char*[]>::value)
 
-} /* namespace kernel */
+} // namespace kernel
 
-#endif /* KERNEL_SEXY_IS_STRING_H_INCLUDED */
+#endif // KERNEL_SEXY_IS_STRING_H_INCLUDED

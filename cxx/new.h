@@ -5,4 +5,4 @@
 
 void* operator new(kernel::Size, void* p);
 
-#endif /* KERNEL_CXX_NEW_H_INCLUDED */
+#endif // KERNEL_CXX_NEW_H_INCLUDED

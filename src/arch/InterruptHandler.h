@@ -27,6 +27,6 @@ private:
 	}
 };
 
-} /* kernel */
+} // namespace kernel
 
-#endif /* KERNEL_ARCH_INTERRUPT_HANDLER_H_INCLUDED */
+#endif // KERNEL_ARCH_INTERRUPT_HANDLER_H_INCLUDED

@@ -4,12 +4,12 @@
 namespace kernel {
 
 int SimpleLoader::parse(const void* image, Size) {
-	header = (Elf64Header*)image;
+	header = (FileHeader*)image;
 
 	SectionHeader* section = (SectionHeader*)((char*)header + header->sectionHeaderOffset);
 
-	base = ~((Address)0); /* Set base to an invalid address */
-	Address upper = 0; /* Upper bound of the memory image */
+	base = ~((Address)0); // Set to an invalid address
+	Address upper = 0; // Upper bound of the memory image
 
 	for (Size i = 0; i < header->sectionHeaderCount; ++i) {
 		if (section[i].flags & SectionHeader::FLAG_ALLOCATE) {
@@ -45,4 +45,4 @@ Address SimpleLoader::load(void* base, Size) {
 	return header->entryPoint;
 }
 
-} /* namespace kernel */
+} // namespace kernel

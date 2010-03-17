@@ -15,8 +15,9 @@ extern "C" char __ld_image_end;
 class GenericAllocator {
 	friend GenericAllocator& getSingleInstance<GenericAllocator>();
 
-	// XXX In the SearchTree, the void* is in fact a pointer to a node in the MaxHeap. Replace
-	//     void* with some concrete type. The same to MaxHeap.
+	/** XXX In the SearchTree, the void* is in fact a pointer to a node in the MaxHeap. Replace
+	 * void* with some concrete type. The same to MaxHeap.
+	 */
 	typedef SearchTree<Address, void*> Tree;
 	typedef MaxHeap<Size, void*> Heap;
 

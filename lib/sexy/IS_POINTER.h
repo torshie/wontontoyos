@@ -36,6 +36,6 @@ STATIC_ASSERT_TRUE(IS_POINTER<void (IS_POINTER<void>::*)(void)>::value)
 STATIC_ASSERT_FALSE(IS_POINTER<void>::value)
 STATIC_ASSERT_FALSE(IS_POINTER<char&>::value)
 
-} /* namespace kernel */
+} // namespace kernel
 
-#endif /* KERNEL_SEXY_IS_POINTER_H_INCLUDED */
+#endif // KERNEL_SEXY_IS_POINTER_H_INCLUDED

@@ -1,11 +1,11 @@
-#ifndef KERNEL_EXE_ELF64_HEADER_H_INCLUDED
-#define KERNEL_EXE_ELF64_HEADER_H_INCLUDED
+#ifndef KERNEL_EXE_FILE_HEADER_H_INCLUDED
+#define KERNEL_EXE_FILE_HEADER_H_INCLUDED
 
 #include <generic/type.h>
 
 namespace kernel {
 
-struct Elf64Header {
+struct FileHeader {
 	struct {
 		U8 magic[4];
 		U8 fileClass;
@@ -79,7 +79,7 @@ struct SectionHeader {
 };
 
 
-} /* namespace kernel */
+} // namespace kernel
 
-#endif /* KERNEL_EXE_ELF64_HEADER_H_INCLUDED */
+#endif // KERNEL_EXE_FILE_HEADER_H_INCLUDED
 

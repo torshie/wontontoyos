@@ -1,5 +1,5 @@
 .section .data
 .align 8
-.global sample_server
-sample_server:
+.global sampleServer
+sampleServer:
 	.incbin "../server/sample/sample.elf"

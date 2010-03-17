@@ -4,6 +4,7 @@
 #include "Message.h"
 #include <generic/Utils.h>
 
+// XXX Replace this macro with an exception
 #define BUG(message) \
 	do { \
 		::kernel::Message::fatal << "BUG: " << ::kernel::Utils::basename(__FILE__) <<  ":" \

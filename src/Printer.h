@@ -11,10 +11,7 @@
 
 namespace kernel {
 
-/**
- * XXX This class is ugly, find a new model to implement the log system
- * XXX Make all methods thread-safe
- */
+// XXX Make all methods thread-safe
 class Printer {
 	friend Printer& getSingleInstance<Printer>();
 	friend class Message;
@@ -85,6 +82,13 @@ class Printer {
 		}
 	};
 
+	template<typename Boolean> class BooleanPrinter {
+	public:
+		static Printer& print(Boolean b, Printer& printer) {
+			return printer << (b ? "true" : "false");
+		}
+	};
+
 	template<typename T> class NullPrinter {
 	public:
 		static Printer& print(const T&, Printer& printer) {
@@ -94,21 +98,24 @@ class Printer {
 
 	template<typename T> Printer& operator << (const T& data) {
 		typedef typename TYPE_SELECTOR<IS_INTEGER<T>::value,
-							typename TYPE_SELECTOR<IS_SIGNED<T>::value,
-								SignedIntegerPrinter<T>,
-								UnsignedIntegerPrinter<T>
-							>::Type,
-							typename TYPE_SELECTOR<IS_STRING<T>::value,
-								StringPrinter<T>,
-								typename TYPE_SELECTOR<IS_POINTER<T>::value,
-									PointerPrinter<T>,
-									typename TYPE_SELECTOR<IS_ENUM<T>::value,
-										EnumPrinter<T>,
-										NullPrinter<T>
-									>::Type
+					typename TYPE_SELECTOR<IS_SIGNED<T>::value,
+						SignedIntegerPrinter<T>,
+						UnsignedIntegerPrinter<T>
+					>::Type,
+					typename TYPE_SELECTOR<IS_STRING<T>::value,
+						StringPrinter<T>,
+						typename TYPE_SELECTOR<IS_POINTER<T>::value,
+							PointerPrinter<T>,
+							typename TYPE_SELECTOR<IS_ENUM<T>::value,
+								EnumPrinter<T>,
+								typename TYPE_SELECTOR<IS_BOOL<T>::value,
+									BooleanPrinter<T>,
+									NullPrinter<T>
 								>::Type
 							>::Type
-						>::Type CompetentPrinter;
+						>::Type
+					>::Type
+				>::Type CompetentPrinter;
 		return CompetentPrinter::print(data, *this);
 	}
 
@@ -127,7 +134,7 @@ private:
 	void scroll();
 };
 
-} /* namespace kernel */
+} // namespace kernel
 
-#endif /* KERNEL_PRINTER_H_INCLUDED */
+#endif // KERNEL_PRINTER_H_INCLUDED
 

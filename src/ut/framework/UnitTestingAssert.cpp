@@ -12,4 +12,4 @@ void UnitTestingAssert::assertTrue(bool value, const char* file, int line,
 	}
 }
 
-} /* namespace kernel */
+} // namespace kernel

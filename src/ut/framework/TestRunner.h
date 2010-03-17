@@ -102,6 +102,6 @@ private:
 	}
 };
 
-} /* namespace kernel */
+} // namespace kernel
 
-#endif /* KERNEL_UT_FRAMEWORK_TEST_RUNNER_H_INCLUDED */
+#endif // KERNEL_UT_FRAMEWORK_TEST_RUNNER_H_INCLUDED

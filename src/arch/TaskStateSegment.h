@@ -13,7 +13,7 @@ private:
 	U32 reserved0;
 public:
 	U64 rsp[3];
-	U64 ist[7]; /* IST0 is reserved */
+	U64 ist[7]; // IST0 is reserved
 private:
 	U64 reserved1;
 	U16 reserved2;
@@ -33,6 +33,6 @@ private:
 
 } __attribute__((packed));
 
-} /* namespace kernel */
+} // namespace kernel
 
-#endif /* KERNEL_ARCH_TASK_STATE_SEGMENT_H_INCLUDED */
+#endif // KERNEL_ARCH_TASK_STATE_SEGMENT_H_INCLUDED
