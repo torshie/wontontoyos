@@ -35,9 +35,7 @@ public:
 	}
 };
 
-#undef SPECIALIZE_UNIT_TESTING_ASSERT_ASSERT_TRUE
-
-} /* namespace kernel */
+} // namespace kernel
 
 #define UT_ASSERT_TRUE(value) \
 	::kernel::UnitTestingAssert::assertTrue((value), __FILE__, __LINE__, #value)
@@ -49,4 +47,4 @@ public:
 	::kernel::UnitTestingAssert::assertUnequal((first), (second), __FILE__, __LINE__, \
 			#first, #second)
 
-#endif /* KERNEL_UT_FRAMEWORK_UNIT_TESTING_ASSERT_H_INCLUDED */
+#endif // KERNEL_UT_FRAMEWORK_UNIT_TESTING_ASSERT_H_INCLUDED

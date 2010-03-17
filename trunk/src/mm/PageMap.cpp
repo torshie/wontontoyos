@@ -50,7 +50,4 @@ void PageMap::reload() {
 	asm volatile("mov %0, %%cr3" : : "r"(address));
 }
 
-}
-
-
- /* namespace kernel */
+} // namespace kernel

@@ -38,7 +38,7 @@ struct TaskStateSegmentDescriptor {
 		base1 = ((Address)&tss) >> 16;
 		base2 = ((Address)&tss) >> 24;
 		base3 = ((Address)&tss) >> 32;
-		type = 9;
+		type = 9; // XXX Evil literal constants
 	}
 
 	TaskStateSegmentDescriptor(const TaskStateSegmentDescriptor&);
@@ -47,6 +47,6 @@ struct TaskStateSegmentDescriptor {
 
 STATIC_ASSERT_EQUAL(sizeof(TaskStateSegmentDescriptor), 16)
 
-} /* namespace kernel */
+} // namespace kernel
 
-#endif /* KERNEL_ARCH_TASK_STATE_SEGMENT_DESCRIPTOR_H_INCLUDED */
+#endif // KERNEL_ARCH_TASK_STATE_SEGMENT_DESCRIPTOR_H_INCLUDED

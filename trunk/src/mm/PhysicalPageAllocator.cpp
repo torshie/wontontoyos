@@ -29,4 +29,4 @@ Address PhysicalPageAllocator::allocate(Size memoryNeeded) {
 void PhysicalPageAllocator::release(Address) {
 }
 
-} /* namespace kernel */
+} // namespace kernel

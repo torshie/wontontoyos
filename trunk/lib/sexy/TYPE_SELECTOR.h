@@ -15,6 +15,6 @@ public:
 	typedef Second Type;
 };
 
-}
+} // namespace kernel
 
-#endif /* KERNEL_SEXY_TYPE_SELECTOR_H_INCLUDED */
+#endif // KERNEL_SEXY_TYPE_SELECTOR_H_INCLUDED

@@ -8,8 +8,7 @@ BEGIN_DEFINE(KernelApplicationBinaryInterfaceConstant)
 /* !!!!!!!!!!!!!!!
  * !!! Warning !!!
  * !!!!!!!!!!!!!!!
- * If you want to change these variables, make sure you have also changed the corresponding
- * linker scripts.
+ * If you want to change these variables, make sure the corresponding linker scripts are consistent
  */
 DEFINE_LONG_LONG(KERNEL_VIRTUAL_BASE, 0xFFFF800000000000)
 DEFINE(KERNEL_RESERVED_MEMORY, 0x100000)

@@ -1,7 +1,7 @@
 #ifndef KERNEL_EXE_SIMPLE_LOADER_H_INCLUDED
 #define KERNEL_EXE_SIMPLE_LOADER_H_INCLUDED
 
-#include <exe/Elf64Header.h>
+#include <exe/FileHeader.h>
 
 namespace kernel {
 /**
@@ -25,11 +25,11 @@ public:
 	Address load(void* base, Size size);
 
 private:
-	Elf64Header* header;
+	FileHeader* header;
 	Address base;
 	Size memoryImageSize;
 };
 
-} /* namespace kernel */
+} // namespace kernel
 
-#endif /* KERNEL_EXE_SIMPLE_LOADER_H_INCLUDED */
+#endif // KERNEL_EXE_SIMPLE_LOADER_H_INCLUDED

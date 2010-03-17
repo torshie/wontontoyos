@@ -60,6 +60,6 @@ public:
 	}
 };
 
-} /* namespace kernel */
+} // namespace kernel
 
-#endif /* KERNEL_GENERIC_COMPARER_H_INCLUDED */
+#endif // KERNEL_GENERIC_COMPARER_H_INCLUDED

@@ -28,6 +28,6 @@ private:
 	const char* testPointName[MAX_TEST_CASE][MAX_TEST_POINT];
 };
 
-} /* namespace kernel */
+} // namespace kernel
 
-#endif /* KERNEL_UT_FRAMEWORK_TEST_SUITE_H_INCLUDED */
+#endif // KERNEL_UT_FRAMEWORK_TEST_SUITE_H_INCLUDED

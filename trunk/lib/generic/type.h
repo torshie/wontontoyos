@@ -41,6 +41,6 @@ STATIC_ASSERT_EQUAL(sizeof(I64), 8)
 STATIC_ASSERT_EQUAL(sizeof(U64), 8)
 STATIC_ASSERT_EQUAL(sizeof(void*), sizeof(Address))
 
-} /* namespace kernel */
+} // namespace kernel
 
-#endif /* KERNEL_GENERIC_TYPE_H_INCLUDED */
+#endif // KERNEL_GENERIC_TYPE_H_INCLUDED

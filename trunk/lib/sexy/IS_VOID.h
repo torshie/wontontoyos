@@ -17,6 +17,6 @@ public:
 	};
 };
 
-} /* namespace kernel */
+} // namespace kernel
 
-#endif /* KERNEL_SEXY_IS_VOID_H_INCLUDED */
+#endif // KERNEL_SEXY_IS_VOID_H_INCLUDED

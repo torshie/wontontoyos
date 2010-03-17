@@ -12,19 +12,14 @@
 
 namespace kernel {
 
-/**
- * Global Descriptor Table
- *
- * See AMD/Intel's system programming manual for more detailed information
- */
 struct GlobalDescriptorTable {
 	friend GlobalDescriptorTable& getSingleInstance<GlobalDescriptorTable>();
 
 	/**
 	 * The order of these descriptors are important:
 	 * 1. kernelData and kernelCode must have the same offset as in src/boot.S
-	 * 2. Data Segment Descriptor must be just before Code Segment Descriptor, since we use
-	 * syscall and sysret. See system programming manual for more detailed information.
+	 * 2. Data Segment Descriptor must be just before Code Segment Descriptor, since syscall and
+	 * sysret are used. Refer to AMD/Intel's system programming manual for detailed information.
 	 */
 	NullDescriptor null;
 	DataSegmentDescriptor kernelData;
@@ -42,6 +37,9 @@ struct GlobalDescriptorTable {
 	};
 
 private:
+	GlobalDescriptorTable(const GlobalDescriptorTable&);
+	const GlobalDescriptorTable& operator=(const GlobalDescriptorTable&);
+
 	char __padding[sizeof(void*) - sizeof(U16)];
 	U16 limit;
 	void* base;
@@ -53,8 +51,6 @@ private:
 		userCode.dpl = 3;
 		userData.__dpl = 3;
 	}
-	GlobalDescriptorTable(const GlobalDescriptorTable&);
-	const GlobalDescriptorTable& operator=(const GlobalDescriptorTable&);
 
 public:
 	/**

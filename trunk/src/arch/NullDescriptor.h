@@ -16,6 +16,6 @@ struct NullDescriptor {
 	const NullDescriptor& operator = (const NullDescriptor&);
 } __attribute__((packed));
 
-} /* namespace kernel */
+} // namespace kernel
 
-#endif /* KERNEL_ARCH_NULL_DESCRIPTOR_H_INCLUDED */
+#endif // KERNEL_ARCH_NULL_DESCRIPTOR_H_INCLUDED

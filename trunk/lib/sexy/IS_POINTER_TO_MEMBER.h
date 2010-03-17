@@ -17,6 +17,6 @@ public:
 	};
 };
 
-} /* namespace kernel */
+} // namespace kernel
 
-#endif
+#endif // KERNEL_SEXY_IS_POINTER_TO_MEMBER_H_INCLUDED

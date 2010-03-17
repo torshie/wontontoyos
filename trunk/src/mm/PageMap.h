@@ -42,6 +42,6 @@ template<int LEVEL> void PageMap::PageMapHelper<LEVEL>::create(Address base,
 	}
 }
 
-} /* namespace kernel */
+} // namespace kernel
 
-#endif /* KERNEL_ARCH_PAGE_MAP_H_INCLUDED */
+#endif // KERNEL_ARCH_PAGE_MAP_H_INCLUDED

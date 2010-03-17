@@ -2,9 +2,12 @@
 *** Implement PhysicalPageAllocator
 
 ** Implement a loader that checks the input image.
-** Enhance linear address allocator. Change swap() method of MaxHeap.
+** Enhance linear address allocator.
+** Rewrite MaxHeap & SearchTree
 ** Test the linear address allocator.
 ** Redesign kernel memory layout.
+** Use a different stack for interrupt handlers
+** cli before enter interrupt handlers, sti after interrupt handlers.
 
 * Remove temporary paging map. So the address space are available to kernel stack.
 * RME remember to copy license

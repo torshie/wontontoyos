@@ -45,6 +45,6 @@ STATIC_ASSERT_FALSE(IS_SIGNED<unsigned long long>::value)
 STATIC_ASSERT_FALSE(IS_SIGNED<void>::value)
 STATIC_ASSERT_FALSE(IS_SIGNED<char*>::value)
 
-} /* namespace kernel */
+} // namespace kernel
 
-#endif /* KERNEL_SEXY_IS_SIGNED_H_INCLUDED */
+#endif // KERNEL_SEXY_IS_SIGNED_H_INCLUDED

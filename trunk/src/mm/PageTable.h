@@ -117,6 +117,6 @@ public:
 	}
 };
 
-} /* namespace kernel */
+} // namespace kernel
 
-#endif
+#endif // KERNEL_ARCH_PAGE_TABLE_H_INCLUDED

@@ -46,6 +46,7 @@
 	pop %rax
 .endm
 
+/* XXX Check whether we need this many service routines */
 INTERRUPT_SERVICE_ROUTINE 0
 INTERRUPT_SERVICE_ROUTINE 1
 INTERRUPT_SERVICE_ROUTINE 2

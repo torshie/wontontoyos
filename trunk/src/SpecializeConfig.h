@@ -16,26 +16,25 @@
 #	endif
 #	define SPECIALIZE_CONFIG_ATTRIBUTE(KEY, Type, defaultValue) \
 		namespace kernel { \
-		template<> class Config::Attribute<KEY, Type > { \
-			friend class Config; \
-		private: \
-			static void get(Type& value) { \
-				value = storage; \
-			} \
-			static void set(const Type& value) { \
-				storage = value; \
-			} \
-			static Type storage; \
-		}; \
-		INSTANTIATE_CONFIG_ATTRIBUTE(KEY, Type, defaultValue); \
-		}
+			template<> class Config::Attribute<KEY, Type > { \
+				friend class Config; \
+			private: \
+				static void get(Type& value) { \
+					value = storage; \
+				} \
+				static void set(const Type& value) { \
+					storage = value; \
+				} \
+				static Type storage; \
+			}; \
+			INSTANTIATE_CONFIG_ATTRIBUTE(KEY, Type, defaultValue); \
+		} // namespace kernel
 
 #else
 #	error "SPECIALIZE_CONFIG_ATTRIBUTE is already defined"
 #endif
 
 #include "Message.h"
-
 SPECIALIZE_CONFIG_ATTRIBUTE(Config::Misc::HIDE_MESSAGE, int, Message::INFO);
 
 #undef SPECIALIZE_CONFIG_ATTRIBUTE

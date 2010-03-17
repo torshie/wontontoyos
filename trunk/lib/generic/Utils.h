@@ -19,6 +19,6 @@ public:
 	static Size roundDown(Size size, Size round);
 };
 
-} /* namespace kernel */
+} // namespace kernel
 
-#endif /* KERNEL_GENERIC_UTILS_H_INCLUDED */
+#endif // KERNEL_GENERIC_UTILS_H_INCLUDED

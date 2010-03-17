@@ -16,7 +16,7 @@ namespace kernel {
 
 extern "C" char __ld_image_end;
 
-extern "C" int sample_server;
+extern "C" int sampleServer;
 void main() {
 	Message::brief << "Welcome to the hell!\n";
 
@@ -31,7 +31,7 @@ void main() {
 	Message::brief << "__ld_bss_end: " << (Address)&__ld_image_end << "\n";
 
 	SimpleLoader loader;
-	loader.parse(&sample_server, 0);
+	loader.parse(&sampleServer, 0);
 	Address base = loader.getBaseAddress();
 	Size size = loader.getMemoryImageSize();
 
@@ -40,6 +40,7 @@ void main() {
 	PageMap::create(base, size);
 	Address entry = loader.load((void*)base, size);
 	Message::brief << "Entry: " << entry << "\n";
+	Message::brief << true << "\n";
 
 	asm volatile ("jmp *%0" : : "r"(entry));
 }

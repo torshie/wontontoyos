@@ -11,8 +11,7 @@ void* GenericAllocator::allocate(Size size) {
 		tree.insert(address, 0);
 		return (void*)address;
 	} else {
-		// XXX Use PageMap::createKernelHierarchy to extend kernel linear address instead of
-		//     return 0
+		// XXX Call PageMap::create to extend kernel linear address instead of return 0
 		return 0;
 	}
 }

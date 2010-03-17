@@ -21,4 +21,4 @@
 		typedef int __staticAssert__[(first) != (second) ? 1 : -1]; \
 	}
 
-#endif /* KERNEL_GENERIC_STATIC_ASSERT_H_INCLUDED */
+#endif // KERNEL_GENERIC_STATIC_ASSERT_H_INCLUDED

@@ -99,4 +99,4 @@ Size Utils::roundDown(Size size, Size round) {
 	return size / round * round;
 }
 
-} /* namespace kernel */
+} // namespace kernel

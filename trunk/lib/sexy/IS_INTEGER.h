@@ -35,6 +35,6 @@ SPECIALIZE_IS_INTEGER_VALUE(unsigned long long);
 
 #undef SPECIALIZE_IS_INTEGER_VALUE
 
-} /* namespace kernel */
+} // namespace kernel
 
-#endif /* KERNEL_SEXY_IS_INTEGER_H_INCLUDED */
+#endif // KERNEL_SEXY_IS_INTEGER_H_INCLUDED

@@ -4,7 +4,7 @@
 
 using namespace kernel;
 
-extern "C" Address loadKernelImage(Elf64Header* fileHeader, Size size) {
+extern "C" Address loadKernelImage(FileHeader* fileHeader, Size size) {
 	SimpleLoader loader;
 	loader.parse(fileHeader, size);
 	Size memoryImageSize = loader.getMemoryImageSize();
