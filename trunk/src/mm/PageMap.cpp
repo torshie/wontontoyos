@@ -3,6 +3,7 @@
 #include "arch/X64Constant.h"
 #include <kernel/abi.h>
 #include "debug.h"
+#include "arch/Processor.h"
 
 namespace kernel {
 
@@ -47,7 +48,9 @@ void PageMap::reload() {
 	PageTable<4>* levelFour = (PageTable<4>*)(PageTable<4>::LOWEST_TABLE_ADDRESS);
 	Address address = levelFour->pointer[PagePointer<4>::POINTERS_PER_PAGE - 1].page
 								* PAGE_SIZE;
-	asm volatile("mov %0, %%cr3" : : "r"(address));
+
+	Processor& processor = getSingleInstance<Processor>();
+	processor.setRegister<Processor::CR3>(address);
 }
 
 } // namespace kernel
