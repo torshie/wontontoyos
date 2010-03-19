@@ -2,7 +2,7 @@
 #define KERNEL_MESSAGE_H_INCLUDED
 
 #include "Printer.h"
-#include "SpecializeConfig.h"
+#include "Config.h"
 
 namespace kernel {
 
@@ -27,12 +27,8 @@ private:
 	int severity;
 };
 
-class Config;
-template<int KEY, typename Value> void Config::get(Value& value);
-
 template<typename T> Message& Message::operator << (const T& data) {
-	int hideMessage;
-	Config::get<Config::Misc::HIDE_MESSAGE>(hideMessage);
+	int hideMessage = Config::get<Config::Misc::HIDE_MESSAGE, int>();
 	if (severity > hideMessage) {
 		console << data;
 	}

@@ -11,10 +11,12 @@
 #include "mm/PageTable.h"
 #include "mm/GenericAllocator.h"
 #include "exe/SimpleLoader.h"
+#include "arch/Processor.h"
 
 namespace kernel {
 
-extern "C" char __ld_image_end;
+// Defined in ld script
+extern "C" int __ld_image_end, __ld_image_start;
 
 extern "C" int sampleServer;
 void main() {
@@ -28,21 +30,11 @@ void main() {
 	runner.run(result);
 	result.show();
 
-	Message::brief << "__ld_bss_end: " << (Address)&__ld_image_end << "\n";
+	Message::brief << "__ld_image_end: " << &__ld_image_end << "\n"
+			<< "__ld_image_start: " << &__ld_image_start << "\n";
 
-	SimpleLoader loader;
-	loader.parse(&sampleServer, 0);
-	Address base = loader.getBaseAddress();
-	Size size = loader.getMemoryImageSize();
-
-	Message::brief << "Server sample, base: " << base << " size: " << size << "\n";
-
-	PageMap::create(base, size);
-	Address entry = loader.load((void*)base, size);
-	Message::brief << "Entry: " << entry << "\n";
-	Message::brief << true << "\n";
-
-	asm volatile ("jmp *%0" : : "r"(entry));
+	for (;;)
+		;
 }
 
 } /* namespace kernel */

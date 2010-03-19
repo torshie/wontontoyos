@@ -9,13 +9,14 @@
 
 namespace kernel {
 
-extern "C" char __ld_image_end;
+extern "C" int __ld_image_end;
 
 // XXX Thread-safety
 class GenericAllocator {
 	friend GenericAllocator& getSingleInstance<GenericAllocator>();
 
-	/** XXX In the SearchTree, the void* is in fact a pointer to a node in the MaxHeap. Replace
+	/**
+	 * XXX In the SearchTree, the void* is in fact a pointer to a node in the MaxHeap. Replace
 	 * void* with some concrete type. The same to MaxHeap.
 	 */
 	typedef SearchTree<Address, void*> Tree;

@@ -7,7 +7,17 @@ namespace kernel {
 class Config {
 	~Config();
 
-	template<int KEY, typename Value> class Attribute;
+	template<int KEY, typename Value> class Attribute {
+		~Attribute();
+
+	public:
+		static Value get();
+		void set(const Value& value);
+
+	private:
+		static Value storage;
+	};
+
 public:
 	class Misc {
 		enum __ {
@@ -15,8 +25,8 @@ public:
 		};
 	};
 
-	template<int KEY, typename Value> static void get(Value& value) {
-		Attribute<KEY, Value>::get(value);
+	template<int KEY, typename Value> static Value get() {
+		return Attribute<KEY, Value>::get();
 	}
 
 	template<int KEY, typename Value> static void set(const Value& value) {
