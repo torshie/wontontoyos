@@ -3,7 +3,7 @@
 .section .init
 .global start
 start:
-	mov $(USER_STACK_BOTTOM - 8), %rsp
+	mov $(USER_STACK_BOTTOM - 16), %rsp
 
 	call main
 	mov %rax, %rsi
