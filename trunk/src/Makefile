@@ -14,7 +14,7 @@ $(KERNEL): $(LIBS) $(LIBRARY) $(LIBS) $(LD_SCRIPT)
 	#  LD $@
 	@$(LD) mm/GenericAllocator.o $(LIBRARY) $(LDFLAGS) -T $(LD_SCRIPT) -o $@ -Map=$(MAP)
 
-dump: $(X64KERNEL)
+dump: $(KERNEL)
 	$(OBJDUMP) $< -D --demangle | less
 
-server.o: server.S ../server/build
+server.o: server.S ../server/sample/sample.elf

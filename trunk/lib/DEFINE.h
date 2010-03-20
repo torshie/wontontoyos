@@ -2,7 +2,7 @@
 #define KERNEL_DEFINE_H_INCLUDED
 
 #if defined(__X86_32__)
-#	define DEFINE_LONG_LONG(a, b) DEFINE(a, b##ll)
+#	define DEFINE_LONG_LONG(a, b) DEFINE(a, b##ull)
 #else
 #	define DEFINE_LONG_LONG(a, b) DEFINE(a, b)
 #endif

@@ -1,5 +1,10 @@
+#include <kernel/abi.h>
+
 .section .init
 .global start
 start:
-	/* XXX Set RSP and other application registers before call main */
+	mov $(USER_STACK_BOTTOM - 8), %rsp
+
 	call main
+	mov %rax, %rsi
+	syscall

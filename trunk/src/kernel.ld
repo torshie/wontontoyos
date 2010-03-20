@@ -20,11 +20,6 @@ PAGE_SIZE = 4096;
 SECTIONS {
 	. = BASE;
 	__ld_image_start = .;
-	
-	.init : {
-		*(.init)
-		. = ALIGN(ALIGNMENT);
-	}
 
 	.text : {
 		*(.text .text.*)

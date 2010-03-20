@@ -66,7 +66,6 @@ bootstrap:
 	mov %ebx, %cr3
 
 	mov $MSR_EXTENDED_FEATURE_ENABLE_REGISTER, %ecx
-	rdmsr
 	xor %eax, %eax
 	bts $EFER_BIT_NO_EXECUTE_ENABLE, %eax
 	bts $EFER_BIT_LONG_MODE_ENABLE, %eax

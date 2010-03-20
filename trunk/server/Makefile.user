@@ -7,5 +7,6 @@ CLEAN = $(SERVER_FILE)
 build: compile $(SERVER_FILE)
 
 $(SERVER_FILE): $(ALL_OBJS) $(START)
-	$(LD) -T $(USER_LD) $(LDFLAGS) $(ALL_OBJS) $(START) -o $@
+	#  LD $@
+	@$(LD) -T $(USER_LD) $(LDFLAGS) $(ALL_OBJS) $(START) -o $@
 

@@ -1,6 +1,8 @@
 *** Add exception support
 *** Implement PhysicalPageAllocator
+*** Implement various deallocator
 
+** Handle rFLAGS upon syscall/sysret
 ** Implement a loader that checks the input image.
 ** Enhance linear address allocator.
 ** Rewrite MaxHeap & SearchTree

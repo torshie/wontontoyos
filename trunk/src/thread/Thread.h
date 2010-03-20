@@ -9,7 +9,7 @@ class Thread {
 public:
 	explicit Thread(Address e) : entry(e) {}
 
-	void start();
+	void start() __attribute__((__noreturn__));
 	void resume();
 	void kill();
 
