@@ -71,7 +71,8 @@ inline void InterruptDescriptorTable::setHandler(int isrNumber, void (*h)(void))
 }
 
 inline void InterruptDescriptorTable::load() const {
-	asm volatile("lidt %0; sti" : : "m"(limit));
+	asm volatile("lidt %0\n"
+			"sti" : : "m"(limit));
 }
 
 } // namespace kernel

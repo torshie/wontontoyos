@@ -3,7 +3,6 @@
 #include "arch/GlobalDescriptorTable.h"
 #include "arch/InterruptDescriptorTable.h"
 #include "ut/framework/UnitTesting.h"
-#include "System.h"
 #include "cxx/rtti.h"
 #include "arch/X64Constant.h"
 #include "mm/PagePointer.h"
@@ -12,6 +11,8 @@
 #include "mm/GenericAllocator.h"
 #include "exe/SimpleLoader.h"
 #include "arch/Processor.h"
+#include "thread/UserAddressSpace.h"
+#include "thread/Thread.h"
 
 namespace kernel {
 
@@ -21,20 +22,24 @@ extern "C" int __ld_image_end, __ld_image_start;
 extern "C" int sampleServer;
 void main() {
 	Message::brief << "Welcome to the hell!\n";
+	Message::brief << "__ld_image_start: " << &__ld_image_start << "\n"
+			<< "__ld_image_end:   " << &__ld_image_end << "\n";
 
 	getSingleInstance<GlobalDescriptorTable>().load();
 	getSingleInstance<InterruptDescriptorTable>().load();
+	getSingleInstance<Processor>().initialize();
 
-	TestRunner& runner = getSingleInstance<TestRunner>();
-	TestResult result;
-	runner.run(result);
-	result.show();
+	SimpleLoader loader;
+	loader.parse(&sampleServer, 0);
+	Address base = loader.getBaseAddress();
+	Size size = loader.getMemoryImageSize();
+	UserAddressSpace* addressSpace = new UserAddressSpace(size);
+	addressSpace->activate();
+	Address entry = loader.load((void*)base, size);
+	Thread sample(entry);
+	sample.start();
 
-	Message::brief << "__ld_image_end: " << &__ld_image_end << "\n"
-			<< "__ld_image_start: " << &__ld_image_start << "\n";
-
-	for (;;)
-		;
+	// XXX Objects on the stack should be destructed
 }
 
 } /* namespace kernel */

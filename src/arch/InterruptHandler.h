@@ -3,8 +3,8 @@
 
 #include "InterruptDescriptorTable.h"
 #include "Printer.h"
-#include "System.h"
 #include <generic/type.h>
+#include "Processor.h"
 
 namespace kernel {
 
@@ -13,17 +13,10 @@ template<int INTERUPT> class InterruptHandler;
 template<> class InterruptHandler<InterruptDescriptorTable::PAGE_FAULT> {
 public:
 	static void handle() {
-		U64 linearAddress = getControlRegister2();
+		Processor& processor = getSingleInstance<Processor>();
+		U64 linearAddress = processor.getRegister<Processor::CR2, U64>();
 		Message::critical << "#Page Fault: accessing " << linearAddress << "\n";
-
-		System::halt();
-	}
-
-private:
-	static U64 getControlRegister2() {
-		U64 result;
-		asm volatile("mov %%cr2, %0" : "=r"(result));
-		return result;
+		processor.halt();
 	}
 };
 

@@ -1,5 +1,4 @@
 #include "PhysicalPageAllocator.h"
-#include "System.h"
 #include "arch/X64Constant.h"
 #include <cxx/BUG.h>
 #include <kernel/abi.h>

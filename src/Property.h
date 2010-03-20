@@ -1,28 +1,30 @@
-#ifndef KERNEL_CONFIG_H_INCLUDED
-#define KERNEL_CONFIG_H_INCLUDED
+#ifndef KERNEL_PROPERTY_H_INCLUDED
+#define KERNEL_PROPERTY_H_INCLUDED
 
 namespace kernel {
 
 // XXX Thread safety
-class Config {
-	~Config();
+class Property {
+	~Property();
 
 	template<int KEY, typename Value> class Attribute {
 		~Attribute();
 
 	public:
 		static Value get();
-		void set(const Value& value);
+		static void set(const Value& value);
 
 	private:
 		static Value storage;
 	};
 
 public:
-	class Misc {
-		enum __ {
-			HIDE_MESSAGE
-		};
+	enum __ {
+		MISC_HIDE_MESSAGE = 0x10000,
+
+		PROCESS_ACTIVE_ADDRESS_SPACE = 0x20000,
+
+		THREAD_STACK_SPACE_SIZE = 0x30000,
 	};
 
 	template<int KEY, typename Value> static Value get() {
@@ -34,6 +36,6 @@ public:
 	}
 };
 
-} // KERNEL_CONFIG_H_INCLUDED
+} // namespace kernel
 
-#endif // KERNEL_CONFIG_H_INCLUDED
+#endif // KERNEL_PROPERTY_H_INCLUDED

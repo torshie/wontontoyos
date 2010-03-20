@@ -15,12 +15,16 @@ class Processor {
 
 public:
 	enum Register {
-		RAX, RBX, RCX, RDX, RSI, RDI, RBP, RSP,
-		CR0, CR1, CR2, CR3
+		CR2, CR3
 	};
 
 	template<int REGISTER, typename Integer> void setRegister(Integer value);
-	template<int REGISTER, typename Integer> void getRegister(Integer& value) const;
+	template<int REGISTER, typename Integer> Integer getRegister();
+	void enterUserMode(Address entry);
+	U64 readModeSpecificRegister(U32 reg);
+	void writeModeSpecificRegister(U32 reg, U64 value);
+	void halt();
+	void initialize(); // XXX Find out why we cannot put initialization code into constructor
 };
 
 } // namespace kernel

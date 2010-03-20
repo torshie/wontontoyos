@@ -73,18 +73,16 @@ STATIC_ASSERT_EQUAL(sizeof(GlobalDescriptorTable),
 		+ sizeof(void*))
 
 inline void GlobalDescriptorTable::load() const {
-	asm volatile("lgdt %0" : : "m"(limit));
-
 	Offset offsetKernelData = OFFSET_KERNEL_DATA;
 	Offset offsetTaskState = OFFSET_TASK_STATE;
 
-	asm volatile("mov %0, %%rax\n"
+	asm volatile("lgdt %0\n"
 			"mov %%ax, %%ds\n"
 			"mov %%ax, %%ss\n"
 			"mov %%ax, %%es\n"
 			"mov %%ax, %%fs\n"
-			"mov %%ax, %%gs\n" : :"m"(offsetKernelData));
-	asm volatile("ltr %0" : : "m"(offsetTaskState));
+			"mov %%ax, %%gs\n"
+			"ltr %1" : : "m"(limit), "m"(offsetTaskState), "a"(offsetKernelData));
 }
 
 } /* namespace kernel */

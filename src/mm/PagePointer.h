@@ -12,8 +12,6 @@ namespace kernel {
 template<int LEVEL> class PageTable;
 
 template<int LEVEL> class PagePointer {
-	PagePointer(const PagePointer&);
-	const PagePointer& operator = (const PagePointer&);
 public:
 	PagePointer() : __initializer(0) {}
 

@@ -2,7 +2,7 @@
 #define KERNEL_MESSAGE_H_INCLUDED
 
 #include "Printer.h"
-#include "Config.h"
+#include "Property.h"
 
 namespace kernel {
 
@@ -28,7 +28,7 @@ private:
 };
 
 template<typename T> Message& Message::operator << (const T& data) {
-	int hideMessage = Config::get<Config::Misc::HIDE_MESSAGE, int>();
+	int hideMessage = Property::get<Property::MISC_HIDE_MESSAGE, int>();
 	if (severity > hideMessage) {
 		console << data;
 	}
