@@ -1,12 +1,12 @@
 SERVER = $(notdir $(CURDIR))
 SERVER_FILE = $(SERVER).elf
 USER_LD = $(WONTON)/server/user.ld
-START = $(WONTON)/server/start.o
+CRT0 = $(WONTON)/server/crt0.o
 CLEAN = $(SERVER_FILE)
 
 build: compile $(SERVER_FILE)
 
-$(SERVER_FILE): $(ALL_OBJS) $(START)
+$(SERVER_FILE): $(ALL_OBJS) $(CRT0)
 	#  LD $@
-	@$(LD) -T $(USER_LD) $(LDFLAGS) $(ALL_OBJS) $(START) -o $@
+	@$(LD) -T $(USER_LD) $(LDFLAGS) $(ALL_OBJS) $(CRT0) -o $@
 
