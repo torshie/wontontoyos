@@ -18,8 +18,8 @@ bootSystemCallRouter:
 	/* Save user instruction pointer */
 	push %rcx
 
-	/* Mangled kernel::SystemCallRouter::route(int, U64, U64, U64, U64) */
-	call _ZN6kernel16SystemCallRouter5routeEimmmm
+	/* Mangled kernel::SystemCallRouter::route(int, U64, U64, U64, U64, U64) */
+	call _ZN6kernel16SystemCallRouter5routeEimmmmm
 
 	/* Load user instruction pointer */
 	pop %rcx

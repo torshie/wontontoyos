@@ -17,6 +17,16 @@ public:
 	static int serve();
 };
 
+template<> class SystemService<SYSCALL_DOUBLE_INPUT> {
+public:
+	static int serve(int input);
+};
+
+template<> class SystemService<SYSCALL_SUM> {
+public:
+	static int serve(int a, int b, int c, int d);
+};
+
 } // namespace kernel
 
 #endif // KERNEL_SYSTEM_SERVICE_H_INCLUDED

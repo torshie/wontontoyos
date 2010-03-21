@@ -7,16 +7,18 @@ namespace kernel {
 
 SystemCallRouter::Service SystemCallRouter::table[] = {
 	(SystemCallRouter::Service)(SystemService<SYSCALL_EXIT_PROCESS>::serve),
-	(SystemCallRouter::Service)(SystemService<SYSCALL_RETURN_VALUE>::serve)
+	(SystemCallRouter::Service)(SystemService<SYSCALL_RETURN_VALUE>::serve),
+	(SystemCallRouter::Service)(SystemService<SYSCALL_DOUBLE_INPUT>::serve),
+	(SystemCallRouter::Service)(SystemService<SYSCALL_SUM>::serve)
 };
 
-int SystemCallRouter::route(int routine, U64 p1, U64 p2, U64 p3, U64 p4) {
+int SystemCallRouter::route(int routine, U64 p1, U64 p2, U64 /* rcx */, U64 p3, U64 p4) {
 	if (routine < (int)SYSCALL_MIN || routine > (int)SYSCALL_MAX) {
 		Message::brief << "Unknown system call: " << routine << "\n";
 		for (;;)
 			;
 	}
-	return (table[routine])(p1, p2, p3, p4);
+	return (table[routine - SYSCALL_MIN])(p1, p2, p3, p4);
 }
 
 } // namespace kernel

@@ -8,7 +8,7 @@ namespace kernel {
 
 class SystemCallRouter {
 public:
-	static int route(int routine, U64 p1, U64 p2, U64 p3, U64 p4);
+	static int route(int routine, U64 p1, U64 p2, U64 /* rcx */, U64 p3, U64 p4);
 
 private:
 	typedef int (*Service)(U64, U64, U64, U64);
