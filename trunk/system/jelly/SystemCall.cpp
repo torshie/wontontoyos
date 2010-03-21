@@ -1,6 +1,4 @@
 #include "SystemCall.h"
-#include "SAVE_GENERIC_REGISTER.h"
-#include "LOAD_GENERIC_REGISTER.h"
 #include <kernel/abi.h>
 
 using namespace kernel;
