@@ -2,8 +2,8 @@ KERNEL = kernel.elf
 MAP = link.map.txt
 LIBRARY = libkernel.a
 CLEAN = $(KERNEL) $(X64KERNEL) $(MAP) $(LIBRARY)
-LIBS = ../cxx/libcxx.a ../lib/libwonton.a
-REQ_DIR = ../cxx ../lib ../server
+LIBS = ../cxx/libcxx.a ../common/libwonton.a
+REQ_DIR = ../cxx ../common ../server
 
 include $(WONTON)/Makefile.variable
 include $(WONTON)/Makefile.rule
@@ -12,7 +12,7 @@ build: compile $(KERNEL)
 
 $(KERNEL): $(LIBS) $(LIBRARY) $(LIBS) $(LD_SCRIPT)
 	#  LD $@
-	@$(LD) mm/GenericAllocator.o $(LIBRARY) $(LDFLAGS) -T $(LD_SCRIPT) -o $@ -Map=$(MAP)
+	@$(LD) -L. -lkernel $(LDFLAGS) -L. -lkernel -T $(LD_SCRIPT) -o $@ -Map=$(MAP)
 
 dump: $(KERNEL)
 	$(OBJDUMP) $< -D --demangle | less

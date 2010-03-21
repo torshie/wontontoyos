@@ -3,7 +3,7 @@ IMAGE = kernel.mboot
 OBJ32 = createTemporaryPagingMap.x86
 CLEAN = $(IMAGE) $(OBJ32)
 LIBS = ../cxx/libcxx.a
-EXTRA_OBJS = ../lib/exe/SimpleLoader.o ../lib/generic/Utils.o
+EXTRA_OBJS = ../common/exe/SimpleLoader.o ../common/generic/Utils.o
 REQ_DIR = ../cxx ../src
 
 include $(WONTON)/Makefile.variable

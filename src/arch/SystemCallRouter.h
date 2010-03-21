@@ -8,9 +8,9 @@ namespace kernel {
 class SystemCallRouter {
 public:
 	/**
-	 * Pass parameter with register %rdi, %rdx, %r8, %r9
+	 * Pass parameter with register %rdx, %r8, %r9
 	 */
-	static void route(int routine, U64 p1, Address returnAddress, U64 p2, U64 p3, U64 p4);
+	static void route(int routine, Address rsp, U64 p1, Address returnAddress, U64 p2, U64 p3);
 };
 
 } // namespace kernel
