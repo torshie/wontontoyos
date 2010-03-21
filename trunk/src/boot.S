@@ -10,7 +10,8 @@ _start:
 
 .global bootSystemCallRouter
 bootSystemCallRouter:
+	mov %rsp, %rsi
 	mov $(KERNEL_STACK_BOTTOM - 16), %rsp
 
-	/* Mangled kernel::SystemCallRouter::route(int, U64, Address, U64, U64, U64) */
+	/* Mangled kernel::SystemCallRouter::route(int, Address, U64, Address, U64, U64) */
 	call _ZN6kernel16SystemCallRouter5routeEimmmmm

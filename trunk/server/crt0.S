@@ -6,5 +6,5 @@ start:
 	mov $(USER_STACK_BOTTOM - 16), %rsp
 
 	call main
-	mov %rax, %rsi
+	mov %rax, %rdx
 	syscall

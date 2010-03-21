@@ -3,7 +3,7 @@
 
 namespace kernel {
 
-void SystemCallRouter::route(int, U64 ret, Address, U64, U64, U64) {
+void SystemCallRouter::route(int, Address, U64 ret, Address, U64, U64) {
 	int returnValue = (int)ret;
 	Message::brief << "Value Returned: " << returnValue << "\n";
 	for (;;)
