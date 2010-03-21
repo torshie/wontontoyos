@@ -1,6 +1,6 @@
 OUTPUT_ARCH(i386:x86-64)
 OUTPUT_FORMAT(elf64-x86-64)
-ENTRY(start)
+ENTRY(_start)
 
 /* The second entry of the level four page map */
 BASE = 0x8000000000;

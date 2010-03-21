@@ -10,8 +10,20 @@ _start:
 
 .global bootSystemCallRouter
 bootSystemCallRouter:
-	mov %rsp, %rsi
-	mov $(KERNEL_STACK_BOTTOM - 16), %rsp
+	/* Save user stack pointer to the bottom of kernel stack */
+	mov %rsp, %rax
+	mov $(KERNEL_STACK_BOTTOM - 16), %rsp /* XXX Check whether set %rsp like this is safe */
+	push %rax
 
-	/* Mangled kernel::SystemCallRouter::route(int, Address, U64, Address, U64, U64) */
-	call _ZN6kernel16SystemCallRouter5routeEimmmmm
+	/* Save user instruction pointer */
+	push %rcx
+
+	/* Mangled kernel::SystemCallRouter::route(int, U64, U64, U64, U64) */
+	call _ZN6kernel16SystemCallRouter5routeEimmmm
+
+	/* Load user instruction pointer */
+	pop %rcx
+
+	/* Load user stack pointer */
+	pop %rsp
+	sysretq
