@@ -15,4 +15,19 @@ int SystemCall<SYSCALL_RETURN_VALUE>::call() {
 	return ret;
 }
 
+int SystemCall<SYSCALL_DOUBLE_INPUT>::call(int input) {
+	int ret;
+	asm volatile ("syscall" : "=a"(ret) : "D"(SYSCALL_DOUBLE_INPUT), "S"(input));
+	return ret;
+}
+
+int SystemCall<SYSCALL_SUM>::call(int a, int b, int c, int d) {
+	int ret;
+	asm volatile(
+			"mov %4, %%r8\n"
+			"mov %5, %%r9\n"
+			"syscall" : "=a"(ret) : "D"(SYSCALL_SUM), "S"(a), "d"(b), "g"(c), "g"(d));
+	return ret;
+}
+
 } // namespace jelly
