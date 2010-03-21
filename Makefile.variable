@@ -37,6 +37,7 @@ ifndef SUBDIR
   SUBDIR = $(shell find . -type d -path './*' -prune | grep -v '\./\.')
 endif
 LD_SCRIPT = $(wildcard *.ld)
+CLEAN += $(LIBRARY)
 
 ifeq ($(shell uname -s), Darwin)
   SYSTEM = Darwin

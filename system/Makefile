@@ -1,3 +1,5 @@
 include $(WONTON)/Makefile.variable
-include $(WONTON)/server/Makefile.user
+
+REQ_DIR = $(SUBDIR)
+
 include $(WONTON)/Makefile.rule

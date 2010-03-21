@@ -1,5 +1,4 @@
 LIBRARY = libcxx.a
-CLEAN = $(LIBRARY)
 
 build: compile $(LIBRARY)
 

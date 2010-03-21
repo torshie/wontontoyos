@@ -2,15 +2,18 @@
 #define KERNEL_ARCH_SYSTEM_CALL_ROUTER_H_INCLUDED
 
 #include <generic/type.h>
+#include <kernel/abi.h>
 
 namespace kernel {
 
 class SystemCallRouter {
 public:
-	/**
-	 * Pass parameter with register %rdx, %r8, %r9
-	 */
-	static void route(int routine, Address rsp, U64 p1, Address returnAddress, U64 p2, U64 p3);
+	static int route(int routine, U64 p1, U64 p2, U64 p3, U64 p4);
+
+private:
+	typedef int (*Service)(U64, U64, U64, U64);
+
+	static Service table[SYSCALL_COUNT];
 };
 
 } // namespace kernel

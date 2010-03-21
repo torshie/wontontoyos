@@ -25,7 +25,8 @@ DEFINE_LONG_LONG(USER_STACK_BOTTOM, 0x800000000000)
 
 DEFINE(SYSCALL_MIN, 0)
 DEFINE(SYSCALL_EXIT_PROCESS, 0)
-DEFINE(SYSCALL_COUNT, 1) /* Don't forget to update this constant after add a new system call */
+DEFINE(SYSCALL_RETURN_VALUE, 1)
+DEFINE(SYSCALL_COUNT, 2) /* Don't forget to update this constant after add a new system call */
 DEFINE(SYSCALL_MAX, SYSCALL_COUNT - 1)
 
 END_DEFINE()

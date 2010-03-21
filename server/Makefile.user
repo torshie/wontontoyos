@@ -1,12 +1,14 @@
 SERVER = $(notdir $(CURDIR))
 SERVER_FILE = $(SERVER).elf
 USER_LD = $(WONTON)/server/user.ld
-CRT0 = $(WONTON)/server/crt0.o
 CLEAN = $(SERVER_FILE)
+LIBS = ../../system/jelly/libjelly.a
+REQ_DIR = ../../system/jelly
+CXXFLAGS += -I$(WONTON)/system
 
-build: compile $(SERVER_FILE)
+build: compile ../../system/jelly/build $(SERVER_FILE)
 
-$(SERVER_FILE): $(ALL_OBJS) $(CRT0)
+$(SERVER_FILE): $(LIBS) $(ALL_OBJS)
 	#  LD $@
-	@$(LD) -T $(USER_LD) $(LDFLAGS) $(ALL_OBJS) $(CRT0) -o $@
+	@$(LD) -T $(USER_LD) $(LDFLAGS) $(ALL_OBJS) -o $@
 

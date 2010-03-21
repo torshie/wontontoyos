@@ -1,4 +1,4 @@
-LIBRARY = libwonton.a
+LIBRARY = libjelly.a
 
 build: compile $(LIBRARY)
 

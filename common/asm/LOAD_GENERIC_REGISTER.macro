@@ -7,7 +7,6 @@
 	pop %r10
 	pop %r9
 	pop %r8
-	pop %rsp
 	pop %rbp
 	pop %rdi
 	pop %rsi
