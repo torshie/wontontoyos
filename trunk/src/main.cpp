@@ -21,7 +21,6 @@ extern "C" int __ld_image_end, __ld_image_start;
 
 extern "C" int sampleServer;
 void main() {
-	Message::brief << "Welcome to the hell!\n";
 	Message::brief << "__ld_image_start: " << &__ld_image_start << "\n"
 			<< "__ld_image_end:   " << &__ld_image_end << "\n";
 

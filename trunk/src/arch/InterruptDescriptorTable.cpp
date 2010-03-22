@@ -8,10 +8,10 @@
 namespace kernel {
 
 // Defined in interruptServiceRoutine.S
-extern "C" Address isrAddressTable[InterruptDescriptorTable::HANDLER_COUNT];
+extern "C" Address isrTable[InterruptDescriptorTable::HANDLER_COUNT];
 
-InterruptDescriptorTable::InterruptDescriptor::InterruptDescriptor() {
-	Utils::memset(this, 0, sizeof(InterruptDescriptor));
+InterruptDescriptorTable::Descriptor::Descriptor() {
+	Utils::memset(this, 0, sizeof(Descriptor));
 	selector = GlobalDescriptorTable::OFFSET_KERNEL_CODE;
 	// XXX Evil literal constants
 	type = 0xe;
@@ -23,14 +23,15 @@ InterruptDescriptorTable::InterruptDescriptorTable() {
 	limit = sizeof(table) - 1;
 
 	for (int i = 0; i < HANDLER_COUNT; ++i) {
-		table[i].setOffset(isrAddressTable[i]);
+		table[i].setOffset(isrTable[i]);
 	}
 	Utils::memset(handler, 0, sizeof(handler));
 
 	setHandler(PAGE_FAULT, InterruptHandler<PAGE_FAULT>::handle);
+	setHandler(DOUBLE_FAULT, InterruptHandler<DOUBLE_FAULT>::handle);
 }
 
-void InterruptDescriptorTable::handle(int isrNumber) {
+void InterruptDescriptorTable::handle(unsigned int isrNumber) {
 	static char const * const ISR_NAME[] = {
 		"#DE Devide By Zero",
 		"#DB Debug Exception",
@@ -58,10 +59,10 @@ void InterruptDescriptorTable::handle(int isrNumber) {
 	if (idt.handler[isrNumber] != 0) {
 		idt.handler[isrNumber]();
 	} else {
-		if (isrNumber != DOUBLE_FAULT) {
-			Message::critical << ISR_NAME[isrNumber];
-			for (;;)
-				;
+		if (isrNumber < (sizeof(ISR_NAME) / sizeof(char*))) {
+			Message::critical << ISR_NAME[isrNumber] << "\n";
+		} else {
+			Message::critical << "#Interrupt: " << isrNumber << "\n";
 		}
 	}
 }

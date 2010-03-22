@@ -21,14 +21,14 @@ public:
 		 * If you want to change this const, make sure you have changed file
 		 * interruptServiceRoutine.S
 		 */
-		HANDLER_COUNT = 32
+		HANDLER_COUNT = 256
 	};
 
 	void load() const;
 	void setHandler(int isrNumber, void (*handler)(void));
 
 private:
-	struct InterruptDescriptor {
+	struct Descriptor {
 		U16 offset0;
 		U16 selector;
 		U8 ist:3;
@@ -41,7 +41,7 @@ private:
 		U32 offset2;
 		U32 ignored1;
 
-		InterruptDescriptor();
+		Descriptor();
 
 		void setOffset(Address offset) {
 			offset0 = offset;
@@ -52,7 +52,7 @@ private:
 
 	void (*handler[HANDLER_COUNT])(void);
 
-	InterruptDescriptor table[HANDLER_COUNT];
+	Descriptor table[HANDLER_COUNT];
 	char __padding[sizeof(U64) - sizeof(U16)];
 	U16 limit;
 	U64 address;
@@ -63,7 +63,7 @@ private:
 	const InterruptDescriptorTable& operator=(const InterruptDescriptorTable&);
 
 	// Yes, handle is private. Assembly is used to get access to this static method
-	static void handle(int isrNumber);
+	static void handle(unsigned int isrNumber);
 } __attribute__((packed));
 
 inline void InterruptDescriptorTable::setHandler(int isrNumber, void (*h)(void)) {
