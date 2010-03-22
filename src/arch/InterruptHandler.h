@@ -20,6 +20,12 @@ public:
 	}
 };
 
+template<> class InterruptHandler<InterruptDescriptorTable::DOUBLE_FAULT> {
+public:
+	static void handle() {
+	}
+};
+
 } // namespace kernel
 
 #endif // KERNEL_ARCH_INTERRUPT_HANDLER_H_INCLUDED
