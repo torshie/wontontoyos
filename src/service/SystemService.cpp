@@ -3,13 +3,15 @@
 
 #include "SystemService.h"
 #include "Message.h"
+#include "arch/Processor.h"
 
 namespace kernel {
 
 int SystemService<SYSCALL_EXIT_PROCESS>::serve(int status) {
 	Message::brief << status << " is the returned value\n";
 
-	for (;;) ;
+	for (;;)
+		;
 	return 0;
 }
 

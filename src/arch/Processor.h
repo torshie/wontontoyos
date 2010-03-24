@@ -2,14 +2,17 @@
 #define KERNEL_ARCH_PROCESSOR_H_INCLUDED
 
 #include <generic/type.h>
-#include <generic/getSingleInstance.h>
+#include "getProcessorInstance.h"
+#include "Message.h"
 
 namespace kernel {
 
 class Processor {
-	friend Processor& getSingleInstance<Processor>();
+	friend Processor& getProcessorInstance<Processor>();
 
-	Processor() {}
+	// XXX Find out why the constructor never get called
+	Processor() {Message::critical << "Where is this message???\n";}
+
 	Processor(const Processor&);
 	const Processor& operator = (const Processor&);
 
@@ -24,7 +27,12 @@ public:
 	U64 getModelSpecificRegister(U32 reg);
 	void setModeSpecificRegister(U32 reg, U64 value);
 	void halt();
-	void initialize(); // XXX Find out why we cannot put initialization code into constructor
+
+	/**
+	 * XXX Find out why the default constructor never get called and we need this method
+	 * to initialize !!!
+	 */
+	void initialize();
 };
 
 } // namespace kernel

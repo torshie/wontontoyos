@@ -11,8 +11,11 @@
 #include "mm/GenericAllocator.h"
 #include "exe/SimpleLoader.h"
 #include "arch/Processor.h"
+#include "arch/getProcessorInstance.h"
 #include "thread/UserAddressSpace.h"
 #include "thread/Thread.h"
+#include "arch/InterruptController.h"
+#include "ut/framework/UnitTesting.h"
 
 namespace kernel {
 
@@ -24,9 +27,15 @@ void main() {
 	Message::brief << "__ld_image_start: " << &__ld_image_start << "\n"
 			<< "__ld_image_end:   " << &__ld_image_end << "\n";
 
-	getSingleInstance<GlobalDescriptorTable>().load();
-	getSingleInstance<InterruptDescriptorTable>().load();
-	getSingleInstance<Processor>().initialize();
+	getProcessorInstance<GlobalDescriptorTable>();
+	getProcessorInstance<InterruptDescriptorTable>();
+	getProcessorInstance<Processor>().initialize();
+//	getProcessorInstance<InterruptController>();
+
+	TestRunner& runner = getSingleInstance<TestRunner>();
+	TestResult result;
+	runner.run(result);
+	result.show();
 
 	SimpleLoader loader;
 	loader.parse(&sampleServer, 0);

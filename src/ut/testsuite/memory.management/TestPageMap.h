@@ -12,12 +12,6 @@ class TestPageMap : public TestCase {
 public:
 	bool getTestPoint(TestPoint&, const char*&);
 
-	void testMapAndUnmapTempPage() {
-		Address physicalAddress = getSingleInstance<PhysicalPageAllocator>().allocate(PAGE_SIZE);
-		void* virtualAddress = PageMap::mapTempPage(physicalAddress);
-		UT_ASSERT_EQUAL(PageMap::unmapTempPage(virtualAddress), physicalAddress);
-	}
-
 	void testCreateKernelMap_MappedAddress() {
 		volatile bool b = true;
 		PageMap::create((Address)&b, PAGE_SIZE);
@@ -47,6 +41,8 @@ public:
 		UT_ASSERT_EQUAL(*first, *second);
 		// XXX Destroy the created map hierarchy
 	}
+
+	// XXX Add more test points to test creation of user space paging map
 };
 
 } /* namespace kernel */

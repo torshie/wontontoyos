@@ -2,13 +2,18 @@
 #define KERNEL_MM_PHYSICAL_PAGE_ALLOCATOR_H_INCLUDED
 
 #include <generic/type.h>
+#include <generic/getSingleInstance.h>
 
 namespace kernel {
 
 class PhysicalPageAllocator {
-public:
+	friend PhysicalPageAllocator& getSingleInstance<PhysicalPageAllocator>();
+	PhysicalPageAllocator(const PhysicalPageAllocator&);
+	const PhysicalPageAllocator& operator = (const PhysicalPageAllocator&);
+
 	PhysicalPageAllocator();
 
+public:
 	Address allocate(Size memoryNeeded);
 	void release(Address);
 

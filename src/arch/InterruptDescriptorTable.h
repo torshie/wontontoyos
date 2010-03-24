@@ -2,17 +2,19 @@
 #define KERNEL_ARCH_INTERRUPT_DESCRIPTOR_TABLE_H_INCLUDED
 
 #include <generic/type.h>
-#include <generic/getSingleInstance.h>
+#include "arch/getProcessorInstance.h"
 #include <generic/STATIC_ASSERT.h>
 
 namespace kernel {
 
 class InterruptDescriptorTable {
-	friend InterruptDescriptorTable& getSingleInstance<InterruptDescriptorTable>();
+	friend InterruptDescriptorTable& getProcessorInstance<InterruptDescriptorTable>();
 public:
 	enum {
 		DOUBLE_FAULT = 8,
 		PAGE_FAULT = 14,
+
+		APIC_INTERRUPT_TIMER = 40,
 
 		/**
 		 * !!!!!!!!!!!!!!!!
@@ -21,26 +23,14 @@ public:
 		 * If you want to change this const, make sure you have changed file
 		 * interruptServiceRoutine.S
 		 */
-		HANDLER_COUNT = 256
+		HANDLER_COUNT = 64
 	};
 
-	void load() const;
 	void setHandler(int isrNumber, void (*handler)(void));
 
 private:
-	struct Descriptor {
-		U16 offset0;
-		U16 selector;
-		U8 ist:3;
-		U8 ignored0:5;
-		U8 type:4;
-		U8 zero0:1;
-		U8 dpl:2;
-		U8 present:1;
-		U16 offset1;
-		U32 offset2;
-		U32 ignored1;
-
+	class Descriptor {
+		friend class InterruptDescriptorTable;
 		Descriptor();
 
 		void setOffset(Address offset) {
@@ -48,6 +38,22 @@ private:
 			offset1 = offset >> 16;
 			offset2 = offset >> 32;
 		}
+
+	public:
+		U16 offset0;
+		U16 selector;
+	private:
+		U8 ist:3;
+		U8 ignored0:5;
+	public:
+		U8 type:4;
+		U8 zero0:1;
+		U8 dpl:2;
+		U8 present:1;
+		U16 offset1;
+		U32 offset2;
+	private:
+		U32 ignored1;
 	} __attribute__((packed));
 
 	void (*handler[HANDLER_COUNT])(void);
@@ -58,6 +64,8 @@ private:
 	U64 address;
 
 	InterruptDescriptorTable();
+	void load() const;
+
 	~InterruptDescriptorTable() {}
 	InterruptDescriptorTable(const InterruptDescriptorTable&);
 	const InterruptDescriptorTable& operator=(const InterruptDescriptorTable&);

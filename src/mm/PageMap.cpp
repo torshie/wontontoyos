@@ -4,53 +4,50 @@
 #include <kernel/abi.h>
 #include "debug.h"
 #include "arch/Processor.h"
+#include <generic/Utils.h>
 
 namespace kernel {
-
-void* PageMap::mapTempPage(Address physicalAddress) {
-	if (physicalAddress % PAGE_SIZE != 0) {
-		BUG("Invalid physicalAddress: " << physicalAddress);
-	}
-
-	PagePointer<1>* freeVirtualPage = PagePointer<1>::getPointerTo(KERNEL_TEMP_AREA_BEGIN);
-	Offset offset = KERNEL_TEMP_AREA_BEGIN;
-	for (; offset < KERNEL_TEMP_AREA_END; offset += PAGE_SIZE, ++freeVirtualPage) {
-		if (!freeVirtualPage->present) {
-			break;
-		}
-	}
-	if (offset == KERNEL_TEMP_AREA_END) {
-		return 0;
-	}
-	freeVirtualPage->address = physicalAddress;
-	freeVirtualPage->present = 1;
-	freeVirtualPage->writable = 1;
-
-	reload();
-
-	return (void*)(offset);
-}
-
-Address PageMap::unmapTempPage(void* pointer) {
-	if ((Address)pointer % PAGE_SIZE != 0) {
-		BUG("Invalid virtual address: " << pointer);
-	}
-
-	PagePointer<1>* pagePointer = PagePointer<1>::getPointerTo((Address)pointer);
-	pagePointer->present = 0;
-
-	reload();
-
-	return pagePointer->page * PAGE_SIZE;
-}
 
 void PageMap::reload() {
 	PageTable<4>* levelFour = (PageTable<4>*)(PageTable<4>::LOWEST_TABLE_ADDRESS);
 	Address address = levelFour->pointer[PagePointer<4>::POINTERS_PER_PAGE - 1].page
 								* PAGE_SIZE;
 
-	Processor& processor = getSingleInstance<Processor>();
+	Processor& processor = getProcessorInstance<Processor>();
 	processor.setRegister<Processor::CR3>(address);
+}
+
+void PageMap::create(Address linear, Size size, Address physical) {
+	// XXX Mark the given physical address in PhysicalPageAllocator if necessary
+	// XXX Mark the given linear address in GenericAllocator if necessary
+	if (physical % PAGE_SIZE != 0) {
+		BUG("Bad physical address: " << physical);
+	}
+	PageMapHelper<4>::create(linear, size);
+	PageMapHelper<3>::create(linear, size);
+	PageMapHelper<2>::create(linear, size);
+	Address start = Utils::roundDown(linear, PAGE_SIZE);
+	Address end = Utils::roundUp(linear + size, PAGE_SIZE);
+	bool userSpace;
+	if (linear < KERNEL_VIRTUAL_BASE) {
+		userSpace = true;
+	} else {
+		userSpace = false;
+	}
+	for (Address linearAddress = start, physicalAddress = physical;
+			linearAddress < end;
+			physicalAddress += PAGE_SIZE, linearAddress += PAGE_SIZE) {
+		// XXX Do something if the an old page already exists
+		PagePointer<1>* pointer = PagePointer<1>::getPointerTo(linearAddress);
+		if (!pointer->present) {
+			pointer->address = physicalAddress;
+			pointer->present = 1;
+			pointer->writable = 1;
+			if (userSpace) {
+				pointer->userSpace = 1;
+			}
+		}
+	}
 }
 
 } // namespace kernel

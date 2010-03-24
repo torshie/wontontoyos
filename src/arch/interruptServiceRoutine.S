@@ -71,4 +71,4 @@
 .endm
 
 /* XXX Check whether we need this many service routines */
-CREATE_ISR_TABLE 256, isrTable
+CREATE_ISR_TABLE 64, isrTable

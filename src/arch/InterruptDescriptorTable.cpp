@@ -29,6 +29,9 @@ InterruptDescriptorTable::InterruptDescriptorTable() {
 
 	setHandler(PAGE_FAULT, InterruptHandler<PAGE_FAULT>::handle);
 	setHandler(DOUBLE_FAULT, InterruptHandler<DOUBLE_FAULT>::handle);
+	setHandler(APIC_INTERRUPT_TIMER, InterruptHandler<APIC_INTERRUPT_TIMER>::handle);
+
+	load();
 }
 
 void InterruptDescriptorTable::handle(unsigned int isrNumber) {
@@ -55,15 +58,17 @@ void InterruptDescriptorTable::handle(unsigned int isrNumber) {
 		"#XM SIMD Floating-Point Exception"
 	};
 
-	InterruptDescriptorTable& idt = getSingleInstance<InterruptDescriptorTable>();
+	InterruptDescriptorTable& idt = getProcessorInstance<InterruptDescriptorTable>();
 	if (idt.handler[isrNumber] != 0) {
 		idt.handler[isrNumber]();
 	} else {
 		if (isrNumber < (sizeof(ISR_NAME) / sizeof(char*))) {
 			Message::critical << ISR_NAME[isrNumber] << "\n";
 		} else {
-			Message::critical << "#Interrupt: " << isrNumber << "\n";
+			Message::critical << "### Unknown Interrupt: " << isrNumber << "\n";
 		}
+		for (;;)
+			;
 	}
 }
 

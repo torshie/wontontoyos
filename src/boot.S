@@ -15,15 +15,15 @@ bootSystemCallRouter:
 	mov $(KERNEL_STACK_BOTTOM - 16), %rsp /* XXX Check whether set %rsp like this is safe */
 	push %rax
 
-	/* Save user instruction pointer */
-	push %rcx
+	push %r11 /* Save user RFLAGS */
+	push %rcx /* Save user instruction pointer */
+
+	sti
 
 	/* Mangled kernel::SystemCallRouter::route(int, U64, U64, U64, U64, U64) */
 	call _ZN6kernel16SystemCallRouter5routeEimmmmm
 
-	/* Load user instruction pointer */
-	pop %rcx
-
-	/* Load user stack pointer */
-	pop %rsp
+	pop %rcx /* Load user instruction pointer */
+	pop %r11 /* Load user RFLAGS */
+	pop %rsp /* Load user stack pointer */
 	sysretq

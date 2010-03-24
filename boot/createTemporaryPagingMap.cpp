@@ -38,7 +38,7 @@ static PagePointer<4>* createIdentityAndHigherHalfPagingMap() {
 	PagePointer<1>* levelOne = (PagePointer<1>*)offset;
 	for (unsigned int i = 0; i < SIZE_OF_MAPPED_MEMORY / PAGE_SIZE; ++i) {
 		if (i < KERNEL_RESERVED_MEMORY / PAGE_SIZE
-				|| i >= (KERNEL_RESERVED_MEMORY + KERNEL_TEMP_AREA) / PAGE_SIZE) {
+				|| i >= (KERNEL_RESERVED_MEMORY + APIC_MEMORY_SIZE) / PAGE_SIZE) {
 			(levelOne + i)->present = 1;
 		}
 		(levelOne + i)->writable = 1;
@@ -96,4 +96,3 @@ extern "C" PagePointer<4>* createTemporaryPagingMap() {
 
 	return levelFour;
 }
-

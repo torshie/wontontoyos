@@ -2,13 +2,13 @@
 #define KERNEL_ARCH_TASK_STATE_SEGMENT_H_INCLUDED
 
 #include <generic/type.h>
-#include <generic/getSingleInstance.h>
 #include <generic/Utils.h>
+#include "getProcessorInstance.h"
 
 namespace kernel {
 
 struct TaskStateSegment {
-	friend TaskStateSegment& getSingleInstance<TaskStateSegment>();
+	friend TaskStateSegment& getProcessorInstance<TaskStateSegment>();
 private:
 	U32 reserved0;
 public:

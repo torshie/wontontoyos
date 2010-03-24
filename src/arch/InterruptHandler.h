@@ -5,6 +5,8 @@
 #include "Printer.h"
 #include <generic/type.h>
 #include "Processor.h"
+#include "Message.h"
+#include "InterruptController.h"
 
 namespace kernel {
 
@@ -13,7 +15,7 @@ template<int INTERUPT> class InterruptHandler;
 template<> class InterruptHandler<InterruptDescriptorTable::PAGE_FAULT> {
 public:
 	static void handle() {
-		Processor& processor = getSingleInstance<Processor>();
+		Processor& processor = getProcessorInstance<Processor>();
 		U64 linearAddress = processor.getRegister<Processor::CR2, U64>();
 		Message::critical << "#Page Fault: accessing " << linearAddress << "\n";
 		processor.halt();
@@ -23,6 +25,16 @@ public:
 template<> class InterruptHandler<InterruptDescriptorTable::DOUBLE_FAULT> {
 public:
 	static void handle() {
+	}
+};
+
+template<> class InterruptHandler<InterruptDescriptorTable::APIC_INTERRUPT_TIMER> {
+public:
+	static void handle() {
+		static I64 tick = 1;
+		Message::brief << "APIC Tick: " <<  tick << "\n";
+		++tick;
+		InterruptController::endInterrupt();
 	}
 };
 
