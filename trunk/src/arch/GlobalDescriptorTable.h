@@ -1,7 +1,7 @@
 #ifndef KERNEL_ARCH_GLOBAL_DESCRIPTOR_TABLE_H_INCLUDED
 #define KERNEL_ARCH_GLOBAL_DESCRIPTOR_TABLE_H_INCLUDED
 
-#include <generic/getSingleInstance.h>
+#include "arch/getProcessorInstance.h"
 #include <generic/type.h>
 #include <generic/STATIC_ASSERT.h>
 #include "NullDescriptor.h"
@@ -13,7 +13,7 @@
 namespace kernel {
 
 struct GlobalDescriptorTable {
-	friend GlobalDescriptorTable& getSingleInstance<GlobalDescriptorTable>();
+	friend GlobalDescriptorTable& getProcessorInstance<GlobalDescriptorTable>();
 
 	/**
 	 * The order of these descriptors are important:
@@ -50,9 +50,10 @@ private:
 			base(this) {
 		userCode.dpl = 3;
 		userData.__dpl = 3;
+
+		load();
 	}
 
-public:
 	/**
 	 * Load the GDTR & TR
 	 *

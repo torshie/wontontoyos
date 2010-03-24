@@ -8,39 +8,31 @@
 
 namespace kernel {
 
-// XXX Implement destroy
+// XXX Implement destroy()
 class PageMap {
 	~PageMap() {}
 
-	template<int LEVEL> class PageMapHelper {
-	public:
-		static void create(Address base, Size size);
-	};
+	template<int LEVEL> class PageMapHelper;
 
 public:
-	static void* mapTempPage(Address physicalAddress);
-	static Address unmapTempPage(void*);
 	static void reload();
-	static void create(Address base, Size size) {
-		PageMapHelper<4>::create(base, size);
-		PageMapHelper<3>::create(base, size);
-		PageMapHelper<2>::create(base, size);
-		PageMapHelper<1>::create(base, size);
-	}
+	static void create(Address linear, Size size, Address physical = 0);
 };
 
-template<int LEVEL> void PageMap::PageMapHelper<LEVEL>::create(Address base,
-		Size size) {
-	Address start = Utils::roundDown(base, PagePointer<LEVEL>::MEMORY_POINTED);
-	Address end = Utils::roundUp(base + size, PagePointer<LEVEL>::MEMORY_POINTED);
-	for (Address address = start; address < end;
-			address += PagePointer<LEVEL>::MEMORY_POINTED) {
-		PagePointer<LEVEL>* pointer = PagePointer<LEVEL>::getPointerTo(address);
-		if (!(pointer->present)) {
-			PageTable<LEVEL - 1>::create(address);
+template<int LEVEL> class PageMap::PageMapHelper {
+public:
+	static void create(Address base, Size size) {
+		Address start = Utils::roundDown(base, PagePointer<LEVEL>::MEMORY_POINTED);
+		Address end = Utils::roundUp(base + size, PagePointer<LEVEL>::MEMORY_POINTED);
+		for (Address address = start; address < end;
+				address += PagePointer<LEVEL>::MEMORY_POINTED) {
+			PagePointer<LEVEL>* pointer = PagePointer<LEVEL>::getPointerTo(address);
+			if (!(pointer->present)) {
+				PageTable<LEVEL - 1>::create(address);
+			}
 		}
 	}
-}
+};
 
 } // namespace kernel
 

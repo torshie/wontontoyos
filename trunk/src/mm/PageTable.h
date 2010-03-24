@@ -84,39 +84,6 @@ template<int LEVEL> void PageTable<LEVEL>::destroy(Address table) {
 	allocator.release(physicalAddress);
 }
 
- //XXX Duplication! Remove it
-template<> class PageTable<0> {
-	friend class TestPageTable;
-	friend class PageMap;
-
-	PageTable() {}
-	PageTable(const PageTable&);
-	const PageTable& operator = (const PageTable&);
-
-public:
-	static PageTable* create(Address linearAddress) {
-		PagePointer<1>* tmp = PagePointer<1>::getPointerTo(linearAddress);
-		bool userSpace;
-		if (linearAddress < KERNEL_VIRTUAL_BASE) {
-			userSpace = true;
-		} else {
-			userSpace = false;
-		}
-
-		PhysicalPageAllocator& allocator = getSingleInstance<PhysicalPageAllocator>();
-		Address physicalAddress = (Address)allocator.allocate(PAGE_SIZE);
-		tmp->page = physicalAddress / PAGE_SIZE;
-		tmp->present = 1;
-		tmp->writable = 1;
-		if (userSpace) {
-			tmp->userSpace = 1;
-		}
-		PageMap::reload();
-
-		return (PageTable*)linearAddress;
-	}
-};
-
 } // namespace kernel
 
 #endif // KERNEL_ARCH_PAGE_TABLE_H_INCLUDED

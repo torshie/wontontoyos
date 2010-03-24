@@ -3,7 +3,7 @@
 
 #include <generic/type.h>
 #include <generic/Utils.h>
-#include <generic/getSingleInstance.h>
+#include "getProcessorInstance.h"
 #include <kernel/abi.h>
 #include "TaskStateSegment.h"
 
@@ -27,7 +27,7 @@ struct TaskStateSegmentDescriptor {
 	U32 _zero1;
 
 	TaskStateSegmentDescriptor() {
-		TaskStateSegment& tss = getSingleInstance<TaskStateSegment>();
+		TaskStateSegment& tss = getProcessorInstance<TaskStateSegment>();
 		tss.rsp[0] = KERNEL_VIRTUAL_BASE + KERNEL_PHYSICAL_BASE;
 		Utils::zeroize(this, sizeof(TaskStateSegmentDescriptor));
 		present = 1;

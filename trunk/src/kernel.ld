@@ -8,10 +8,10 @@ ENTRY(_start)
  * !!!!!!!!!!!!!!!
  * If you want to change load address, make sure <kernel/abi.h> is consistent
  */
-BASE = 0xFFFF800000000000 + 0x100000 + 0xA000 + 0x6000;
+BASE = 0xFFFF800000000000 + 0x100000 + 0x1000 + 0x6000;
 /*           ^                  ^         ^        ^
  *           |                  |         |        |
- *     VIRTUAL_BASE         RESERVED  TEMP_AREA  STACK
+ *     VIRTUAL_BASE         RESERVED     APIC  STACK
  */
 
 ALIGNMENT = 16;

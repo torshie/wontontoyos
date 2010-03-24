@@ -15,6 +15,7 @@ namespace kernel {
 class Printer {
 	friend Printer& getSingleInstance<Printer>();
 	friend class Message;
+
 	Printer();
 	Printer(const Printer&);
 	const Printer& operator=(const Printer&);

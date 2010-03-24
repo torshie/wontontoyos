@@ -1,7 +1,9 @@
 *** Add exception support
 *** Implement PhysicalPageAllocator
 *** Implement various deallocator
+*** Enable APIC
 
+** Check the dependency of all the processor/singleton instances.
 ** Handle rFLAGS upon syscall/sysret
 ** Implement a loader that checks the input image.
 ** Enhance linear address allocator.
@@ -9,8 +11,6 @@
 ** Test the linear address allocator.
 ** Redesign kernel memory layout.
 ** Use a different stack for interrupt handlers
-** cli before enter interrupt handlers, sti after interrupt handlers.
 
 * Remove temporary paging map. So the address space are available to kernel stack.
-* RME remember to copy license
-* Find out why mm/GeneralAllocator.o is so special what we have to pass it as an argument to ld
+* Port RME

@@ -4,7 +4,7 @@
 namespace kernel {
 
 void Thread::start() {
-	Processor& processor = getSingleInstance<Processor>();
+	Processor& processor = getProcessorInstance<Processor>();
 	processor.enterUserMode(entry);
 	for (;;);
 }
