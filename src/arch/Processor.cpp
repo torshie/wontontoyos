@@ -45,7 +45,8 @@ void Processor::setModeSpecificRegister(U32 reg, U64 value) {
 }
 
 void Processor::enterUserMode(Address entry) {
-	asm volatile("sysretq" : : "c"(entry));
+	asm volatile("mov $0x200, %%r11\n"
+			"sysretq" : : "c"(entry) : ("%r11"));
 }
 
 void Processor::halt() {

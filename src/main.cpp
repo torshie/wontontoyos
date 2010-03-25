@@ -14,8 +14,8 @@
 #include "arch/getProcessorInstance.h"
 #include "thread/UserAddressSpace.h"
 #include "thread/Thread.h"
-#include "arch/InterruptController.h"
 #include "ut/framework/UnitTesting.h"
+#include "arch/InterruptController.h"
 
 namespace kernel {
 
@@ -30,12 +30,15 @@ void main() {
 	getProcessorInstance<GlobalDescriptorTable>();
 	getProcessorInstance<InterruptDescriptorTable>();
 	getProcessorInstance<Processor>().initialize();
-//	getProcessorInstance<InterruptController>();
+	getProcessorInstance<InterruptController>();
 
 	TestRunner& runner = getSingleInstance<TestRunner>();
 	TestResult result;
 	runner.run(result);
 	result.show();
+
+	for (;;)
+		;
 
 	SimpleLoader loader;
 	loader.parse(&sampleServer, 0);
