@@ -28,15 +28,15 @@ mbootheader:
 globalDescriptorTable:
 	.quad 0 /* Null segment descriptor, required by CPU specification */
 
-/* Data Segment descriptor. */
-dataSegmentDescriptor:
-	.long 0x0000FFFF
-	.long 0x00CF9200 /* Bit G, D/B, P, 12 and W are set, DPL is 0 */
-
 /* 64-bit Code Segment descriptor */
 _64bitCodeSegmentDescriptor:
 	.long 0x00000000
 	.long 0x00209800 /* Bit L, P, 12 and 11 are set, DPL is 0 */
+
+/* Data Segment descriptor. */
+dataSegmentDescriptor:
+	.long 0x0000FFFF
+	.long 0x00CF9200 /* Bit G, D/B, P, 12 and W are set, DPL is 0 */
 
 globalDescriptorTablePointer:
 	.short . - globalDescriptorTable - 1
@@ -89,11 +89,11 @@ _64bitMode:
 
 	mov $(dataSegmentDescriptor - globalDescriptorTable), %ax
 	mov %ax, %ds
+	mov %ax, %ss
 
 	mov $kernelImage, %rdi
 	mov $(kernelImageEnd - kernelImage), %rsi
 	call loadKernelImage
-
 	jmp *%rax /* Jump to kernel's entry point */
 
 .section .data

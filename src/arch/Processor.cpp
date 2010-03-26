@@ -7,7 +7,7 @@ namespace kernel {
 
 extern "C" void (*bootSystemCallRouter)();
 void Processor::initialize() {
-	U64 star = ((U64)(GlobalDescriptorTable::OFFSET_USER_DATA - 8) << 48)
+	U64 star = ((U64)((GlobalDescriptorTable::OFFSET_USER_DATA - 8) | 3) << 48)
 			| ((U64)(GlobalDescriptorTable::OFFSET_KERNEL_CODE) << 32);
 	setModeSpecificRegister(MSR_SYS_TARGET_ADDRESS_REGISTER, star);
 	setModeSpecificRegister(MSR_SYSCALL_FLAG_MASK, 0xFFFFFFFF);

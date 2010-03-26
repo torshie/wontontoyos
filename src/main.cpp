@@ -26,7 +26,6 @@ extern "C" int sampleServer;
 void main() {
 	Message::brief << "__ld_image_start: " << &__ld_image_start << "\n"
 			<< "__ld_image_end:   " << &__ld_image_end << "\n";
-
 	getProcessorInstance<GlobalDescriptorTable>();
 	getProcessorInstance<InterruptDescriptorTable>();
 	getProcessorInstance<Processor>().initialize();

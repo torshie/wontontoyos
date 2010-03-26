@@ -20,8 +20,8 @@ bootSystemCallRouter:
 
 	sti
 
-	/* Mangled kernel::SystemCallRouter::route(int, U64, U64, U64, U64, U64) */
-	call _ZN6kernel16SystemCallRouter5routeEimmmmm
+	/* Mangled kernel::ServiceRouter::route(int, U64, U64, U64, U64, U64) */
+	call _ZN6kernel13ServiceRouter5routeEimmmmm
 
 	pop %rcx /* Load user instruction pointer */
 	pop %r11 /* Load user RFLAGS */

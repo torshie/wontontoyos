@@ -17,21 +17,27 @@ struct GlobalDescriptorTable {
 
 	/**
 	 * The order of these descriptors are important:
-	 * 1. kernelData and kernelCode must have the same offset as in src/boot.S
-	 * 2. Data Segment Descriptor must be just before Code Segment Descriptor, since syscall and
-	 * sysret are used. Refer to AMD/Intel's system programming manual for detailed information.
+	 * 1. kernelData and kernelCode must have the same offset as in boot/loader.S
+	 * 2. syscall & sysret are used. Refer to AMD/Intel's system programming manual for
+	 * detailed information.
 	 */
 	NullDescriptor null;
-	DataSegmentDescriptor kernelData;
+public:
 	CodeSegmentDescriptor kernelCode;
+	DataSegmentDescriptor kernelData;
+private:
+	// XXX 32-bit user space code isn't support, so create a private dummy 32-bit Code Descriptor
+	NullDescriptor code32;
+public:
 	DataSegmentDescriptor userData;
 	CodeSegmentDescriptor userCode;
 	TaskStateSegmentDescriptor taskState;
 
 	enum {
-		OFFSET_KERNEL_DATA = sizeof(NullDescriptor),
-		OFFSET_KERNEL_CODE = sizeof(DataSegmentDescriptor) + OFFSET_KERNEL_DATA,
-		OFFSET_USER_DATA = sizeof(CodeSegmentDescriptor) + OFFSET_KERNEL_CODE,
+		OFFSET_KERNEL_CODE = sizeof(NullDescriptor),
+		OFFSET_KERNEL_DATA = sizeof(CodeSegmentDescriptor) + OFFSET_KERNEL_CODE,
+		OFFSET_USER_DATA = sizeof(DataSegmentDescriptor) + sizeof(NullDescriptor)
+							+ OFFSET_KERNEL_DATA,
 		OFFSET_USER_CODE = sizeof(DataSegmentDescriptor) + OFFSET_USER_DATA,
 		OFFSET_TASK_STATE = sizeof(CodeSegmentDescriptor) + OFFSET_USER_CODE
 	};
@@ -44,15 +50,7 @@ private:
 	U16 limit;
 	void* base;
 
-	GlobalDescriptorTable()
-			: limit(sizeof(null) + sizeof(kernelData) + sizeof(kernelCode) + sizeof(userData)
-					+ sizeof(userCode) + sizeof(taskState) - 1),
-			base(this) {
-		userCode.dpl = 3;
-		userData.__dpl = 3;
-
-		load();
-	}
+	GlobalDescriptorTable();
 
 	/**
 	 * Load the GDTR & TR
@@ -63,10 +61,18 @@ private:
 	 * XXX Load TR should be placed in a separate function, maybe even in a separate class
 	 */
 	void load() const;
-};
+} __attribute__((packed));
+
+inline GlobalDescriptorTable::GlobalDescriptorTable() :
+		limit(sizeof(GlobalDescriptorTable) - sizeof(limit) - sizeof(base) - sizeof(__padding)),
+		base(this) {
+	userCode.dpl = 3;
+	userData.__dpl = 3;
+	load();
+}
 
 STATIC_ASSERT_EQUAL(sizeof(GlobalDescriptorTable),
-		sizeof(NullDescriptor) + sizeof(DataSegmentDescriptor) * 2
+		sizeof(NullDescriptor) * 2 + sizeof(DataSegmentDescriptor) * 2
 		+ sizeof(CodeSegmentDescriptor) * 2
 		+ sizeof(TaskStateSegmentDescriptor)
 		+ sizeof(void*) - sizeof(U16) /* padding */
