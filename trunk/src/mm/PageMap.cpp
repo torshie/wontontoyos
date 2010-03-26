@@ -43,7 +43,6 @@ void PageMap::create(Address linear, Size size, Address physical) {
 			pointer->address = physicalAddress;
 			pointer->present = 1;
 			pointer->writable = 1;
-			pointer->cacheDisable = 1;
 			if (userSpace) {
 				pointer->userSpace = 1;
 			}

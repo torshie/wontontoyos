@@ -57,8 +57,6 @@ private:
 	 *
 	 * Load the GDTR the with address of the only instance of GlobalDescriptorTable, load TR
 	 * with the address of data member taskState.
-	 *
-	 * XXX Load TR should be placed in a separate function, maybe even in a separate class
 	 */
 	void load() const;
 } __attribute__((packed));
@@ -83,6 +81,7 @@ inline void GlobalDescriptorTable::load() const {
 	Offset offsetKernelData = OFFSET_KERNEL_DATA;
 	Offset offsetTaskState = OFFSET_TASK_STATE;
 
+	 // XXX Load TR should be placed in a separate function, maybe even in a separate class
 	asm volatile("lgdt %0\n"
 			"mov %%ax, %%ds\n"
 			"mov %%ax, %%ss\n"
