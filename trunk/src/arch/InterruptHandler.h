@@ -33,15 +33,9 @@ template<> class InterruptHandler<InterruptDescriptorTable::APIC_INTERRUPT_TIMER
 public:
 	static void handle() {
 		static I64 tick = 1;
-		U16 cs, ss;
-		asm volatile ("mov %%cs, %0" : "=r"(cs));
-		asm volatile ("mov %%ss, %0" : "=r"(ss));
-		Message::brief << "CS: " << cs << " SS: " << ss << "\n";
 		Message::brief << "APIC Tick: " <<  tick << "\n";
 		++tick;
 		InterruptController::endInterrupt();
-		asm volatile ("mov $0x18, %ax\n"
-				"mov %ax, %ss");
 	}
 };
 
