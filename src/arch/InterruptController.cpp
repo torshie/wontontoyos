@@ -16,7 +16,7 @@ InterruptController::InterruptController() {
 	Message::brief << "APIC ID: " << Register<APIC_REGISTER_ID>::get() << "\n";
 	Message::brief << "APIC Version: " << Register<APIC_REGISTER_VERSION>::get() << "\n";
 	Register<APIC_REGISTER_TIMER_DIVIDE_CONFIGURATION>::set(10);
-	Register<APIC_REGISTER_TIMER_INITIAL_COUNT>::set(0x8fffff);
+	Register<APIC_REGISTER_TIMER_INITIAL_COUNT>::set(0x5fffff);
 	Register<APIC_REGISTER_ENTRY_TIMER>::set(
 			InterruptDescriptorTable::APIC_INTERRUPT_TIMER | (1 << 17));
 }
