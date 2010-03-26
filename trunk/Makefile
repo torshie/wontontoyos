@@ -18,3 +18,10 @@ run: build
 	$(QEMU)
 
 nothing:
+
+disk.img: $(KERNEL)
+	echo `hdiutil attach $@ | head -n 1 | cut -f 1` > .tmp
+	cp $^ /Volumes/boss
+	hdiutil detach `cat .tmp`
+	rm -f .tmp
+	touch $@

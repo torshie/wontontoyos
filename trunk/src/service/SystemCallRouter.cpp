@@ -8,7 +8,7 @@ namespace kernel {
 SystemCallRouter::Service SystemCallRouter::table[] = {
 	(SystemCallRouter::Service)(SystemService<SYSCALL_EXIT_PROCESS>::serve),
 	(SystemCallRouter::Service)(SystemService<SYSCALL_RETURN_VALUE>::serve),
-	(SystemCallRouter::Service)(SystemService<SYSCALL_DOUBLE_INPUT>::serve),
+	(SystemCallRouter::Service)(SystemService<SYSCALL_PRINT>::serve),
 	(SystemCallRouter::Service)(SystemService<SYSCALL_SUM>::serve)
 };
 

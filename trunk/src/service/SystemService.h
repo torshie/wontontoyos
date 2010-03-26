@@ -17,7 +17,7 @@ public:
 	static int serve();
 };
 
-template<> class SystemService<SYSCALL_DOUBLE_INPUT> {
+template<> class SystemService<SYSCALL_PRINT> {
 public:
 	static int serve(int input);
 };

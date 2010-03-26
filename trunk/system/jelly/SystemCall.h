@@ -17,7 +17,7 @@ public:
 	static int call();
 };
 
-template<> class SystemCall<kernel::SYSCALL_DOUBLE_INPUT> {
+template<> class SystemCall<kernel::SYSCALL_PRINT> {
 public:
 	static int call(int input);
 };

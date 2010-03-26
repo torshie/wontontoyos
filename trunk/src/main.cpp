@@ -37,9 +37,6 @@ void main() {
 	runner.run(result);
 	result.show();
 
-	for (;;)
-		;
-
 	SimpleLoader loader;
 	loader.parse(&sampleServer, 0);
 	Address base = loader.getBaseAddress();

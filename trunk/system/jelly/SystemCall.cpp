@@ -15,9 +15,9 @@ int SystemCall<SYSCALL_RETURN_VALUE>::call() {
 	return ret;
 }
 
-int SystemCall<SYSCALL_DOUBLE_INPUT>::call(int input) {
+int SystemCall<SYSCALL_PRINT>::call(int input) {
 	int ret;
-	asm volatile ("syscall" : "=a"(ret) : "D"(SYSCALL_DOUBLE_INPUT), "S"(input));
+	asm volatile ("syscall" : "=a"(ret) : "D"(SYSCALL_PRINT), "S"(input));
 	return ret;
 }
 

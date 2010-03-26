@@ -39,13 +39,13 @@
 .macro DEFINE_ISR isrNumber
 	.align 8
 	isr\isrNumber:
-		cli
+		cli /* XXX Use a gate descriptor to clear and set RFLAGS.IF */
 		SAVE_GENERIC_REGISTER
 		mov $\isrNumber, %rdi
 		/* Mangled ::kernel::InterruptDescriptorTable::handle(unsigned int) */
 		call _ZN6kernel24InterruptDescriptorTable6handleEj
 		LOAD_GENERIC_REGISTER
-		sti
+		sti /* XXX Use a gate descriptor to clear and set RFLAGS.IF */
 		iretq
 .endm
 

@@ -8,7 +8,7 @@ namespace kernel {
 extern "C" void (*bootSystemCallRouter)();
 void Processor::initialize() {
 	U64 star = ((U64)(GlobalDescriptorTable::OFFSET_USER_DATA - 8) << 48)
-			| ((U64)(GlobalDescriptorTable::OFFSET_KERNEL_DATA - 8) << 32);
+			| ((U64)(GlobalDescriptorTable::OFFSET_KERNEL_CODE) << 32);
 	setModeSpecificRegister(MSR_SYS_TARGET_ADDRESS_REGISTER, star);
 	setModeSpecificRegister(MSR_SYSCALL_FLAG_MASK, 0xFFFFFFFF);
 	setModeSpecificRegister(MSR_LONG_SYSCALL_TARGET_ADDRESS_REGISTER,
@@ -46,7 +46,7 @@ void Processor::setModeSpecificRegister(U32 reg, U64 value) {
 
 void Processor::enterUserMode(Address entry) {
 	asm volatile("mov $0x200, %%r11\n"
-			"sysretq" : : "c"(entry) : ("%r11"));
+			"sysretq" : : "c"(entry));
 }
 
 void Processor::halt() {

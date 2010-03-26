@@ -59,6 +59,7 @@ template<int LEVEL> PageTable<LEVEL>* PageTable<LEVEL>::create(Address linearAdd
 	tmp->page = physicalAddress / PAGE_SIZE;
 	tmp->present = 1;
 	tmp->writable = 1;
+	tmp->cacheDisable = 1;
 	if (userSpace) {
 		tmp->userSpace = 1;
 	}
