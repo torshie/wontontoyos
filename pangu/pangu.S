@@ -40,7 +40,12 @@ dataSegmentDescriptor:
 
 globalDescriptorTablePointer:
 	.short . - globalDescriptorTable - 1
-	.quad globalDescriptorTable
+	.long globalDescriptorTable
+	.long 0
+
+.align 8
+pml4: .quad 0
+loaderEntry: .quad 0
 
 .section .text
 .code32
@@ -50,7 +55,21 @@ bootstrap:
 	mov $__ld_kernel_stack__, %esp /* Defined in ld script */
 
 	call _createTemporaryPagingMap
-	push %eax /* Save return value which is the address of level four map */
+	mov %eax, pml4 /* Save return value which is the address of level four map */
+
+	/* Load the 64-bit loader into memory */
+	pushl $0x1ff000 /* Modify loader.ld as well if this value is modified */
+	pushl $(loaderEnd - loaderStart)
+	pushl $loaderStart
+	call _loadFileImage
+	add $12, %esp
+
+	mov %eax, loaderEntry
+
+	/* Pass parameters to the 64-bit loader */
+	movl $(dataSegmentDescriptor - globalDescriptorTable), -8(%eax)
+	movl $kernelStart, -16(%eax)
+	movl $(kernelEnd - kernelStart), -24(%eax)
 
 	xor %eax, %eax
 	bts $CR0_BIT_PROTECTION_ENABLED, %eax
@@ -62,8 +81,8 @@ bootstrap:
 	bts $CR4_BIT_OS_FXSAVE_FXRSTOR_SUPPORT, %eax
 	mov %eax, %cr4
 
-	popl %ebx /* We have saved address of pageMap after calling fillPageTable() */
-	mov %ebx, %cr3
+	mov pml4, %eax
+	mov %eax, %cr3
 
 	mov $MSR_EXTENDED_FEATURE_ENABLE_REGISTER, %ecx
 	xor %edx, %edx
@@ -79,28 +98,27 @@ bootstrap:
 	bts $CR0_BIT_PAGING, %eax /* Enable paging */
 	mov %eax, %cr0
 
-	ljmp $(_64bitCodeSegmentDescriptor - globalDescriptorTable), $_64bitMode
+	mov loaderEntry, %eax
+	ljmp $(_64bitCodeSegmentDescriptor - globalDescriptorTable), $_64bit
 
-.code64
-_64bitMode:
+.align 16
+_64bit:
 	cli
-	mov $__ld_kernel_stack__, %rsp
-	push %rbx /* The address of pml4 */
+	.byte 0x48, 0x31, 0xc0 /* xor %rax, %rax */
 
-	mov $(dataSegmentDescriptor - globalDescriptorTable), %ax
-	mov %ax, %ds
-	mov %ax, %ss
-	mov %ax, %es
-	mov %ax, %fs
-	mov %ax, %gs
+	/*movq loaderEntry, %rax*/
+	.byte 0x8b, 0x04, 0x25
+	.long loaderEntry
 
-	mov $kernelImage, %rdi
-	mov $(kernelImageEnd - kernelImage), %rsi
-	call loadKernelImage
-	jmp *%rax /* Jump to kernel's entry point */
+	.byte 0xff, 0xe0 /* jmpq *%rax */
 
 .section .data
 .align 8
-kernelImage:
-.incbin "../src/kernel.elf"
-kernelImageEnd:
+loaderStart:
+	.incbin "../loader/loader.elf"
+loaderEnd:
+
+.align 8
+kernelStart:
+	.incbin "../src/kernel.elf"
+kernelEnd:

@@ -87,7 +87,7 @@ const char* Utils::basename(const char* path) {
 	return storage;
 }
 
-U64 Utils::ceilingDivide(U64 value, U64 round) {
+Size Utils::ceilingDivide(Size value, Size round) {
 	if (value % round == 0) {
 		return value / round;
 	} else {

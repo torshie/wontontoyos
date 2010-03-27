@@ -14,7 +14,7 @@ public:
 	static int strcmp(const char* first, const char* second, Size length = (Size)((long)(-1)));
 	static Size strlen(const char* string);
 	static const char* basename(const char* path);
-	static U64 ceilingDivide(U64 value, U64 round);
+	static Size ceilingDivide(Size value, Size round);
 	static Size roundUp(Size size, Size round);
 	static Size roundDown(Size size, Size round);
 };

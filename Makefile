@@ -1,12 +1,12 @@
 all: build
 
-REQ_DIR = boot
+REQ_DIR = pangu
 
 include $(WONTON)/Makefile.variable
 include $(WONTON)/Makefile.rule
 
-KERNEL = boot/kernel.mboot
-QEMU = qemu-system-x86_64 -vga std -kernel $(KERNEL) -m 256
+PANGU = pangu/pangu.mboot
+QEMU = qemu-system-x86_64 -vga std -kernel $(PANGU) -m 256
 
 debug: debug-build
 	$(QEMU) -s -monitor stdio
@@ -19,7 +19,7 @@ run: build
 
 nothing:
 
-disk.img: $(KERNEL)
+disk.img: $(PANGU)
 	echo `hdiutil attach $@ | head -n 1 | cut -f 1` > .tmp
 	cp $^ /Volumes/boss
 	hdiutil detach `cat .tmp`
