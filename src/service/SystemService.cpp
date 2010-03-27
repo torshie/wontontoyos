@@ -24,8 +24,9 @@ int SystemService<SYSCALL_PRINT>::serve(int input) {
 	return 0;
 }
 
-int SystemService<SYSCALL_SUM>::serve(int a, int b, int c, int d) {
-	return a + b + c + d;
+int SystemService<SYSCALL_SLEEP>::serve() {
+	asm volatile("hlt");
+	return 0;
 }
 
 } // namespace kernel

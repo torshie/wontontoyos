@@ -9,7 +9,7 @@ ServiceRouter::Service ServiceRouter::table[] = {
 	(ServiceRouter::Service)(SystemService<SYSCALL_EXIT_PROCESS>::serve),
 	(ServiceRouter::Service)(SystemService<SYSCALL_RETURN_VALUE>::serve),
 	(ServiceRouter::Service)(SystemService<SYSCALL_PRINT>::serve),
-	(ServiceRouter::Service)(SystemService<SYSCALL_SUM>::serve)
+	(ServiceRouter::Service)(SystemService<SYSCALL_SLEEP>::serve)
 };
 
 int ServiceRouter::route(int routine, U64 p1, U64 p2, U64 /* rcx */, U64 p3, U64 p4) {

@@ -11,11 +11,9 @@
 using namespace kernel;
 
 enum {
-	NUMBER_OF_LEVEL_TWO_PAGE_POINTERS = 2,
+	NUMBER_OF_LEVEL_TWO_PAGE_POINTERS = (TEMP_MAP_SIZE - 3 * PAGE_SIZE) / PAGE_SIZE,
 	NUMBER_OF_LEVEL_THREE_PAGE_POINTERS = 1,
 	NUMBER_OF_LEVEL_FOUR_PAGE_POINTERS = 1,
-	PAGING_MAP_SIZE = (NUMBER_OF_LEVEL_TWO_PAGE_POINTERS + NUMBER_OF_LEVEL_THREE_PAGE_POINTERS
-							+ NUMBER_OF_LEVEL_FOUR_PAGE_POINTERS + 1) * PAGE_SIZE,
 	SIZE_OF_MAPPED_MEMORY = PagePointer<2>::MEMORY_POINTED
 									* NUMBER_OF_LEVEL_TWO_PAGE_POINTERS,
 };
@@ -34,11 +32,11 @@ static void zeroize(void* memory, Size size) {
  * @return The address of Level Four Paging Map of the paging map
  */
 static PagePointer<4>* createIdentityAndHigherHalfPagingMap() {
-	Offset offset = KERNEL_RESERVED_MEMORY;
+	Offset offset = LOW_MEMORY_SIZE;
 	PagePointer<1>* levelOne = (PagePointer<1>*)offset;
 	for (unsigned int i = 0; i < SIZE_OF_MAPPED_MEMORY / PAGE_SIZE; ++i) {
-		if (i < KERNEL_RESERVED_MEMORY / PAGE_SIZE
-				|| i >= (KERNEL_RESERVED_MEMORY + APIC_MEMORY_SIZE) / PAGE_SIZE) {
+		if (i < LOW_MEMORY_SIZE / PAGE_SIZE
+				|| i >= (LOW_MEMORY_SIZE + MEMORY_HOLE_SIZE) / PAGE_SIZE) {
 			(levelOne + i)->present = 1;
 		}
 		(levelOne + i)->writable = 1;
@@ -84,7 +82,7 @@ static PagePointer<4>* createIdentityAndHigherHalfPagingMap() {
  */
 extern "C" PagePointer<4>* createTemporaryPagingMap() {
 	// XXX Use kernel::Utils::zeroize instead
-	zeroize((void*)(KERNEL_RESERVED_MEMORY), PAGING_MAP_SIZE);
+	zeroize((void*)(LOW_MEMORY_SIZE), TEMP_MAP_SIZE);
 
 	PagePointer<4>* levelFour = createIdentityAndHigherHalfPagingMap();
 	enum {

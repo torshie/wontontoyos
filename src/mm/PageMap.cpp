@@ -17,7 +17,7 @@ void PageMap::reload() {
 	processor.setRegister<Processor::CR3>(address);
 }
 
-void PageMap::create(Address linear, Size size, Address physical) {
+void PageMap::create(Address linear, Size size, Address physical, bool replace) {
 	// XXX Mark the given physical address in PhysicalPageAllocator if necessary
 	// XXX Mark the given linear address in GenericAllocator if necessary
 	if (physical % PAGE_SIZE != 0) {
@@ -46,8 +46,13 @@ void PageMap::create(Address linear, Size size, Address physical) {
 			if (userSpace) {
 				pointer->userSpace = 1;
 			}
+		} else {
+			if (replace) {
+				pointer->page = physical / PAGE_SIZE;
+			}
 		}
 	}
+	PageMap::reload();
 }
 
 } // namespace kernel

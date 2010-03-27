@@ -1,10 +1,10 @@
-#include "UserAddressSpace.h"
+#include "AddressSpace.h"
 #include "mm/PageMap.h"
 #include "mm/PageTable.h"
 
 namespace kernel {
 
-UserAddressSpace::UserAddressSpace(Size basicSpaceSize, bool activateImmediately) {
+AddressSpace::AddressSpace(Size basicSpaceSize, bool activateImmediately) {
 	Size stackSize = Property::get<Property::THREAD_STACK_SPACE_SIZE, Size>();
 	stackSpaceStart = USER_STACK_BOTTOM - stackSize;
 	basicSpaceEnd = USER_VIRTUAL_BASE + basicSpaceSize;
@@ -18,17 +18,17 @@ UserAddressSpace::UserAddressSpace(Size basicSpaceSize, bool activateImmediately
 	stackSpacePointer = *stack;
 
 	if (!activateImmediately) {
-		UserAddressSpace* active =
-				Property::get<Property::PROCESS_ACTIVE_ADDRESS_SPACE, UserAddressSpace*>();
+		AddressSpace* active =
+				Property::get<Property::PROCESS_ACTIVE_ADDRESS_SPACE, AddressSpace*>();
 		if (active != 0) {
 			active->activate();
 		}
 	}
 }
 
-void UserAddressSpace::activate() {
-	UserAddressSpace* active =
-			Property::get<Property::PROCESS_ACTIVE_ADDRESS_SPACE, UserAddressSpace*>();
+void AddressSpace::activate() {
+	AddressSpace* active =
+			Property::get<Property::PROCESS_ACTIVE_ADDRESS_SPACE, AddressSpace*>();
 	if (active != this) {
 		PagePointer<4>* basic = PagePointer<4>::getPointerTo(USER_VIRTUAL_BASE);
 		PagePointer<4>* stack = PagePointer<4>::getPointerTo(stackSpaceStart);

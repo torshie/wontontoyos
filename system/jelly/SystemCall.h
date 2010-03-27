@@ -22,9 +22,9 @@ public:
 	static int call(int input);
 };
 
-template<> class SystemCall<kernel::SYSCALL_SUM> {
+template<> class SystemCall<kernel::SYSCALL_SLEEP> {
 public:
-	static int call(int a, int b, int c, int d);
+	static int call();
 };
 
 } // namespace jelly

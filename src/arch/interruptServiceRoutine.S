@@ -42,8 +42,8 @@
 		cli /* XXX Use a gate descriptor to clear and set RFLAGS.IF */
 		SAVE_GENERIC_REGISTER
 		mov $\isrNumber, %rdi
-		/* Mangled ::kernel::InterruptDescriptorTable::handle(unsigned int) */
-		call _ZN6kernel24InterruptDescriptorTable6handleEj
+		/* Mangled ::kernel::InterruptTable::handle(unsigned int) */
+		call _ZN6kernel14InterruptTable6handleEj
 		LOAD_GENERIC_REGISTER
 		sti /* XXX Use a gate descriptor to clear and set RFLAGS.IF */
 		iretq
@@ -60,15 +60,13 @@
 	.quad isr\param
 .endm
 
-.macro CREATE_ISR_TABLE size, tableName
-	.section .text
-		FOR 0, %(\size - 1), DEFINE_ISR
-	.section .data
-	.global \tableName
-	.align 8
-	\tableName:
-		FOR 0, %(\size - 1), SET_ISR_ENTRY
-.endm
+.section .text
+	FOR 0, 63, DEFINE_ISR
+	FOR 64, 127, DEFINE_ISR
 
-/* XXX Check whether we need this many service routines */
-CREATE_ISR_TABLE 64, isrTable
+.section .data
+.global isrTable
+.align 8
+isrTable:
+	FOR 0, 63, SET_ISR_ENTRY
+	FOR 64, 127, SET_ISR_ENTRY

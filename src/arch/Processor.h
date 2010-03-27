@@ -23,7 +23,6 @@ public:
 
 	template<int REGISTER, typename Integer> void setRegister(Integer value);
 	template<int REGISTER, typename Integer> Integer getRegister();
-	void enterUserMode(Address entry);
 	U64 getModelSpecificRegister(U32 reg);
 	void setModeSpecificRegister(U32 reg, U64 value);
 	void halt();

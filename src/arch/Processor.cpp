@@ -5,14 +5,13 @@
 
 namespace kernel {
 
-extern "C" void (*bootSystemCallRouter)();
+extern "C" void (*bootServiceRouter)();
 void Processor::initialize() {
 	U64 star = ((U64)((GlobalDescriptorTable::OFFSET_USER_DATA - 8) | 3) << 48)
 			| ((U64)(GlobalDescriptorTable::OFFSET_KERNEL_CODE) << 32);
 	setModeSpecificRegister(MSR_SYS_TARGET_ADDRESS_REGISTER, star);
 	setModeSpecificRegister(MSR_SYSCALL_FLAG_MASK, 0xFFFFFFFF);
-	setModeSpecificRegister(MSR_LONG_SYSCALL_TARGET_ADDRESS_REGISTER,
-			(U64)(&bootSystemCallRouter));
+	setModeSpecificRegister(MSR_LONG_SYSCALL_TARGET_ADDRESS_REGISTER, (U64)(&bootServiceRouter));
 }
 
 template<> U64 Processor::getRegister<Processor::CR3, U64>() {
@@ -42,11 +41,6 @@ void Processor::setModeSpecificRegister(U32 reg, U64 value) {
 	U32 low = (U32)value;
 	U32 high = value >> 32;
 	asm volatile("wrmsr" : : "c"(reg), "d"(high), "a"(low));
-}
-
-void Processor::enterUserMode(Address entry) {
-	asm volatile("mov $0x200, %%r11\n"
-			"sysretq" : : "c"(entry));
 }
 
 void Processor::halt() {

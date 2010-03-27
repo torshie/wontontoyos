@@ -1,5 +1,5 @@
 #include "Message.h"
-#include "InterruptDescriptorTable.h"
+#include "InterruptTable.h"
 #include "GlobalDescriptorTable.h"
 #include "InterruptHandler.h"
 #include <generic/Utils.h>
@@ -8,9 +8,9 @@
 namespace kernel {
 
 // Defined in interruptServiceRoutine.S
-extern "C" Address isrTable[InterruptDescriptorTable::HANDLER_COUNT];
+extern "C" Address isrTable[InterruptTable::HANDLER_COUNT];
 
-InterruptDescriptorTable::Descriptor::Descriptor() {
+InterruptTable::Descriptor::Descriptor() {
 	Utils::memset(this, 0, sizeof(Descriptor));
 	selector = GlobalDescriptorTable::OFFSET_KERNEL_CODE;
 	// XXX Evil literal constants
@@ -18,7 +18,7 @@ InterruptDescriptorTable::Descriptor::Descriptor() {
 	present = 1;
 }
 
-InterruptDescriptorTable::InterruptDescriptorTable() {
+InterruptTable::InterruptTable() {
 	address = (U64)(this->table);
 	limit = sizeof(table) - 1;
 
@@ -29,12 +29,12 @@ InterruptDescriptorTable::InterruptDescriptorTable() {
 
 	setHandler(PAGE_FAULT, InterruptHandler<PAGE_FAULT>::handle);
 	setHandler(DOUBLE_FAULT, InterruptHandler<DOUBLE_FAULT>::handle);
-	setHandler(APIC_INTERRUPT_TIMER, InterruptHandler<APIC_INTERRUPT_TIMER>::handle);
+	setHandler(APIC_TIMER_INTERRUPT, InterruptHandler<APIC_TIMER_INTERRUPT>::handle);
 
 	load();
 }
 
-void InterruptDescriptorTable::handle(unsigned int isrNumber) {
+void InterruptTable::handle(unsigned int isrNumber) {
 	static char const * const ISR_NAME[] = {
 		"#DE Devide By Zero",
 		"#DB Debug Exception",
@@ -58,7 +58,7 @@ void InterruptDescriptorTable::handle(unsigned int isrNumber) {
 		"#XM SIMD Floating-Point Exception"
 	};
 
-	InterruptDescriptorTable& idt = getProcessorInstance<InterruptDescriptorTable>();
+	InterruptTable& idt = getProcessorInstance<InterruptTable>();
 	if (idt.handler[isrNumber] != 0) {
 		idt.handler[isrNumber]();
 	} else {

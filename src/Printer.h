@@ -8,6 +8,7 @@
 #include <sexy/IS_STRING.h>
 #include <sexy/IS_POINTER.h>
 #include <sexy/IS_ENUM.h>
+#include <kernel/abi.h>
 
 namespace kernel {
 
@@ -16,7 +17,7 @@ class Printer {
 	friend Printer& getSingleInstance<Printer>();
 	friend class Message;
 
-	Printer();
+	Printer(U16* base = (U16*)(KERNEL_VIRTUAL_BASE + 0xb8000));
 	Printer(const Printer&);
 	const Printer& operator=(const Printer&);
 

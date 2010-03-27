@@ -8,8 +8,8 @@ _start:
 	mov $(KERNEL_STACK_BOTTOM - 16), %rsp
 	call startKernel
 
-.global bootSystemCallRouter
-bootSystemCallRouter:
+.global bootServiceRouter
+bootServiceRouter:
 	/* Save user stack pointer to the bottom of kernel stack */
 	mov %rsp, %rax
 	mov $(KERNEL_STACK_BOTTOM - 16), %rsp /* XXX Check whether set %rsp like this is safe */

@@ -90,6 +90,9 @@ _64bitMode:
 	mov $(dataSegmentDescriptor - globalDescriptorTable), %ax
 	mov %ax, %ds
 	mov %ax, %ss
+	mov %ax, %es
+	mov %ax, %fs
+	mov %ax, %gs
 
 	mov $kernelImage, %rdi
 	mov $(kernelImageEnd - kernelImage), %rsi

@@ -12,11 +12,11 @@ build: $(BUILD_REQ_DIR)
 
 clean: $(CLEAN_SUBDIR)
 	#  CLEAN $(CURDIR)
-	@rm -f *.o $(CLEAN)
+	@rm -f *.o *.x86 $(CLEAN)
 	
 veryclean: $(VERYCLEAN_SUBDIR)
 	#  VERYCLEAN $(CURDIR)
-	@rm -f *.o *.mak $(CLEAN)
+	@rm -f *.o *.mak *.x86 $(CLEAN)
 
 compile: $(COMPILE_SUBDIR) $(OBJS)
 
