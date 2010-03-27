@@ -22,9 +22,9 @@ public:
 	static int serve(int input);
 };
 
-template<> class SystemService<SYSCALL_SUM> {
+template<> class SystemService<SYSCALL_SLEEP> {
 public:
-	static int serve(int a, int b, int c, int d);
+	static int serve();
 };
 
 } // namespace kernel

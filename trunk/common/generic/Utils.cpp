@@ -34,20 +34,28 @@ Size Utils::strncpy(char *dst, const char *src, Size space) {
 }
 
 // XXX Optimize
-int Utils::strcmp(const char *first, const char *second) {
+int Utils::strcmp(const char *first, const char *second, Size length) {
+	if (length == 0) {
+		return 0;
+	}
 	if (first == 0 || second == 0) {
 		return first - second;
 	}
 
 	const unsigned char *a = (const unsigned char*)(first);
 	const unsigned char *b = (const unsigned char*)(second);
-	for (; *a && *b; ++a, ++b) {
+	Size index = 0;
+	for (; index < length && *a && *b; ++a, ++b, ++index) {
 		if (*a != *b) {
 			return *a - *b;
 		}
 	}
 
-	return *a - *b;
+	if (index == length) {
+		return 0;
+	} else {
+		return *a - *b;
+	}
 }
 
 Size Utils::strlen(const char* string) {

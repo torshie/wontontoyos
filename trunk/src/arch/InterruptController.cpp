@@ -4,25 +4,29 @@
 #include "X64Constant.h"
 #include "mm/PageMap.h"
 #include "mm/PageTable.h"
-#include "InterruptDescriptorTable.h"
+#include "Port.h"
+#include "InterruptTable.h"
 
 namespace kernel {
 
 InterruptController::InterruptController() {
+	enum {
+		APIC_INITIAL_COUNT = 0x1000000,
+		IO_APIC_BASE = 0xFEC00000,
+		IO_APIC_MEMORY_SIZE = 0x1000,
+		APIC_MEMORY_SIZE = 0x1000
+	};
+
 	Processor& processor = getProcessorInstance<Processor>();
 	Address physical = processor.getModelSpecificRegister(MSR_APIC_BASE_ADDRES_REGISTER);
 	physical = (physical >> 12) << 12;
 	PageMap::create(CONTROLLER_BASE_ADDRESS, APIC_MEMORY_SIZE, physical);
-	Message::brief << "APIC ID: " << Register<APIC_REGISTER_ID>::get() << "\n";
-	Message::brief << "APIC Version: " << Register<APIC_REGISTER_VERSION>::get() << "\n";
-	Register<APIC_REGISTER_TIMER_DIVIDE_CONFIGURATION>::set(10);
-	Register<APIC_REGISTER_TIMER_INITIAL_COUNT>::set(0xffffff);
-	Register<APIC_REGISTER_ENTRY_TIMER>::set(
-			InterruptDescriptorTable::APIC_INTERRUPT_TIMER | (1 << 17));
+	PageMap::create(CONTROLLER_BASE_ADDRESS + APIC_MEMORY_SIZE, IO_APIC_MEMORY_SIZE,
+			IO_APIC_BASE);
 }
 
-void InterruptController::endInterrupt() {
-	Register<APIC_REGISTER_END_OF_INTERRUPT>::set(0);
+void InterruptController::signal() {
+	Register<APIC_REGISTER_END_OF_INTERRUPT>::set();
 }
 
 } // namespace kernel

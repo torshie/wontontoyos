@@ -5,7 +5,7 @@ using namespace jelly;
 using namespace kernel;
 
 int main() {
-	int value = SystemCall<SYSCALL_SUM>::call(1, 2, 3, 4);
-	SystemCall<SYSCALL_PRINT>::call(value);
-	return value;
+	SystemCall<SYSCALL_PRINT>::call(10);
+	for (;;);
+	return 20;
 }

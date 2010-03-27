@@ -1,11 +1,10 @@
 #include "Printer.h"
 #include <generic/getSingleInstance.h>
-#include <kernel/abi.h>
 
 namespace kernel {
 
-Printer::Printer()
-		: buffer((U16*)(KERNEL_VIRTUAL_BASE + 0xb8000)),
+Printer::Printer(U16* base)
+		: buffer(base),
 		x(0), y(0) {
 	for (int i = 0; i < HEIGHT; ++i) {
 		scroll();

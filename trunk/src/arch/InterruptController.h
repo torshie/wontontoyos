@@ -17,18 +17,22 @@ class InterruptController {
 
 	template<int REGISTER> class Register;
 
+	enum {
+		ATTR_PERIODIC = 1 << 17
+	};
+
 public:
 	enum {
-		CONTROLLER_BASE_ADDRESS = KERNEL_VIRTUAL_BASE + KERNEL_RESERVED_MEMORY
+		CONTROLLER_BASE_ADDRESS = KERNEL_VIRTUAL_BASE + LOW_MEMORY_SIZE
 	};
 
 	// XXX This is ugly
-	static void endInterrupt();
+	static void signal();
 };
 
 #ifndef SPECIALIZE_INTERRUPT_CONTROLLER_REGISTER
 #	define NULL_GETTER(reg, Type)
-#	define NULL_SETTTER(reg, Type)
+#	define NULL_SETTER(reg, Type)
 #	define DEFAULT_GETTER(reg, Type) \
 	static Type get() { \
 		return *(Type*)(InterruptController::CONTROLLER_BASE_ADDRESS + reg); \
@@ -36,6 +40,10 @@ public:
 #	define DEFAULT_SETTER(reg, Type) \
 		static void set(Type value) { \
 			*(Type*)(InterruptController::CONTROLLER_BASE_ADDRESS + reg) = value; \
+		}
+#	define ZERO_SETTER(reg, Type) \
+		static void set() { \
+			*(Type*)(InterruptController::CONTROLLER_BASE_ADDRESS + reg) = 0; \
 		}
 
 #	define SPECIALIZE_INTERRUPT_CONTROLLER_REGISTER(reg, Type, Getter, Setter) \
@@ -59,7 +67,9 @@ SPECIALIZE_INTERRUPT_CONTROLLER_REGISTER(APIC_REGISTER_ENTRY_TIMER, U32,
 SPECIALIZE_INTERRUPT_CONTROLLER_REGISTER(APIC_REGISTER_TIMER_DIVIDE_CONFIGURATION, U32,
 		DEFAULT_GETTER, DEFAULT_SETTER);
 SPECIALIZE_INTERRUPT_CONTROLLER_REGISTER(APIC_REGISTER_END_OF_INTERRUPT, U32,
-		NULL_GETTER, DEFAULT_SETTER);
+		NULL_GETTER, ZERO_SETTER);
+SPECIALIZE_INTERRUPT_CONTROLLER_REGISTER(APIC_REGISTER_TIMER_CURRENT_COUNT, U32,
+		DEFAULT_GETTER, NULL_SETTER);
 
 #undef SPECIALIZE_INTERRUPT_CONTROLLER_REGISTER
 

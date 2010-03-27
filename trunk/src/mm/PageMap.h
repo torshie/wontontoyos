@@ -16,7 +16,7 @@ class PageMap {
 
 public:
 	static void reload();
-	static void create(Address linear, Size size, Address physical = 0);
+	static void create(Address linear, Size size, Address physical = 0, bool replace = false);
 };
 
 template<int LEVEL> class PageMap::PageMapHelper {

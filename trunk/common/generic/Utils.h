@@ -11,7 +11,7 @@ public:
 	static Size strncpy(char* dst, const char* src, Size space);
 	static void memset(void* dst, char value, Size count);
 	static void zeroize(void* dst, Size size);
-	static int strcmp(const char* first, const char* second);
+	static int strcmp(const char* first, const char* second, Size length = (Size)((long)(-1)));
 	static Size strlen(const char* string);
 	static const char* basename(const char* path);
 	static U64 ceilingDivide(U64 value, U64 round);

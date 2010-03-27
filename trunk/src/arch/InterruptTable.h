@@ -7,14 +7,14 @@
 
 namespace kernel {
 
-class InterruptDescriptorTable {
-	friend InterruptDescriptorTable& getProcessorInstance<InterruptDescriptorTable>();
+class InterruptTable {
+	friend InterruptTable& getProcessorInstance<InterruptTable>();
 public:
 	enum {
 		DOUBLE_FAULT = 8,
 		PAGE_FAULT = 14,
 
-		APIC_INTERRUPT_TIMER = 40,
+		APIC_TIMER_INTERRUPT = 63,
 
 		/**
 		 * !!!!!!!!!!!!!!!!
@@ -23,14 +23,14 @@ public:
 		 * If you want to change this const, make sure you have changed file
 		 * interruptServiceRoutine.S
 		 */
-		HANDLER_COUNT = 64
+		HANDLER_COUNT = 128
 	};
 
 	void setHandler(int isrNumber, void (*handler)(void));
 
 private:
 	class Descriptor {
-		friend class InterruptDescriptorTable;
+		friend class InterruptTable;
 		Descriptor();
 
 		void setOffset(Address offset) {
@@ -63,22 +63,22 @@ private:
 	U16 limit;
 	U64 address;
 
-	InterruptDescriptorTable();
+	InterruptTable();
 	void load() const;
 
-	~InterruptDescriptorTable() {}
-	InterruptDescriptorTable(const InterruptDescriptorTable&);
-	const InterruptDescriptorTable& operator=(const InterruptDescriptorTable&);
+	~InterruptTable() {}
+	InterruptTable(const InterruptTable&);
+	const InterruptTable& operator=(const InterruptTable&);
 
 	// Yes, handle is private. Assembly is used to get access to this static method
 	static void handle(unsigned int isrNumber);
 } __attribute__((packed));
 
-inline void InterruptDescriptorTable::setHandler(int isrNumber, void (*h)(void)) {
+inline void InterruptTable::setHandler(int isrNumber, void (*h)(void)) {
 	handler[isrNumber] = h;
 }
 
-inline void InterruptDescriptorTable::load() const {
+inline void InterruptTable::load() const {
 	asm volatile("lidt %0\n"
 			"sti" : : "m"(limit));
 }

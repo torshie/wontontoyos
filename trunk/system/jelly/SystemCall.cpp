@@ -17,16 +17,13 @@ int SystemCall<SYSCALL_RETURN_VALUE>::call() {
 
 int SystemCall<SYSCALL_PRINT>::call(int input) {
 	int ret;
-	asm volatile ("syscall" : "=a"(ret) : "D"(SYSCALL_PRINT), "S"(input));
+	asm volatile("syscall" : "=a"(ret) : "D"(SYSCALL_PRINT), "S"(input));
 	return ret;
 }
 
-int SystemCall<SYSCALL_SUM>::call(int a, int b, int c, int d) {
+int SystemCall<SYSCALL_SLEEP>::call() {
 	int ret;
-	asm volatile(
-			"mov %4, %%r8\n"
-			"mov %5, %%r9\n"
-			"syscall" : "=a"(ret) : "D"(SYSCALL_SUM), "S"(a), "d"(b), "g"(c), "g"(d));
+	asm volatile("syscall" : "=a"(ret) : "D"(SYSCALL_SLEEP));
 	return ret;
 }
 

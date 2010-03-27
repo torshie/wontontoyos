@@ -1,10 +1,9 @@
 *** Add exception support
 *** Implement PhysicalPageAllocator
 *** Implement various deallocator
-*** Enable APIC
+*** Check all the asm volatile and set clobber registers
 
 ** Check the dependency of all the processor/singleton instances.
-** Handle rFLAGS upon syscall/sysret
 ** Implement a loader that checks the input image.
 ** Enhance linear address allocator.
 ** Rewrite MaxHeap & SearchTree
@@ -12,5 +11,4 @@
 ** Redesign kernel memory layout.
 ** Use a different stack for interrupt handlers
 
-* Remove temporary paging map. So the address space are available to kernel stack.
 * Port RME
