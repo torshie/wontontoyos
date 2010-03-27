@@ -1,5 +1,5 @@
-OUTPUT_ARCH(i386:x86-64)
-OUTPUT_FORMAT(elf64-x86-64)
+OUTPUT_ARCH(i386)
+OUTPUT_FORMAT(elf32-i386)
 ENTRY (_start)
 
 BASE = 0x200000;
@@ -12,12 +12,12 @@ SECTIONS{
 
 	.text : AT(ADDR(.text) - BASE) {
 		__ld_code_start__ = .;
-		*(.text)
+		*(.text .text.*)
 		. = ALIGN(ALIGNMENT);
 	}
 
 	.rodata : AT(ADDR(.rodata) - BASE) {
-		*(.rodata*)
+		*(.rodata .rodata.*)
 		. = ALIGN(ALIGNMENT);
 		__ld_start_ctors = .;
 		*(.ctors*)
@@ -28,13 +28,13 @@ SECTIONS{
 	}
 
 	.data : AT(ADDR(.data) - BASE) {
-		*(.data)
+		*(.data .data.*)
 		. = ALIGN(ALIGNMENT);
 		__ld_data_end__ = .;
 	}
 
 	.bss : AT(ADDR(.bss) - BASE) {
-		*(.bss)
+		*(.bss .bss.*)
 	}
 
 	__ld_bss_end__ = ALIGN(4096);

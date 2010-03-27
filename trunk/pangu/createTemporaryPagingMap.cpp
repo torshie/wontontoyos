@@ -80,6 +80,8 @@ static PagePointer<4>* createIdentityAndHigherHalfPagingMap() {
  *
  * @return The address of Level Four Paging Map of the temporary paging map
  */
+namespace pangu {
+
 extern "C" PagePointer<4>* createTemporaryPagingMap() {
 	// XXX Use kernel::Utils::zeroize instead
 	zeroize((void*)(LOW_MEMORY_SIZE), TEMP_MAP_SIZE);
@@ -94,3 +96,5 @@ extern "C" PagePointer<4>* createTemporaryPagingMap() {
 
 	return levelFour;
 }
+
+} // namespace pangu

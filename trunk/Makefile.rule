@@ -36,8 +36,10 @@ $(CLEAN_SUBDIR) $(COMPILE_SUBDIR) $(VERYCLEAN_SUBDIR) $(MAK_SUBDIR) $(BUILD_REQ_
 %.x86: %.cpp
 	#  CC.X86 $@
 	@$(CXX) $(CXXFLAGS32) -c -o $@ $<
-	#  OBJCOPY $@
-	@$(OBJCOPY) -O elf64-x86-64 $@
+	
+%.x86: %.S
+	#  AS.X86 $@
+	@$(CXX) $(CXXFLAGS32) -D__ASM__ -c -o $@ $<
 
 %.mak: %.cpp
 	#  MAK $@
