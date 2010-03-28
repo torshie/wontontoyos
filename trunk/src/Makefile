@@ -12,7 +12,7 @@ build: compile $(KERNEL)
 
 $(KERNEL): $(LIBS) $(LIBRARY) $(LIBS) $(LD_SCRIPT)
 	#  LD $@
-	@$(LD) -L. -lkernel $(LDFLAGS) -L. -lkernel -T $(LD_SCRIPT) -o $@ -Map=$(MAP)
+	@$(CXX) $(CXXFLAGS) -L. -lkernel $(LDFLAGS) -L. -lkernel -T $(LD_SCRIPT) -o $@ -Wl,-Map=$(MAP)
 
 dump: $(KERNEL)
 	$(OBJDUMP) $< -D --demangle | less

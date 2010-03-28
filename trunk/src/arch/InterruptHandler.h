@@ -16,7 +16,7 @@ template<> class InterruptHandler<InterruptTable::PAGE_FAULT> {
 public:
 	static void handle() {
 		Processor& processor = getProcessorInstance<Processor>();
-		U64 linearAddress = processor.getRegister<Processor::CR2, U64>();
+		NativeUnsigned linearAddress = processor.getRegister<Processor::CR2>();
 		Message::critical << "#Page Fault: accessing " << linearAddress << "\n";
 		processor.halt();
 	}

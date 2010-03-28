@@ -18,11 +18,11 @@ class Processor {
 
 public:
 	enum Register {
-		CR2, CR3
+		CR0, CR2, CR3, CR4
 	};
 
-	template<int REGISTER, typename Integer> void setRegister(Integer value);
-	template<int REGISTER, typename Integer> Integer getRegister();
+	template<int REGISTER> void setRegister(NativeUnsigned value);
+	template<int REGISTER> NativeUnsigned getRegister();
 	U64 getModelSpecificRegister(U32 reg);
 	void setModeSpecificRegister(U32 reg, U64 value);
 	void halt();

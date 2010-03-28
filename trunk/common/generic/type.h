@@ -30,6 +30,8 @@ typedef TYPE_SELECTOR<sizeof(int) == sizeof(void*),
 
 typedef TYPE_SELECTOR<sizeof(int) == sizeof(long), unsigned int, unsigned long>::Type Size;
 typedef Address Offset;
+typedef long NativeInteger;
+typedef unsigned long NativeUnsigned;
 
 STATIC_ASSERT_EQUAL(sizeof(I8), 1)
 STATIC_ASSERT_EQUAL(sizeof(U8), 1)

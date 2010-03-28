@@ -11,4 +11,6 @@
 ** Redesign kernel memory layout.
 ** Use a different stack for interrupt handlers
 
+** Triple fault when compiled with option "-flto" or "-O3" 
+
 * Port RME
