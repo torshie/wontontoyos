@@ -1,12 +1,6 @@
-/**
- * XXX We cannot link this file against other kernel source files, even when they are
- * compiled into 32-bit object files. Find out why, and then remove all the duplications in
- * this file.
- */
-
 #include "arch/X64Constant.h"
+#include "createPageMap.h"
 #include <kernel/abi.h>
-#include "mm/PagePointer.h"
 
 using namespace kernel;
 
@@ -17,14 +11,6 @@ enum {
 	SIZE_OF_MAPPED_MEMORY = PagePointer<2>::MEMORY_POINTED
 									* NUMBER_OF_LEVEL_TWO_PAGE_POINTERS,
 };
-
-static void zeroize(void* memory, Size size) {
-	char* p = (char*)memory;
-	char* end = p + size;
-	for (; p < end; ++p) {
-		*p = 0;
-	}
-}
 
 /**
  * Create a temporary identity & higher-half paging map.
@@ -82,9 +68,8 @@ static PagePointer<4>* createIdentityAndHigherHalfPagingMap() {
  */
 namespace pangu {
 
-extern "C" PagePointer<4>* createTemporaryPagingMap() {
-	// XXX Use kernel::Utils::zeroize instead
-	zeroize((void*)(LOW_MEMORY_SIZE), TEMP_MAP_SIZE);
+PagePointer<4>* createPageMap() {
+	Utils::zeroize((void*)(LOW_MEMORY_SIZE), TEMP_MAP_SIZE);
 
 	PagePointer<4>* levelFour = createIdentityAndHigherHalfPagingMap();
 	enum {

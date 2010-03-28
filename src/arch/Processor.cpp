@@ -5,6 +5,7 @@
 
 namespace kernel {
 
+#ifndef __X86_32__
 extern "C" void (*bootServiceRouter)();
 void Processor::initialize() {
 	U64 star = ((U64)((GlobalDescriptorTable::OFFSET_USER_DATA - 8) | 3) << 48)
@@ -13,21 +14,36 @@ void Processor::initialize() {
 	setModeSpecificRegister(MSR_SYSCALL_FLAG_MASK, 0xFFFFFFFF);
 	setModeSpecificRegister(MSR_LONG_SYSCALL_TARGET_ADDRESS_REGISTER, (U64)(&bootServiceRouter));
 }
+#endif
 
-template<> U64 Processor::getRegister<Processor::CR3, U64>() {
-	U64 value;
+template<> void Processor::setRegister<Processor::CR4>(NativeUnsigned value) {
+	asm volatile("mov %0, %%cr4" : : "r"(value));
+}
+
+template<> NativeUnsigned Processor::getRegister<Processor::CR3>() {
+	NativeUnsigned value;
 	asm volatile("mov %%cr3, %0" : "=r"(value));
 	return value;
 }
 
-template<> void Processor::setRegister<Processor::CR3, U64>(U64 value) {
+template<> void Processor::setRegister<Processor::CR3>(NativeUnsigned value) {
 	asm volatile("mov %0, %%cr3" : : "r"(value));
 }
 
-template<> U64 Processor::getRegister<Processor::CR2, U64>() {
-	U64 value;
+template<> NativeUnsigned Processor::getRegister<Processor::CR2>() {
+	NativeUnsigned value;
 	asm volatile("mov %%cr2, %0" : "=r"(value));
 	return value;
+}
+
+template<> void Processor::setRegister<Processor::CR0>(NativeUnsigned value) {
+	asm volatile("mov %0, %%cr0" : : "r"(value));
+}
+
+template<> NativeUnsigned Processor::getRegister<Processor::CR0>() {
+	NativeUnsigned ret;
+	asm volatile("mov %%cr0, %0" : "=r"(ret));
+	return ret;
 }
 
 U64 Processor::getModelSpecificRegister(U32 reg) {

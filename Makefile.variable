@@ -8,22 +8,23 @@ AS = $(CROSS)as
 AR = $(CROSS)ar
 OBJCOPY = $(CROSS)objcopy
 OBJDUMP = $(CROSS)objdump
+STRIP = $(CROSS)strip
 
 INCLUDE_FLAGS = -I$(WONTON)/common -I$(WONTON) -I$(WONTON)/src
 WARNING_FLAGS = -W -Wall -Wextra -Werror -Wno-enum-compare
-OPTIMIZE_FLAGS = -O0 -fomit-frame-pointer -finline-limit=10000
+OPTIMIZE_FLAGS = -O2 -s
 COMMON_FLAGS += -nostdlib -nostartfiles -nodefaultlibs -ansi -fno-exceptions -mno-red-zone \
-		-fshow-column -ftabstop=4 -g \
+		-fshow-column -ftabstop=4 \
 		$(INCLUDE_FLAGS) $(WARNING_FLAGS)
 OPTIMIZE_BUILD_FLAGS = $(COMMON_FLAGS) $(OPTIMIZE_FLAGS) -mcmodel=large \
 		-DBUILD_TEST_MODE_KERNEL
-DEBUG_FLAGS = -O0
+DEBUG_FLAGS = -O0 -g
 DEBUG_BUILD_FLAGS = $(COMMON_FLAGS) $(DEBUG_FLAGS) -mcmodel=large -DBUILD_DEBUG_MODE_KERNEL \
 		-DBUILD_TEST_MODE_KERNEL
 CXXFLAGS32 = $(COMMON_FLAGS) -m32 -D__X86_32__ -fleading-underscore -O2
 LDFLAGS = $(addprefix -L, $(dir $(LIBS))) \
 		$(addprefix -l, $(patsubst lib%, %, $(patsubst %.a, %, $(notdir $(LIBS))))) \
-		-z max-page-size=0x1000
+		-Wl,-z,max-page-size=0x1000
 ifeq ($(DEBUG_BUILD), 1)
   CXXFLAGS = $(DEBUG_BUILD_FLAGS)
 else

@@ -11,6 +11,6 @@ build: $(IMAGE)
 
 $(IMAGE): $(OBJS) $(LIBS) $(LD_SCRIPT)
 	#  LD $@
-	@$(LD) $(OBJS) $(EXTRA_OBJS) $(LDFLAGS) -T $(LD_SCRIPT) -o $@
+	@$(CXX) $(CXXFLAGS) $(OBJS) $(EXTRA_OBJS) $(LDFLAGS) -Wl,-T$(LD_SCRIPT) -o $@
 
 compile: $(OBJS)

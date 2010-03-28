@@ -10,7 +10,7 @@ build: compile ../../system/jelly/build $(SERVER_FILE)
 
 $(SERVER_FILE): $(LIBS) $(ALL_OBJS)
 	#  LD $@
-	@$(LD) -T $(USER_LD) $(LDFLAGS) $(ALL_OBJS) -o $@
+	@$(CXX) $(CXXFLAGS) -Wl,-T$(USER_LD) $(LDFLAGS) $(ALL_OBJS) -o $@
 	
 dump: $(SERVER_FILE)
 	$(OBJDUMP) $^ -d --demangle | less

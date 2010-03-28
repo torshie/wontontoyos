@@ -17,7 +17,12 @@ class Printer {
 	friend Printer& getSingleInstance<Printer>();
 	friend class Message;
 
+#ifndef __X86_32__
 	Printer(U16* base = (U16*)(KERNEL_VIRTUAL_BASE + 0xb8000));
+#else
+	Printer(U16* base = (U16*)(0xb8000));
+#endif
+
 	Printer(const Printer&);
 	const Printer& operator=(const Printer&);
 
