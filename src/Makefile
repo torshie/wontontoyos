@@ -15,6 +15,8 @@ $(KERNEL): $(DBG_IMG)
 	#  STRIP $@
 	@cp $^ $@
 	@$(STRIP) $@
+	#  OBJCOPY $@
+	@$(OBJCOPY) -R .lto $@
 
 $(DBG_IMG): $(LIBS) $(LIBRARY) $(LIBS) $(LD_SCRIPT)
 	#  LD $@

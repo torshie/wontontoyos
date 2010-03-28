@@ -13,6 +13,8 @@ $(SERVER_FILE): $(DBG_IMG)
 	#  STRIP $@
 	@cp $^ $@
 	@$(STRIP) $@
+	#  OBJCOPY $@
+	@$(OBJCOPY) $@ -R .lto
 
 $(DBG_IMG): $(LIBS) $(ALL_OBJS)
 	#  LD $@

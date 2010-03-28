@@ -12,7 +12,7 @@ STRIP = $(CROSS)strip
 
 INCLUDE_FLAGS = -I$(WONTON)/common -I$(WONTON) -I$(WONTON)/src
 WARNING_FLAGS = -W -Wall -Wextra -Werror -Wno-enum-compare
-OPTIMIZE_FLAGS = -O2
+OPTIMIZE_FLAGS = -O2 -flto
 COMMON_FLAGS += -nostdlib -nostartfiles -nodefaultlibs -ansi -fno-exceptions -mno-red-zone \
 		-fshow-column -ftabstop=4 -g3 \
 		$(INCLUDE_FLAGS) $(WARNING_FLAGS)

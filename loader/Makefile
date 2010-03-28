@@ -13,6 +13,8 @@ $(IMAGE): $(DBG_IMG)
 	#  STRIP $@
 	@cp $^ $@
 	@$(STRIP) -s $@
+	#  OBJCOPY $@
+	@$(OBJCOPY) -R .lto $@
 
 $(DBG_IMG): $(OBJS) $(LIBS) $(LD_SCRIPT)
 	#  LD $@

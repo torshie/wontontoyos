@@ -22,5 +22,6 @@ _start:
 	mov _start - 16, %rdi
 	mov _start - 24, %rsi
 	mov $KERNEL_PHYSICAL_BASE, %rdx
+	xchg %bx, %bx
 	call loadFileImage
 	jmp *%rax /* Jump to kernel's entry point */

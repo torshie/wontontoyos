@@ -63,6 +63,11 @@ SECTIONS {
 	. = ALIGN(PAGE_SIZE);
 	__ld_image_end = .;
 
+	/* This section is used for link time optimization */
+	.lto : {
+		*(.gnu.lto*)
+	}
+
 	/DISCARD/ : {
 		*(.comment)
 	}

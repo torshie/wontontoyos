@@ -39,6 +39,10 @@ SECTIONS{
 	}
 
 	__ld_bss_end__ = ALIGN(4096);
+	
+	.lto : {
+		*(.gnu.lto*)
+	}
 
 	/DISCARD/ : {
 		*(.comment)

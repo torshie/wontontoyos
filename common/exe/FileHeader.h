@@ -14,7 +14,7 @@ struct FileHeader {
 		U8 abiId;
 		U8 abiVersion;
 		U8 __padding[7];
-	};
+	} __attribute__((packed));
 	U16 type;
 	U16 machine;
 	U32 version;
@@ -44,7 +44,7 @@ struct FileHeader {
 		TYPE_DYNAMIC = 3,
 		TYPE_CORE = 4,
 	};
-};
+} __attribute__((packed));
 
 struct SectionHeader {
 	U32 name;
@@ -76,8 +76,7 @@ struct SectionHeader {
 		FLAG_ALLOCATE = 0x2,
 		FLAG_EXECUTABLE = 0x4,
 	};
-};
-
+} __attribute__((packed));
 
 } // namespace kernel
 
