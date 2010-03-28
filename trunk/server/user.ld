@@ -47,6 +47,10 @@ SECTIONS {
 
 	. = ALIGN(PAGE_SIZE);
 	__ld_image_end = .;
+	
+	.lto : {
+		*(.gnu.lto*)
+	}
 
 	/DISCARD/ : {
 		*(.comment)

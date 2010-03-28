@@ -22,6 +22,8 @@ $(PANGU): $(DBG_IMG)
 	#  STRIP $@
 	@cp $^ $@
 	@$(STRIP) $@
+	#  OBJCOPY $@
+	@$(OBJCOPY) $@ -R .lto
 
 $(DBG_IMG): $(OBJ32)
 	#  LD $@
