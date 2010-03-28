@@ -1,6 +1,6 @@
-KERNEL = ../src/kernel.elf
 IMAGE = loader.elf
-CLEAN = $(IMAGE)
+DBG_IMG = loader.dbg
+CLEAN = $(IMAGE) $(DBG_IMG)
 LIBS = ../common/libwonton.a
 REQ_DIR = ../common
 
@@ -9,8 +9,13 @@ include $(WONTON)/Makefile.rule
 
 build: $(IMAGE)
 
-$(IMAGE): $(OBJS) $(LIBS) $(LD_SCRIPT)
+$(IMAGE): $(DBG_IMG)
+	#  STRIP $@
+	@cp $^ $@
+	@$(STRIP) -s $@
+
+$(DBG_IMG): $(OBJS) $(LIBS) $(LD_SCRIPT)
 	#  LD $@
-	@$(CXX) $(CXXFLAGS) $(OBJS) $(EXTRA_OBJS) $(LDFLAGS) -Wl,-T$(LD_SCRIPT) -o $@
+	@$(CXX) $(CXXFLAGS) $(OBJS) $(LDFLAGS) -Wl,-T$(LD_SCRIPT) -o $@
 
 compile: $(OBJS)

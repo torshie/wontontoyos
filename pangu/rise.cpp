@@ -3,6 +3,7 @@
 #include "createPageMap.h"
 #include "Message.h"
 #include <cxx/initCxxSupport.h>
+#include <cxx/new.h>
 
 using namespace kernel;
 

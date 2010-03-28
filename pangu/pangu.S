@@ -38,8 +38,8 @@ dataSegmentDescriptor:
 	.long 0x0000FFFF
 	.long 0x00CF9200 /* Bit G, D/B, P, 12 and W are set, DPL is 0 */
 
-.global _globalDescriptorTablePointer
-_globalDescriptorTablePointer:
+.global globalDescriptorTablePointer
+globalDescriptorTablePointer:
 	.short . - globalDescriptorTable - 1
 	.long globalDescriptorTable
 	.long 0
@@ -54,19 +54,19 @@ bootstrap:
 
 	mov $__ld_kernel_stack__, %esp /* Defined in ld script */
 
-	call _rise
+	call rise
 
 	mov %eax, loaderEntry
 
 	/* Pass parameters to the 64-bit loader */
 	movl $(dataSegmentDescriptor - globalDescriptorTable), -8(%eax)
-	movl $_kernelStart, -16(%eax)
-	movl $(_kernelEnd - _kernelStart), -24(%eax)
+	movl $kernelStart, -16(%eax)
+	movl $(kernelEnd - kernelStart), -24(%eax)
 
-	ljmp $(_64bitCodeSegmentDescriptor - globalDescriptorTable), $_64bit
+	ljmp $(_64bitCodeSegmentDescriptor - globalDescriptorTable), $longModeCode
 
 .section .text
-_64bit:
+longModeCode:
 	cli
 	.byte 0x48, 0x31, 0xc0 /* xor %rax, %rax */
 
@@ -77,13 +77,13 @@ _64bit:
 	.byte 0xff, 0xe0 /* jmpq *%rax */
 
 .section .data
-.global _loaderStart, _loaderEnd, _kernelStart, _kernelEnd
+.global loaderStart, loaderEnd, kernelStart, kernelEnd
 .align 8
-_loaderStart:
+loaderStart:
 	.incbin "../loader/loader.elf"
-_loaderEnd:
+loaderEnd:
 
 .align 8
-_kernelStart:
+kernelStart:
 	.incbin "../src/kernel.elf"
-_kernelEnd:
+kernelEnd:

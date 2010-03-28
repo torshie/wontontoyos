@@ -1,14 +1,20 @@
 SERVER = $(notdir $(CURDIR))
 SERVER_FILE = $(SERVER).elf
+DBG_IMG = $(SERVER).dbg
 USER_LD = $(WONTON)/server/user.ld
-CLEAN = $(SERVER_FILE)
+CLEAN = $(SERVER_FILE) $(DBG_IMG)
 LIBS = ../../system/jelly/libjelly.a
 REQ_DIR = ../../system/jelly
 CXXFLAGS += -I$(WONTON)/system
 
 build: compile ../../system/jelly/build $(SERVER_FILE)
 
-$(SERVER_FILE): $(LIBS) $(ALL_OBJS)
+$(SERVER_FILE): $(DBG_IMG)
+	#  STRIP $@
+	@cp $^ $@
+	@$(STRIP) $@
+
+$(DBG_IMG): $(LIBS) $(ALL_OBJS)
 	#  LD $@
 	@$(CXX) $(CXXFLAGS) -Wl,-T$(USER_LD) $(LDFLAGS) $(ALL_OBJS) -o $@
 	
