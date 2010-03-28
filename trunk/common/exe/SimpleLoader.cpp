@@ -8,8 +8,8 @@ int SimpleLoader::parse(const void* image, Size) {
 
 	SectionHeader* section = (SectionHeader*)((char*)header + header->sectionHeaderOffset);
 
-	base = ~((Address)0); // Set to an invalid address
-	Address upper = 0; // Upper bound of the memory image
+	base = ~((Address)0);
+	Address upper = 0;
 
 	for (Size i = 0; i < header->sectionHeaderCount; ++i) {
 		if (section[i].flags & SectionHeader::FLAG_ALLOCATE) {
@@ -34,7 +34,7 @@ Address SimpleLoader::load(void* base, Size) {
 		if (section[i].flags & SectionHeader::FLAG_ALLOCATE) {
 			Address offset = section[i].address - b;
 			if (section[i].type == SectionHeader::TYPE_PROGRAM_BITS) {
-				Utils::memcpy((char*) base + offset, (char*)header + section[i].offset,
+				Utils::memcpy((char*)base + offset, (char*)header + section[i].offset,
 						section[i].size);
 			} else {
 				Utils::zeroize((char*)base + offset, section[i].size);

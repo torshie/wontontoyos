@@ -19,9 +19,9 @@ SECTIONS{
 	.rodata : AT(ADDR(.rodata) - BASE) {
 		*(.rodata .rodata.*)
 		. = ALIGN(ALIGNMENT);
-		___ld_start_ctors = .;
+		__ld_start_ctors = .;
 		*(.ctors*)
-		___ld_end_ctors = .;
+		__ld_end_ctors = .;
 		. = ALIGN(ALIGNMENT); 
 		*(.dtors*)
 		. = ALIGN(ALIGNMENT);

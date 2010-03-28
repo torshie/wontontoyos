@@ -1,7 +1,8 @@
 PANGU = pangu.mboot
+DBG_IMG = pangu.dbg
 LOADER = ../loader/loader.elf
 KERNEL = ../src/kernel.elf
-CLEAN = $(PANGU)
+CLEAN = $(PANGU) $(DBG_IMG)
 REQ_DIR = ../loader ../src
 
 OBJ32 = $(patsubst %.cpp, %.x86, $(wildcard *.cpp)) pangu.x86 \
@@ -17,7 +18,12 @@ include $(WONTON)/Makefile.rule
 
 build: $(PANGU)
 
-$(PANGU): $(OBJ32)
+$(PANGU): $(DBG_IMG)
+	#  STRIP $@
+	@cp $^ $@
+	@$(STRIP) $@
+
+$(DBG_IMG): $(OBJ32)
 	#  LD $@
 	@$(CXX) $(CXXFLAGS32) -T $(LD_SCRIPT) $(LDFLAGS) $(OBJ32) -o $@
 

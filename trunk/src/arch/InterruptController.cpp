@@ -12,8 +12,6 @@ namespace kernel {
 InterruptController::InterruptController() {
 	enum {
 		APIC_INITIAL_COUNT = 0x1000000,
-		IO_APIC_BASE = 0xFEC00000,
-		IO_APIC_MEMORY_SIZE = 0x1000,
 		APIC_MEMORY_SIZE = 0x1000
 	};
 
@@ -21,8 +19,6 @@ InterruptController::InterruptController() {
 	Address physical = processor.getModelSpecificRegister(MSR_APIC_BASE_ADDRES_REGISTER);
 	physical = (physical >> 12) << 12;
 	PageMap::create(CONTROLLER_BASE_ADDRESS, APIC_MEMORY_SIZE, physical);
-	PageMap::create(CONTROLLER_BASE_ADDRESS + APIC_MEMORY_SIZE, IO_APIC_MEMORY_SIZE,
-			IO_APIC_BASE);
 }
 
 void InterruptController::signal() {
