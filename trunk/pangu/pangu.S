@@ -1,5 +1,3 @@
-#include <arch/X64Constant.h>
-
 .set MBOOT_MAGIC, 0x1BADB002
 .set MBOOT_FLAGS, (1 | (1 << 1) | (1 << 16))
 .set MBOOT_CHECKSUM, (-(MBOOT_FLAGS + MBOOT_MAGIC))

@@ -2,6 +2,8 @@
 #include "arch/X64Constant.h"
 #include "createPageMap.h"
 #include "Message.h"
+#include "InterfaceDescriptionPointer.h"
+#include "InterfaceDescriptionTable.h"
 #include <cxx/initCxxSupport.h>
 #include <cxx/new.h>
 
@@ -14,7 +16,16 @@ extern "C" char kernelStart, kernelEnd, loaderStart, loaderEnd, globalDescriptor
 extern "C" Address rise() {
 	initCxxSupport();
 
-	Message::brief << "Good morning!\n";
+	char msg[] = "Good morning\n";
+
+	Message::brief << msg;
+	Message::brief << 'A';
+	InterfaceDescriptionPointer* pointer = InterfaceDescriptionPointer::find();
+	Message::brief << "RSDP: " << pointer << "\n";
+
+	((InterfaceDescriptionTable*)(pointer->address))->show();
+
+	for (;;);
 
 	PagePointer<4>* map = createPageMap();
 	Address loaderEntry = loadFileImage(&loaderStart, &loaderEnd - &loaderStart,
