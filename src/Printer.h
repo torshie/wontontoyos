@@ -8,6 +8,7 @@
 #include <sexy/IS_STRING.h>
 #include <sexy/IS_POINTER.h>
 #include <sexy/IS_ENUM.h>
+#include <sexy/IS_CHAR_ARRAY.h>
 #include <kernel/abi.h>
 
 namespace kernel {
@@ -84,6 +85,24 @@ private:
 		}
 	};
 
+	template<typename Char> class CharPrinter {
+	public:
+		static Printer& print(Char c, Printer& printer) {
+			printer.printChar(c);
+			return printer;
+		}
+	};
+
+	template<typename CharArray, unsigned int N = sizeof(CharArray)> class CharArrayPrinter {
+	public:
+		static Printer& print(const char array[N], Printer& printer) {
+			for (unsigned int i = 0; array[i] && i < N; ++i) {
+				printer.printChar(array[i]);
+			}
+			return printer;
+		}
+	};
+
 	template<typename Pointer> class PointerPrinter {
 	public:
 		static Printer& print(Pointer pointer, Printer& printer) {
@@ -101,18 +120,25 @@ private:
 	template<typename T> class NullPrinter {
 	public:
 		static Printer& print(const T&, Printer& printer) {
+			printer << "(null printer)";
 			return printer;
 		}
 	};
 
 	template<typename T> Printer& operator << (const T& data) {
 		typedef typename TYPE_SELECTOR<IS_INTEGER<T>::value,
-					typename TYPE_SELECTOR<IS_SIGNED<T>::value,
-						SignedIntegerPrinter<T>,
-						UnsignedIntegerPrinter<T>
+					typename TYPE_SELECTOR<SAME_TYPE<typename NAKED<T>::Type, char>::value,
+						CharPrinter<T>,
+						typename TYPE_SELECTOR<IS_SIGNED<T>::value,
+							SignedIntegerPrinter<T>,
+							UnsignedIntegerPrinter<T>
+						>::Type
 					>::Type,
 					typename TYPE_SELECTOR<IS_STRING<T>::value,
-						StringPrinter<T>,
+						typename TYPE_SELECTOR<IS_CHAR_ARRAY<T>::value,
+							CharArrayPrinter<T>,
+							StringPrinter<T>
+						>::Type,
 						typename TYPE_SELECTOR<IS_POINTER<T>::value,
 							PointerPrinter<T>,
 							typename TYPE_SELECTOR<IS_ENUM<T>::value,
