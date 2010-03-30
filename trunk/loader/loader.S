@@ -1,5 +1,3 @@
-#include <kernel/abi.h>
-
 .section .text
 .code64
 .global _start
@@ -21,6 +19,5 @@ _start:
 
 	mov _start - 16, %rdi
 	mov _start - 24, %rsi
-	mov $KERNEL_PHYSICAL_BASE, %rdx
 	call loadFileImage
 	jmp *%rax /* Jump to kernel's entry point */

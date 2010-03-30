@@ -54,18 +54,16 @@ template<typename Left, typename Right> class Comparer {
 		}
 	};
 
-	typedef typename TYPE_SELECTOR<IS_STRING<Left>::value,
-		OldStringComparer,
-		typename TYPE_SELECTOR<(IS_POINTER<Left>::value || IS_POINTER<Right>::value),
-			PointerComparer<Left, Right>,
-			typename TYPE_SELECTOR<(IS_INTEGER<Right>::value && IS_INTEGER<Right>::value),
-				typename TYPE_SELECTOR<(sizeof(Left) > sizeof(Right)),
-					IntegerComparer<Left>,
-					IntegerComparer<Right>
+	typedef typename TYPE_SELECTOR<
+		IS_STRING<typename NAKED<Left>::Type>::value, OldStringComparer,
+		(IS_POINTER<typename NAKED<Left>::Type >::value
+				|| IS_POINTER<typename NAKED<Right>::Type >::value), PointerComparer<Left, Right>,
+		(IS_INTEGER<Left>::value || IS_INTEGER<Right>::value),
+				typename TYPE_SELECTOR<
+					(sizeof(Left) > sizeof(Right)), IntegerComparer<Left>,
+					true, IntegerComparer<Right>
 				>::Type,
-				OperatorComparer<Left, Right>
-			>::Type
-		>::Type
+		true, OperatorComparer<Left, Right>
 	>::Type CompetentComparer;
 
 public:

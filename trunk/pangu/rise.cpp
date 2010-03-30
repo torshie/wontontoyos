@@ -11,25 +11,26 @@ using namespace kernel;
 
 namespace pangu {
 
-extern "C" Address loadFileImage(void*, Size, void*);
+extern "C" Address loadFileImage(void*, Size);
 extern "C" char kernelStart, kernelEnd, loaderStart, loaderEnd, globalDescriptorTablePointer;
 extern "C" Address rise() {
 	initCxxSupport();
 
-	char msg[] = "Good morning\n";
-
-	Message::brief << msg;
-	Message::brief << 'A';
-	InterfaceDescriptionPointer* pointer = InterfaceDescriptionPointer::find();
-	Message::brief << "RSDP: " << pointer << "\n";
-
-	((InterfaceDescriptionTable*)(pointer->address))->show();
+	const InterfaceDescriptionPointer* pointer = InterfaceDescriptionPointer::find();
+	const InterfaceDescriptionTable* root = pointer->getRootTable();
+	const InterfaceDescriptionTable* hpet = root->find("HPET");
+	if (hpet == 0) {
+		Message::fatal << "Cannot find HPET, stop initialization\n";
+		for (;;);
+	} else {
+		Message::brief << "HPET is at: " << hpet << "\n";
+		Message::brief << "HPET Revision: " << hpet->revision << "\n";
+	}
 
 	for (;;);
 
 	PagePointer<4>* map = createPageMap();
-	Address loaderEntry = loadFileImage(&loaderStart, &loaderEnd - &loaderStart,
-			(void*)(0x1ff000));
+	Address loaderEntry = loadFileImage(&loaderStart, &loaderEnd - &loaderStart);
 	Processor& processor = getProcessorInstance<Processor>();
 	processor.setRegister<Processor::CR0>(1 << CR0_BIT_PROTECTION_ENABLED);
 	processor.setRegister<Processor::CR4>(

@@ -12,16 +12,16 @@ public:
 	};
 };
 
-template<typename T, int N> class IS_CHAR_ARRAY<T[N]> {
+template<int N> class IS_CHAR_ARRAY<char[N]> {
 public:
 	enum {
-		value = SAME_TYPE<char, typename NAKED<T>::Type >::value
+		value = 1
 	};
 };
 
 STATIC_ASSERT_TRUE(IS_CHAR_ARRAY<char[1]>::value);
-STATIC_ASSERT_TRUE(IS_CHAR_ARRAY<const char[1]>::value);
-STATIC_ASSERT_TRUE(IS_CHAR_ARRAY<volatile char[1]>::value);
+STATIC_ASSERT_TRUE(IS_CHAR_ARRAY<NAKED<const char[1]>::Type >::value);
+STATIC_ASSERT_TRUE(IS_CHAR_ARRAY<NAKED<volatile char[1]>::Type >::value);
 STATIC_ASSERT_FALSE(IS_CHAR_ARRAY<char[]>::value);
 STATIC_ASSERT_FALSE(IS_CHAR_ARRAY<char>::value);
 STATIC_ASSERT_FALSE(IS_CHAR_ARRAY<char*>::value);

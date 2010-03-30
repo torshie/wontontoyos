@@ -9,6 +9,8 @@
 #include <sexy/IS_POINTER.h>
 #include <sexy/IS_ENUM.h>
 #include <sexy/IS_CHAR_ARRAY.h>
+#include <sexy/IS_UNSIGNED.h>
+#include <sexy/TYPE_SELECTOR.h>
 #include <kernel/abi.h>
 
 namespace kernel {
@@ -126,31 +128,18 @@ private:
 	};
 
 	template<typename T> Printer& operator << (const T& data) {
-		typedef typename TYPE_SELECTOR<IS_INTEGER<T>::value,
-					typename TYPE_SELECTOR<SAME_TYPE<typename NAKED<T>::Type, char>::value,
-						CharPrinter<T>,
-						typename TYPE_SELECTOR<IS_SIGNED<T>::value,
-							SignedIntegerPrinter<T>,
-							UnsignedIntegerPrinter<T>
-						>::Type
-					>::Type,
-					typename TYPE_SELECTOR<IS_STRING<T>::value,
-						typename TYPE_SELECTOR<IS_CHAR_ARRAY<T>::value,
-							CharArrayPrinter<T>,
-							StringPrinter<T>
-						>::Type,
-						typename TYPE_SELECTOR<IS_POINTER<T>::value,
-							PointerPrinter<T>,
-							typename TYPE_SELECTOR<IS_ENUM<T>::value,
-								EnumPrinter<T>,
-								typename TYPE_SELECTOR<IS_BOOL<T>::value,
-									BooleanPrinter<T>,
-									NullPrinter<T>
-								>::Type
-							>::Type
-						>::Type
-					>::Type
-				>::Type CompetentPrinter;
+		typedef typename TYPE_SELECTOR<
+			SAME_TYPE<char, typename NAKED<T>::Type >::value, CharPrinter<T>,
+			SAME_TYPE<bool, typename NAKED<T>::Type >::value, BooleanPrinter<T>,
+			IS_SIGNED<typename NAKED<T>::Type >::value, SignedIntegerPrinter<T>,
+			IS_UNSIGNED<typename NAKED<T>::Type >::value, UnsignedIntegerPrinter<T>,
+			IS_CHAR_ARRAY<typename NAKED<T>::Type >::value, CharArrayPrinter<T>,
+			IS_STRING<typename NAKED<T>::Type>::value, StringPrinter<T>,
+			IS_POINTER<typename NAKED<T>::Type>::value, PointerPrinter<T>,
+			IS_ENUM<typename NAKED<T>::Type>::value, EnumPrinter<T>,
+			true, NullPrinter<T>
+		>::Type CompetentPrinter;
+
 		return CompetentPrinter::print(data, *this);
 	}
 

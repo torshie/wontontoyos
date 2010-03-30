@@ -38,11 +38,10 @@ void startKernel() {
 
 	SimpleLoader* loader = new SimpleLoader();
 	loader->parse(&sampleServer, 0);
-	Address base = loader->getBaseAddress();
 	Size size = loader->getMemoryImageSize();
 	AddressSpace* addressSpace = new AddressSpace(size);
 	addressSpace->activate();
-	Address entry = loader->load((void*)base, size);
+	Address entry = loader->load(size);
 
 	delete loader;
 
