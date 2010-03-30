@@ -1,18 +1,21 @@
 #include "InterfaceDescriptionTable.h"
 #include "Message.h"
+#include <generic/Utils.h>
 
 using namespace kernel;
 
 namespace pangu {
 
-void InterfaceDescriptionTable::show() {
-	Message::brief << "Signature: " << signature[0] << signature[1] << signature[2] << signature[3] << "\n"
-			<< "Length: " << length << "\n"
-			<< "OemId: " << oemId << "\n"
-			<< "OemTableId: " << oemTableId << "\n"
-			<< "OemRevision: " << oemRevision << "\n"
-			<< "CreatorId: " << creatorId << "\n"
-			<< "CreatorRevision: " << creatorRevision << "\n";
+const InterfaceDescriptionTable* InterfaceDescriptionTable::find(const char* sig) const {
+	for (U32* start = (U32*)data; (char*)start < (char*)this + length; ++start) {
+		if (*start != 0) {
+			const InterfaceDescriptionTable* table = (const InterfaceDescriptionTable*)*start;
+			if (Utils::strcmp(table->signature, sig, sizeof(table->signature)) == 0) {
+				return table;
+			}
+		}
+	}
+	return 0;
 }
 
 } // namespace pangu

@@ -5,10 +5,15 @@
 
 namespace pangu {
 
+class InterfaceDescriptionTable;
 class InterfaceDescriptionPointer {
 	~InterfaceDescriptionPointer();
 public:
-	static InterfaceDescriptionPointer* find();
+	static const InterfaceDescriptionPointer* find();
+
+	const InterfaceDescriptionTable* getRootTable() const {
+		return (InterfaceDescriptionTable*)address;
+	}
 
 	kernel::U8 signature[8];
 	kernel::U8 checksum;

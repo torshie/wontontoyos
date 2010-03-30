@@ -9,7 +9,7 @@ class InterfaceDescriptionTable {
 	~InterfaceDescriptionTable();
 
 public:
-	void show();
+	const InterfaceDescriptionTable* find(const char* sig) const;
 
 	char signature[4];
 	kernel::U32 length;
@@ -20,6 +20,7 @@ public:
 	kernel::U32 oemRevision;
 	kernel::U32 creatorId;
 	kernel::U32 creatorRevision;
+	char data[];
 } __attribute__((packed));
 
 } // namespace pangu

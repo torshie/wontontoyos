@@ -3,9 +3,9 @@
 
 using namespace kernel;
 
-extern "C" Address loadFileImage(FileHeader* fileHeader, Size size, void* address) {
+extern "C" Address loadFileImage(FileHeader* fileHeader, Size size) {
 	SimpleLoader loader;
 	loader.parse(fileHeader, size);
 	Size memoryImageSize = loader.getMemoryImageSize();
-	return loader.load(address, memoryImageSize);
+	return loader.load(memoryImageSize);
 }

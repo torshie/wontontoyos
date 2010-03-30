@@ -22,7 +22,7 @@ public:
 		return memoryImageSize;
 	}
 
-	Address load(void* base, Size size);
+	Address load(Size size);
 
 private:
 	FileHeader* header;
