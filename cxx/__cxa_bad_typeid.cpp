@@ -1,5 +1,5 @@
-// XXX Implement
+#include "abort.h"
+
 extern "C" void __cxa_bad_typeid() {
-	for (;;)
-		;
+	std::abort();
 }

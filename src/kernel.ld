@@ -59,6 +59,12 @@ SECTIONS {
 	.bss : {
 		*(.bss .bss.*)
 	}
+	
+	.eh_frame : {
+		start_eh_frame = .;
+		*(.eh_frame)
+		QUAD(0)
+	}
 
 	. = ALIGN(PAGE_SIZE);
 	__ld_image_end = .;

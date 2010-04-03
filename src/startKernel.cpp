@@ -3,7 +3,6 @@
 #include "arch/GlobalDescriptorTable.h"
 #include "arch/InterruptTable.h"
 #include "ut/framework/UnitTesting.h"
-#include "cxx/rtti.h"
 #include "arch/X64Constant.h"
 #include "mm/PagePointer.h"
 #include "mm/PageMap.h"

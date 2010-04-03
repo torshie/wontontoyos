@@ -1,5 +1,5 @@
 #include "ut/framework/UnitTesting.h"
-#include <cxx/rtti.h>
+#include <cxx/typeinfo.h>
 
 namespace kernel {
 
