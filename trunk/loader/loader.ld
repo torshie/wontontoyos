@@ -2,8 +2,8 @@ OUTPUT_ARCH(i386:x86-64)
 OUTPUT_FORMAT(elf64-x86-64)
 ENTRY (_start)
 
-/* Modify pangu.S as well if this value is modified */
-BASE = 0x200000 - 0x1000;
+/* Modify pangu.ld if this value is modified */
+BASE = 0x300000 - 0x1000;
 
 ALIGNMENT = 8;
 

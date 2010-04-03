@@ -2,16 +2,19 @@ OUTPUT_ARCH(i386)
 OUTPUT_FORMAT(elf32-i386)
 ENTRY (_start)
 
-BASE = 0x200000;
+/* Modify loader.ld when this variable is modified */
+BASE = 0x300000;
 
 ALIGNMENT = 8;
 
 SECTIONS{
 	. = BASE;
 	__ld_kernel_stack__ = . - ALIGNMENT;
-
+	
 	.text : AT(ADDR(.text) - BASE) {
 		__ld_code_start__ = .;
+		*(.mboot)
+		. = ALIGN(ALIGNMENT);
 		*(.text .text.*)
 		. = ALIGN(ALIGNMENT);
 	}

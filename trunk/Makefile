@@ -1,6 +1,6 @@
 all: build
 
-REQ_DIR = pangu
+REQ_DIR = supcxx
 
 include $(WONTON)/Makefile.variable
 include $(WONTON)/Makefile.rule

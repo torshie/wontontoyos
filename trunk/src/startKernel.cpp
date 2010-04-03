@@ -23,7 +23,7 @@ namespace kernel {
 extern "C" int __ld_image_end, __ld_image_start;
 
 extern "C" int sampleServer;
-void startKernel() {
+void startKernel(U64 timerAddress) {
 	Message::brief << "__ld_image_start: " << &__ld_image_start << "\n"
 			<< "__ld_image_end:   " << &__ld_image_end << "\n";
 	getProcessorInstance<GlobalDescriptorTable>();
@@ -35,6 +35,8 @@ void startKernel() {
 	TestResult result;
 	runner.run(result);
 	result.show();
+
+	Message::brief << "Timer: " << timerAddress << "\n";
 
 	SimpleLoader* loader = new SimpleLoader();
 	loader->parse(&sampleServer, 0);
@@ -63,8 +65,9 @@ static void WAIT_FOR_DEBUGGER() {
 #	define WAIT_FOR_DEBUGGER()
 #endif
 
-extern "C" void startKernel() {
-	using namespace kernel;
+using namespace kernel;
+
+extern "C" void startKernel(U64 timerAddress) {
 
 	// Remove the lower half of the page map, which can help us find out bugs
 	PagePointer<4>* levelFour = (PagePointer<4>*)PageTable<4>::LOWEST_TABLE_ADDRESS;
@@ -76,5 +79,5 @@ extern "C" void startKernel() {
 
 	initCxxSupport();
 
-	::kernel::startKernel();
+	::kernel::startKernel(timerAddress);
 }
