@@ -20,4 +20,6 @@ _start:
 	mov _start - 16, %rdi
 	mov _start - 24, %rsi
 	call loadFileImage
-	jmp *%rax /* Jump to kernel's entry point */
+
+	mov _start - 32, %rdi
+	call *%rax /* Jump to kernel's entry point */

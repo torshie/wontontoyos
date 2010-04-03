@@ -2,12 +2,7 @@
 .set MBOOT_FLAGS, (1 | (1 << 1) | (1 << 16))
 .set MBOOT_CHECKSUM, (-(MBOOT_FLAGS + MBOOT_MAGIC))
 
-.section .text
-.code32
-.global _start
-_start:
-	jmp bootstrap
-
+.section .mboot
 .align 4
 mbootheader:
 	.long MBOOT_MAGIC
@@ -47,7 +42,8 @@ loaderEntry: .quad 0
 
 .section .text
 .code32
-bootstrap:
+.global _start
+_start:
 	cli
 
 	mov $__ld_kernel_stack__, %esp /* Defined in ld script */

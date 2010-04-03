@@ -4,6 +4,7 @@
 #include "Message.h"
 #include "InterfaceDescriptionPointer.h"
 #include "InterfaceDescriptionTable.h"
+#include "HighPrecisionEventTimerDescriptor.h"
 #include <cxx/initCxxSupport.h>
 #include <cxx/new.h>
 
@@ -20,17 +21,17 @@ extern "C" Address rise() {
 	const InterfaceDescriptionTable* root = pointer->getRootTable();
 	const InterfaceDescriptionTable* hpet = root->find("HPET");
 	if (hpet == 0) {
-		Message::fatal << "Cannot find HPET, stop initialization\n";
+		Message::fatal << "Cannot find HPET\n";
 		for (;;);
-	} else {
-		Message::brief << "HPET is at: " << hpet << "\n";
-		Message::brief << "HPET Revision: " << hpet->revision << "\n";
 	}
 
-	for (;;);
+	HighPrecisionEventTimerDescriptor* timer = (HighPrecisionEventTimerDescriptor*)(&(hpet->data));
 
 	PagePointer<4>* map = createPageMap();
 	Address loaderEntry = loadFileImage(&loaderStart, &loaderEnd - &loaderStart);
+	// XXX Evil literal
+	*(U64*)(loaderEntry - 32) = timer->address; // Pass parameter to 64-bit loader
+
 	Processor& processor = getProcessorInstance<Processor>();
 	processor.setRegister<Processor::CR0>(1 << CR0_BIT_PROTECTION_ENABLED);
 	processor.setRegister<Processor::CR4>(

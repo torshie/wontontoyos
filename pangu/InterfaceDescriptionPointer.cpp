@@ -5,7 +5,7 @@ using namespace kernel;
 
 namespace pangu {
 
-InterfaceDescriptionPointer* InterfaceDescriptionPointer::find() {
+const InterfaceDescriptionPointer* InterfaceDescriptionPointer::find() {
 	enum {
 		MIN_POSSIBLE_ADDRESS = 0x0009FC00,
 		MAX_POSSIBLE_ADDRESS = 0x000FFFFF - sizeof(InterfaceDescriptionPointer)
