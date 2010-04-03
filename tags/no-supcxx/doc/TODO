@@ -1,0 +1,15 @@
+*** Add exception support
+*** Implement PhysicalPageAllocator
+*** Implement various deallocator
+*** Check all the asm volatile and set clobber registers
+
+** Check the dependency of all the processor/singleton instances.
+** Implement a loader that checks the input image.
+** Enhance linear address allocator.
+** Rewrite MaxHeap & SearchTree
+** Test the linear address allocator.
+** Redesign kernel memory layout.
+** Use a different stack for interrupt handlers
+** Triple fault when compiled with option "-O3"
+
+* Port RME
