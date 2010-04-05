@@ -3,7 +3,6 @@
 
 namespace kernel {
 
-// XXX Thread safety
 class Property {
 	~Property();
 
@@ -20,11 +19,11 @@ class Property {
 
 public:
 	enum __ {
-		MISC_HIDE_MESSAGE = 0x10000,
+		MISC_HIDE_MESSAGE = 10000,
 
-		PROCESS_ACTIVE_ADDRESS_SPACE = 0x20000,
+		PROCESS_ACTIVE_ADDRESS_SPACE = 20000,
 
-		THREAD_STACK_SPACE_SIZE = 0x30000,
+		THREAD_STACK_SPACE_SIZE = 30000,
 	};
 
 	template<int KEY, typename Value> static Value get() {

@@ -32,20 +32,19 @@ extern "C" Address rise() {
 	// XXX Evil literal
 	*(U64*)(loaderEntry - 32) = timer->address; // Pass parameter to 64-bit loader
 
-	Processor& processor = getProcessorInstance<Processor>();
-	processor.setRegister<Processor::CR0>(1 << CR0_BIT_PROTECTION_ENABLED);
-	processor.setRegister<Processor::CR4>(
+	Processor::Register<Processor::CR0>::set(1 << CR0_BIT_PROTECTION_ENABLED);
+	Processor::Register<Processor::CR4>::set(
 			(1 << CR4_BIT_PHYSICAL_ADDRESS_EXTENSION)
 				| (1 << CR4_BIT_PAGE_GLOBAL_ENABLE)
 				| (1 << CR4_BIT_OS_FXSAVE_FXRSTOR_SUPPORT));
-	processor.setRegister<Processor::CR3>((Address)map);
-	processor.setModeSpecificRegister(MSR_EXTENDED_FEATURE_ENABLE_REGISTER,
+	Processor::Register<Processor::CR3>::set((NativeUnsigned)map);
+	Processor::setModeSpecificRegister(MSR_EXTENDED_FEATURE_ENABLE_REGISTER,
 			(1 << EFER_BIT_NO_EXECUTE_ENABLE)
 				| (1 << EFER_BIT_LONG_MODE_ENABLE)
 				| (1 << EFER_BIT_SYSTEM_CALL_EXTENSION));
 	asm volatile("lgdt %0" : : "m"(globalDescriptorTablePointer));
-	NativeUnsigned cr0 = processor.getRegister<Processor::CR0>();
-	processor.setRegister<Processor::CR0>(cr0 | (1 << CR0_BIT_PAGING));
+	NativeUnsigned cr0 = Processor::Register<Processor::CR0>::get();
+	Processor::Register<Processor::CR0>::set(cr0 | (1 << CR0_BIT_PAGING));
 
 	return loaderEntry;
 }

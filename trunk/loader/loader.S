@@ -8,7 +8,7 @@
 	.endr
 _start:
 	cli
-	mov $__ld_kernel_stack__, %rsp
+	mov $(__ld_image_start - 16), %rsp
 
 	mov _start - 8, %ax
 	mov %ax, %ds

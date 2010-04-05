@@ -5,7 +5,7 @@
 
 namespace kernel {
 
-struct NullDescriptor {
+class NullDescriptor {
 	friend class GlobalDescriptorTable;
 
 	U64 initializer;

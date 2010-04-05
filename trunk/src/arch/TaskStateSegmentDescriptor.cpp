@@ -2,14 +2,14 @@
 #include <generic/type.h>
 #include <generic/Utils.h>
 #include "getProcessorInstance.h"
-#include <kernel/abi.h>
 #include "TaskStateSegment.h"
 
 namespace kernel {
 
+extern "C" int __ld_image_start;
 TaskStateSegmentDescriptor::TaskStateSegmentDescriptor() {
 	TaskStateSegment& tss = getProcessorInstance<TaskStateSegment>();
-	tss.rsp[0] = KERNEL_VIRTUAL_BASE + KERNEL_PHYSICAL_BASE;
+	tss.rsp[0] = (Address)&__ld_image_start;
 	Utils::zeroize(this, sizeof(TaskStateSegmentDescriptor));
 	present = 1;
 	Size limit = sizeof(tss) - 1;

@@ -27,8 +27,7 @@ AddressSpace::AddressSpace(Size basicSpaceSize, bool activateImmediately) {
 }
 
 void AddressSpace::activate() {
-	AddressSpace* active =
-			Property::get<Property::PROCESS_ACTIVE_ADDRESS_SPACE, AddressSpace*>();
+	AddressSpace* active = Property::get<Property::PROCESS_ACTIVE_ADDRESS_SPACE, AddressSpace*>();
 	if (active != this) {
 		PagePointer<4>* basic = PagePointer<4>::getPointerTo(USER_VIRTUAL_BASE);
 		PagePointer<4>* stack = PagePointer<4>::getPointerTo(stackSpaceStart);

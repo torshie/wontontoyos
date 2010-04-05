@@ -12,9 +12,7 @@ void PageMap::reload() {
 	PageTable<4>* levelFour = (PageTable<4>*)(PageTable<4>::LOWEST_TABLE_ADDRESS);
 	Address address = levelFour->pointer[PagePointer<4>::POINTERS_PER_PAGE - 1].page
 								* PAGE_SIZE;
-
-	Processor& processor = getProcessorInstance<Processor>();
-	processor.setRegister<Processor::CR3>(address);
+	Processor::Register<Processor::CR3>::set(address);
 }
 
 void PageMap::create(Address linear, Size size, Address physical, bool replace) {

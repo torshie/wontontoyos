@@ -27,9 +27,9 @@ InterruptTable::InterruptTable() {
 	}
 	Utils::memset(handler, 0, sizeof(handler));
 
-	setHandler(PAGE_FAULT, InterruptHandler<PAGE_FAULT>::handle);
-	setHandler(DOUBLE_FAULT, InterruptHandler<DOUBLE_FAULT>::handle);
-	setHandler(APIC_TIMER_INTERRUPT, InterruptHandler<APIC_TIMER_INTERRUPT>::handle);
+	setHandler(HANDLER_PAGE_FAULT, InterruptHandler<HANDLER_PAGE_FAULT>::handle);
+	setHandler(HANDLER_DOUBLE_FAULT, InterruptHandler<HANDLER_DOUBLE_FAULT>::handle);
+	setHandler(HANDLER_HPET_TIMER, InterruptHandler<HANDLER_HPET_TIMER>::handle);
 
 	load();
 }

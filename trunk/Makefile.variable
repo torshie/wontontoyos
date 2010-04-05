@@ -10,15 +10,15 @@ OBJCOPY = $(CROSS)objcopy
 OBJDUMP = $(CROSS)objdump
 STRIP = $(CROSS)strip
 
-INCLUDE_FLAGS = -I$(WONTON)/common -I$(WONTON) -I$(WONTON)/src -I.
-WARNING_FLAGS = -W -Wall -Wextra -Wno-enum-compare
+INCLUDE_FLAGS = -I$(WONTON)/common -I$(WONTON) -I$(WONTON)/src
+WARNING_FLAGS = -W -Wall -Wextra -Werror -Wno-enum-compare
 OPTIMIZE_FLAGS = -O2
-COMMON_FLAGS += -nostdlib -nostartfiles -nodefaultlibs -ansi -mno-red-zone \
-		-fshow-column -ftabstop=4 -g3 -D__EXCEPTIONS=1 \
+COMMON_FLAGS += -nostdlib -nostartfiles -nodefaultlibs -ansi -mno-red-zone -fno-exceptions \
+		-fshow-column -ftabstop=4 -g3 \
 		$(INCLUDE_FLAGS) $(WARNING_FLAGS)
 OPTIMIZE_BUILD_FLAGS = $(COMMON_FLAGS) $(OPTIMIZE_FLAGS) -mcmodel=large \
 		-DBUILD_TEST_MODE_KERNEL
-DEBUG_FLAGS = -O0
+DEBUG_FLAGS = -O2
 DEBUG_BUILD_FLAGS = $(COMMON_FLAGS) $(DEBUG_FLAGS) -mcmodel=large -DBUILD_DEBUG_MODE_KERNEL \
 		-DBUILD_TEST_MODE_KERNEL
 CXXFLAGS32 = $(COMMON_FLAGS) -m32 -D__X86_32__ -O0

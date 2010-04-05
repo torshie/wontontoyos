@@ -8,7 +8,7 @@ ENTRY(_start)
  * !!!!!!!!!!!!!!!
  * If you want to change load address, make sure <kernel/abi.h> is consistent
  */
-BASE = 0xFFFF800000000000 + 0x100000 + 0x2000 + 0x6000;
+BASE = 0xFFFF800000000000 + 0x100000 + 0x4000 + 0x6000;
 /*           ^                  ^         ^        ^
  *           |                  |         |        |
  *     VIRTUAL_BASE         RESERVED     HOLE    STACK
@@ -32,16 +32,12 @@ SECTIONS {
 	.rodata : {
 		*(.rodata .rodata.*);
 		. = ALIGN(ALIGNMENT);
-	}
-
-	.ctors : {
+		
 		__ld_start_ctors = .;
 		*(.ctors)
 		__ld_end_ctors = .;
 		. = ALIGN(ALIGNMENT);
-	}
-
-	.dtors : {
+		
 		__ld_start_dtors = .;
 		*(.dtors)
 		__ld_end_dtors = .;
@@ -63,7 +59,6 @@ SECTIONS {
 	. = ALIGN(PAGE_SIZE);
 	__ld_image_end = .;
 
-	/* This section is used for link time optimization */
 	.lto : {
 		*(.gnu.lto*)
 	}

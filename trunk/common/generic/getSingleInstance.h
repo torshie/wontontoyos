@@ -9,6 +9,11 @@ template<typename T> T& getSingleInstance() {
 	return instance;
 }
 
+template<typename T, typename P1> T& getSingleInstance(P1 a1) {
+	static T instance(a1);
+	return instance;
+}
+
 } // namespace kernel
 
 #endif // KERNEL_GENERIC_GET_SINGLE_INSTANCE_H_INCLUDED
