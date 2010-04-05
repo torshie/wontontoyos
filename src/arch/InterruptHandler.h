@@ -12,30 +12,27 @@ namespace kernel {
 
 template<int INTERUPT> class InterruptHandler;
 
-template<> class InterruptHandler<InterruptTable::PAGE_FAULT> {
+template<> class InterruptHandler<InterruptTable::HANDLER_PAGE_FAULT> {
 public:
 	static void handle() {
-		Processor& processor = getProcessorInstance<Processor>();
-		NativeUnsigned linearAddress = processor.getRegister<Processor::CR2>();
+		NativeUnsigned linearAddress = Processor::Register<Processor::CR2>::get();
 		Message::critical << "#Page Fault: accessing " << linearAddress << "\n";
-		processor.halt();
+		Processor::halt();
 	}
 };
 
-template<> class InterruptHandler<InterruptTable::DOUBLE_FAULT> {
+template<> class InterruptHandler<InterruptTable::HANDLER_DOUBLE_FAULT> {
 public:
 	static void handle() {
 		Message::brief << "#Double Fault\n";
 	}
 };
 
-template<> class InterruptHandler<InterruptTable::APIC_TIMER_INTERRUPT> {
+template<> class InterruptHandler<InterruptTable::HANDLER_HPET_TIMER> {
 public:
 	static void handle() {
-		static I64 tick = 1;
-		Message::brief << "APIC Tick: " <<  tick << "\n";
-		++tick;
-		InterruptController::signal();
+		static int tick = 0;
+		Message::brief << "HPET Tick: " << tick << "\n";
 	}
 };
 

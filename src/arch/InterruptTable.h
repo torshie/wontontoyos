@@ -11,10 +11,10 @@ class InterruptTable {
 	friend InterruptTable& getProcessorInstance<InterruptTable>();
 public:
 	enum {
-		DOUBLE_FAULT = 8,
-		PAGE_FAULT = 14,
+		HANDLER_DOUBLE_FAULT = 8,
+		HANDLER_PAGE_FAULT = 14,
 
-		APIC_TIMER_INTERRUPT = 63,
+		HANDLER_HPET_TIMER = 33,
 
 		/**
 		 * !!!!!!!!!!!!!!!!

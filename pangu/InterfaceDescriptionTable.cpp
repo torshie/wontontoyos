@@ -15,7 +15,6 @@ const InterfaceDescriptionTable* InterfaceDescriptionTable::find(const char* sig
 			}
 		}
 	}
-	for (;;);
 	return 0;
 }
 

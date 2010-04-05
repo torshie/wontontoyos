@@ -16,6 +16,8 @@
 #include "thread/Thread.h"
 #include "ut/framework/UnitTesting.h"
 #include "arch/InterruptController.h"
+#include "driver/timer/EventTimer.h"
+#include "arch/InputOutputController.h"
 
 namespace kernel {
 
@@ -28,8 +30,12 @@ void startKernel(U64 timerAddress) {
 			<< "__ld_image_end:   " << &__ld_image_end << "\n";
 	getProcessorInstance<GlobalDescriptorTable>();
 	getProcessorInstance<InterruptTable>();
-	getProcessorInstance<Processor>().initialize();
 	getProcessorInstance<InterruptController>();
+
+	getSingleInstance<EventTimer>(timerAddress);
+	InputOutputController& io = getSingleInstance<InputOutputController>();
+	Message::brief << "IOAPIC Version: " << io.getRegister(InputOutputController::REG_VERSION)
+			<< "\n";
 
 	TestRunner& runner = getSingleInstance<TestRunner>();
 	TestResult result;
@@ -37,6 +43,8 @@ void startKernel(U64 timerAddress) {
 	result.show();
 
 	Message::brief << "Timer: " << timerAddress << "\n";
+
+	Processor::initializeUserMode();
 
 	SimpleLoader* loader = new SimpleLoader();
 	loader->parse(&sampleServer, 0);
