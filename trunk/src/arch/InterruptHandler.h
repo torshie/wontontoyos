@@ -32,7 +32,9 @@ template<> class InterruptHandler<InterruptTable::HANDLER_HPET_TIMER> {
 public:
 	static void handle() {
 		static int tick = 0;
+		tick++;
 		Message::brief << "HPET Tick: " << tick << "\n";
+		InterruptController::signal();
 	}
 };
 

@@ -4,7 +4,7 @@
 #include "Message.h"
 #include "InterfaceDescriptionPointer.h"
 #include "InterfaceDescriptionTable.h"
-#include "HighPrecisionEventTimerDescriptor.h"
+#include "EventTimerDescriptor.h"
 #include <cxx/initCxxSupport.h>
 #include <cxx/new.h>
 
@@ -25,7 +25,7 @@ extern "C" Address rise() {
 		for (;;);
 	}
 
-	HighPrecisionEventTimerDescriptor* timer = (HighPrecisionEventTimerDescriptor*)(&(hpet->data));
+	EventTimerDescriptor* timer = (EventTimerDescriptor*)(&(hpet->data));
 
 	PagePointer<4>* map = createPageMap();
 	Address loaderEntry = loadFileImage(&loaderStart, &loaderEnd - &loaderStart);

@@ -34,8 +34,11 @@ private:
 	template<typename Integer> class UnsignedIntegerPrinter {
 	public:
 		static Printer& print(Integer data, Printer& printer) {
-			char tmp[sizeof(Integer) * 2 + 1] = {0};
-			for (unsigned i = 0; i < sizeof(Integer) * 2; ++i,
+			enum {
+				BUFFER_SIZE = sizeof(Integer) * 2 + 1
+			};
+			char tmp[BUFFER_SIZE] = {0};
+			for (unsigned int i = 0; i < sizeof(Integer) * 2; ++i,
 					data >>= 4) {
 				char c = data & 0x0f;
 				if (c < 10) {
@@ -44,7 +47,16 @@ private:
 					tmp[sizeof(Integer) * 2 - i - 1] = 'A' + c - 10;
 				}
 			}
-			return printer << (tmp);
+			for (unsigned int i = 0; i < BUFFER_SIZE; ++i) {
+				if (tmp[i] == 0) {
+					break;
+				}
+				if (i % 4 == 0 && i != 0) {
+					printer.printChar('-');
+				}
+				printer.printChar(tmp[i]);
+			}
+			return printer;
 		}
 	};
 

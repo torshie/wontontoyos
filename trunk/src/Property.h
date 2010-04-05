@@ -24,6 +24,8 @@ public:
 		PROCESS_ACTIVE_ADDRESS_SPACE = 20000,
 
 		THREAD_STACK_SPACE_SIZE = 30000,
+
+		PARAM_EVENT_TIMER_BASE = 40000,
 	};
 
 	template<int KEY, typename Value> static Value get() {

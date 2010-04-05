@@ -16,6 +16,9 @@ debug-build:
 
 run: build
 	$(QEMU)
+	
+count:
+	wc -l `find . -name '*.h'` `find . -name '*.cpp'`
 
 nothing:
 
