@@ -5,7 +5,7 @@
 
 namespace pangu {
 
-struct HighPrecisionEventTimerDescriptor {
+struct EventTimerDescriptor {
 	kernel::U32 blockId;
 	kernel::U8 addressSpace;
 	kernel::U8 bitWidth;

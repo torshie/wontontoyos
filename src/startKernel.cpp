@@ -18,6 +18,7 @@
 #include "arch/InterruptController.h"
 #include "driver/timer/EventTimer.h"
 #include "arch/InputOutputController.h"
+#include "Property.h"
 
 namespace kernel {
 
@@ -25,15 +26,17 @@ namespace kernel {
 extern "C" int __ld_image_end, __ld_image_start;
 
 extern "C" int sampleServer;
-void startKernel(U64 timerAddress) {
+void startKernel(Address timerAddress) {
+	Property::set<Property::PARAM_EVENT_TIMER_BASE>(timerAddress);
+
 	Message::brief << "__ld_image_start: " << &__ld_image_start << "\n"
 			<< "__ld_image_end:   " << &__ld_image_end << "\n";
 	getProcessorInstance<GlobalDescriptorTable>();
 	getProcessorInstance<InterruptTable>();
 	getProcessorInstance<InterruptController>();
-
-	getSingleInstance<EventTimer>(timerAddress);
+	getSingleInstance<EventTimer>();
 	InputOutputController& io = getSingleInstance<InputOutputController>();
+
 	Message::brief << "IOAPIC Version: " << io.getRegister(InputOutputController::REG_VERSION)
 			<< "\n";
 
@@ -75,7 +78,7 @@ static void WAIT_FOR_DEBUGGER() {
 
 using namespace kernel;
 
-extern "C" void startKernel(U64 timerAddress) {
+extern "C" void startKernel(Address timerAddress) {
 
 	// Remove the lower half of the page map, which can help us find out bugs
 	PagePointer<4>* levelFour = (PagePointer<4>*)PageTable<4>::LOWEST_TABLE_ADDRESS;

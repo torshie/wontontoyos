@@ -1,4 +1,3 @@
-*** Imlement initializer manager
 *** Implement PhysicalPageAllocator
 *** Implement various deallocator
 *** Check all the asm volatile and set clobber registers
