@@ -23,24 +23,21 @@ EventTimer::EventTimer() {
 	if (periodicTimer < 0) {
 		Message::brief << "Cannot find periodic timer " << "\n";
 		Processor::halt();
-	} else {
-		Message::brief << "Got periodic timer: " << periodicTimer << "\n";
 	}
 
-	int interrupt = getAvailableInterrupt(periodicTimer);
 	TimerConfig timerConfig;
 	timerConfig.__value = timer[periodicTimer].config.__value;
-	timerConfig.interrupt = interrupt;
+	timerConfig.interrupt = InputOutputController::ROUTER_HPET_TIMER;
 	timerConfig.periodic = 1;
 	timerConfig.levelTrigger = 0;
 	timerConfig.setValue = 1;
 	timerConfig.enable = 1;
 	timer[periodicTimer].config.__value = timerConfig.__value;
-	timer[periodicTimer].comparator = 0x20000000;
+	timer[periodicTimer].comparator = UNIT_PER_SECOND / ((U64)id.period * TIMER_FREQUENCE);
 
 	InputOutputController::Router router(InterruptTable::HANDLER_HPET_TIMER);
 	InputOutputController& controller = getSingleInstance<InputOutputController>();
-	controller.setRouter(interrupt, router);
+	controller.setRouter(InputOutputController::ROUTER_HPET_TIMER, router);
 
 	GeneralConfig generalConfig;
 	generalConfig.__value = config.__value;

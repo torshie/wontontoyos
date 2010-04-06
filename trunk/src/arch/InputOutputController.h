@@ -18,6 +18,9 @@ public:
 		REG_ID = 0,
 		REG_VERSION = 1,
 		REG_ARBITRATION = 2,
+
+		// XXX This value should be detected at runtime.
+		ROUTER_HPET_TIMER = 4,
 	};
 
 	union Router {
