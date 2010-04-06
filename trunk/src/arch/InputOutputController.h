@@ -25,11 +25,11 @@ public:
 		struct {
 			U8 interrupt;
 			U8 deliveryMode:3;
-			U8 destinationMode:1;
+			U8 logicalMode:1;
 			U8 deliveryStatus:1;
-			U8 polarity:1;
+			U8 lowActive:1;
 			U8 __ignored:1;
-			U8 triggerMode:1;
+			U8 levelTrigger:1;
 			U8 mask:1;
 			U64 __reserved:39;
 			U8 desination;
