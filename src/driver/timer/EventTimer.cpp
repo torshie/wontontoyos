@@ -29,30 +29,24 @@ EventTimer::EventTimer() {
 
 	int interrupt = getAvailableInterrupt(periodicTimer);
 	TimerConfig timerConfig;
-	timerConfig.value = timer[periodicTimer].config.value;
+	timerConfig.__value = timer[periodicTimer].config.__value;
 	timerConfig.interrupt = interrupt;
-	timerConfig.enablePeriodic = 1;
-	timerConfig.levelTriggered = 0;
+	timerConfig.periodic = 1;
+	timerConfig.levelTrigger = 0;
+	timerConfig.setValue = 1;
 	timerConfig.enable = 1;
-	timer[periodicTimer].config.value = timerConfig.value;
-	timer[periodicTimer].comparator = 0xfffffffffffffffe;
+	timer[periodicTimer].config.__value = timerConfig.__value;
+	timer[periodicTimer].comparator = 0x20000000;
 
 	InputOutputController::Router router(InterruptTable::HANDLER_HPET_TIMER);
 	InputOutputController& controller = getSingleInstance<InputOutputController>();
-	router.mask = 0;
 	controller.setRouter(interrupt, router);
 
 	GeneralConfig generalConfig;
-	generalConfig.value = config.value;
+	generalConfig.__value = config.__value;
 	generalConfig.enable = 1;
 	generalConfig.legacy = 0;
-	config.value = generalConfig.value;
-
-/*	for (;;) {
-		Message::brief << "Main Counter: " << (U64)mainCounter << "\n"
-				<< "Comparator: " << (U64)timer[periodicTimer].comparator << "\n";
-		for (volatile long long i = 0; i < 0x10000000; ++i) {}
-	} */
+	config.__value = generalConfig.__value;
 }
 
 int EventTimer::getAvailableInterrupt(int timerIndex) const {
@@ -64,10 +58,10 @@ int EventTimer::getAvailableInterrupt(int timerIndex) const {
 
 int EventTimer::getPeriodicTimer() const {
 	GeneralId buffer;
-	buffer.value = id.value;
+	buffer.__value = id.__value;
 	for (unsigned int i = 0; i < buffer.timerCount; ++i) {
 		TimerConfig tc;
-		tc.value = timer[i].config.value;
+		tc.__value = timer[i].config.__value;
 		if (tc.periodicCapable) {
 			return i;
 		}

@@ -30,7 +30,7 @@ class EventTimer {
 				U8 legacy :1;
 				U16 vendorId;
 			} __attribute__((packed));
-			U32 value;
+			U32 __value;
 		};
 		U32 period;
 	} __attribute__((packed));
@@ -41,26 +41,26 @@ class EventTimer {
 			U8 legacy :1;
 			U64 __reserved :62;
 		};
-		U64 value;
+		U64 __value;
 	} __attribute__((packed));
 
 	struct TimerConfig {
 		union {
 			struct {
 				U8 __reserved1 :1;
-				U8 levelTriggered :1;
+				U8 levelTrigger :1;
 				U8 enable :1;
-				U8 __unused1 :1;
+				U8 periodic :1;
 				U8 periodicCapable :1;
 				U8 wideTimer :1;
-				U8 enablePeriodic :1;
+				U8 setValue :1;
 				U8 __reserved2 :1;
 				U8 narrowMode :1;
-				volatile U8 interrupt :5;
-				U8 __unused2 :2;
+				U8 interrupt :5;
+				U8 __unused1 :2;
 				U16 __reserved3;
 			}__attribute__((packed));
-			U32 value;
+			U32 __value;
 		};
 		U32 possibleInterrupt;
 	} __attribute__((packed));
