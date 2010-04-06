@@ -20,6 +20,11 @@ class EventTimer {
 	EventTimer(const EventTimer&);
 	const EventTimer& operator = (const EventTimer&);
 
+	enum {
+		UNIT_PER_SECOND = 1000000000000000ull,
+		TIMER_FREQUENCE = 2
+	};
+
 	struct GeneralId {
 		union {
 			struct {

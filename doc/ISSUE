@@ -1,1 +1,1 @@
-HPET driver doesn't work as expected
+IO-APIC/HPET only works on QEMU
