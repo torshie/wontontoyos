@@ -10,12 +10,12 @@ cat > ${sourceFile} << EOF
 #include "ut/framework/TestRunner.h"
 EOF
 
+testSuiteName=`basename ${PWD}`
 for header in `ls *.h`; do
-	echo "#include \"${header}\"" >> ${sourceFile}
+	echo "#include \"ut/testsuite/${testSuiteName}/${header}\"" >> ${sourceFile}
 done
 
-functionName=`echo ${sourceFile} | sed 's/\\.cpp$//g'`
-testSuiteName=`basename ${PWD}`
+functionName=`basename ${sourceFile} | sed 's/\\.cpp$//g'`
 
 cat >> ${sourceFile} << EOF
 

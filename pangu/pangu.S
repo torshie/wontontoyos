@@ -74,10 +74,10 @@ longModeCode:
 .global loaderStart, loaderEnd, kernelStart, kernelEnd
 .align 8
 loaderStart:
-	.incbin "../loader/loader.elf"
+	.incbin "loader.elf"
 loaderEnd:
 
 .align 8
 kernelStart:
-	.incbin "../src/kernel.elf"
+	.incbin "kernel.elf"
 kernelEnd:

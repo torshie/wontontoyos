@@ -1,23 +1,10 @@
-IMAGE = loader.elf
-DBG_IMG = loader.dbg
-CLEAN = $(IMAGE) $(DBG_IMG)
-LIBS = ../common/libwonton.a
-REQ_DIR = ../common
-
 include $(WONTON)/Makefile.variable
+
+FINAL_IMAGE = $(buildDirectory)/loader.elf
+DEBUG_SYMBOL_IMAGE = $(buildDirectory)/loader.dbg
+REQUIRED_LIBRARIES = $(rootBuildDirectory)/common/libwonton.a
+REQUIRED_MODULES = ../common
+TARGETS = $(FINAL_IMAGE)
+LINKER_SCRIPT = loader.ld
+
 include $(WONTON)/Makefile.rule
-
-build: $(IMAGE)
-
-$(IMAGE): $(DBG_IMG)
-	#  STRIP $@
-	@cp $^ $@
-	@$(STRIP) -s $@
-	#  OBJCOPY $@
-	@$(OBJCOPY) -R .lto $@
-
-$(DBG_IMG): $(OBJS) $(LIBS) $(LD_SCRIPT)
-	#  LD $@
-	@$(CXX) $(CXXFLAGS) $(OBJS) $(LDFLAGS) -Wl,-T$(LD_SCRIPT) -o $@
-
-compile: $(OBJS)

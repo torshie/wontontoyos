@@ -2,7 +2,8 @@
 
 testHeader="$1"
 testName=`basename ${testHeader} | sed s/\.h$//g`
-sourcePath=`echo ${testHeader} | sed s/\.h$/.cpp/g`
+#sourcePath=`echo ${testHeader} | sed s/\.h$/.cpp/g`
+sourcePath="$2"
 
 cat > ${sourcePath} << EOF
 /******************************************************************
