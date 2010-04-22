@@ -1,56 +1,86 @@
-CLEAN_SUBDIR = $(addsuffix /clean, $(SUBDIR))
-COMPILE_SUBDIR = $(addsuffix /compile, $(SUBDIR))
-VERYCLEAN_SUBDIR = $(addsuffix /veryclean, $(SUBDIR))
-MAK_SUBDIR = $(addsuffix /mak, $(SUBDIR))
-BUILD_REQ_DIR = $(addsuffix /build, $(REQ_DIR))
-BUILD_SUBDIR = $(addsuffix /build, $(SUBDIR))
+compileSubdirectories = $(addsuffix /compile, $(MODULES))
+buildSubdirectories = $(addsuffix /build, $(MODULES))
+buildRequiredModules = $(addsuffix /build, $(REQUIRED_MODULES))
+cleanSubdirectories = $(addsuffix /clean, $(MODULES))
 
-.PHONY: compile clean veryclean mak $(CLEAN_SUBDIR) $(COMPILE_SUBDIR) (VERYCLEAN_SUBDIR) \
-		(MAK_SUBDIR) $(BUILD_REQ_DIR)
-		
-build: $(BUILD_REQ_DIR)
+buildDirectoryMagic = $(buildDirectory)/.buildDirectoryMagic
 
-clean: $(CLEAN_SUBDIR)
-	#  CLEAN $(CURDIR)
-	@rm -f *.o *.x86 $(CLEAN)
-	
-veryclean: $(VERYCLEAN_SUBDIR)
-	#  VERYCLEAN $(CURDIR)
-	@rm -f *.o *.mak *.x86 $(CLEAN)
+targetsNeeded = $(buildRequiredModules) compile $(buildSubdirectories)
+ifdef LIBRARY
+  targetsNeeded += $(buildDirectory)/$(LIBRARY)
+endif
+targetsNeeded += $(TARGETS)
 
-compile: $(COMPILE_SUBDIR) $(OBJS)
+build: $(targetsNeeded)
 
-mak: $(MAK_SUBDIR) $(MAK_FILES)
+.PHONY: clean compile $(compileSubdirectories) $(buildRequiredModules)
 
-$(CLEAN_SUBDIR) $(COMPILE_SUBDIR) $(VERYCLEAN_SUBDIR) $(MAK_SUBDIR) $(BUILD_REQ_DIR):
+.SUFFIXES: .x86 .d
+
+$(buildRequiredModules) $(compileSubdirectories) $(buildSubdirectories) $(cleanSubdirectories):
 	@$(MAKE) -C $(@D) $(@F)
 
+$(rootBuildDirectory)/%.o: $(WONTON)/%.cpp $(buildDirectoryMagic) 
+	#  CC $(@F)
+	@$(CXX) $(compilerFlags) $(x64Flags) -c -o $@ $<
+
+$(rootBuildDirectory)/%.x86: $(WONTON)/%.cpp $(buildDirectoryMagic) 
+	#  CC.X86 $(@F)
+	@$(CXX) $(compilerFlags) $(x86Flags) -c -o $@ $<
+
+$(rootBuildDirectory)/%.o: $(WONTON)/%.S $(buildDirectoryMagic)
+	#  AS $(@F)
+	@$(CXX) $(compilerFlags) $(x64Flags) $(asmFlags) -c -o $@ $<
+
+$(rootBuildDirectory)/%.x86: $(WONTON)/%.S $(buildDirectoryMagic)
+	#  AS.X86 $(@F)
+	@$(CXX) $(compilerFlags) $(x86Flags) $(asmFlags) -c -o $@ $<
+
+$(rootBuildDirectory)/%.d: $(WONTON)/%.cpp $(buildDirectoryMagic)
+	#  MF $(@F)
+	@$(CXX) $(compilerFlags) $(x64Flags) -M -MF $@ $<
+
 %.o: %.cpp
-	#  CC $@
-	@$(CXX) $(CXXFLAGS) -c -o $@ $<
+	#  CC $(@F)
+	@$(CXX) $(compilerFlags) $(x64Flags) -c -o $@ $<
 
-%.o: %.S
-	#  AS $@
-	@$(CXX) $(CXXFLAGS) -D__ASM__ -c -o $@ $<
+compile: $(buildDirectoryMagic) $(compileSubdirectories) $(objectFiles)
 
-%.x86: %.cpp
-	#  CC.X86 $@
-	@$(CXX) $(CXXFLAGS32) -c -o $@ $<
-	
-%.x86: %.S
-	#  AS.X86 $@
-	@$(CXX) $(CXXFLAGS32) -D__ASM__ -c -o $@ $<
+$(buildDirectoryMagic):
+	@mkdir -p $(buildDirectory)
+	@touch $@
 
-%.mak: %.cpp
-	#  MAK $@
-	@$(CXX) $(CXXFLAGS) -M -MF $@ $<
+$(FINAL_IMAGE): $(DEBUG_SYMBOL_IMAGE)
+	#  STRIP $(@F)
+	@cp $^ $@
+	@$(STRIP) $@
+	#  OBJCOPY $(@F)
+	@$(OBJCOPY) -R .lto $@
 
-$(LIBRARY): $(ALL_OBJS)
-	#  AR $@
-	@$(AR) rcs $@ $(ALL_OBJS)
-	
+$(DEBUG_SYMBOL_IMAGE): $(allObjectFiles) $(REQUIRED_LIBRARIES) $(LINKER_SCRIPT)
+	#  LD $(@F)
+	@$(CXX) $(allObjectFiles) $(linkerFlags) -T $(LINKER_SCRIPT) -o $@
+
+ifdef LIBRARY
+$(buildDirectory)/$(LIBRARY): $(allObjectFiles)
+	#  AR $(@F)
+	@$(AR) rcs $@ $(allObjectFiles)
+
+clean: $(cleanSubdirectories)
+	#  CLEAN $(notdir $(CURDIR))
+	@rm -f $(buildDirectory)/*.o $(buildDirectory)/*.d \
+		$(CLEAN) $(FINAL_IMAGE) $(DEBUG_SYMBOL_IMAGE) $(buildDirectory)/$(LIBRARY)
+else
+clean: $(cleanSubdirectories)
+	#  CLEAN $(notdir $(CURDIR))
+	@rm -f $(buildDirectory)/*.o $(buildDirectory)/*.d \
+		$(CLEAN) $(FINAL_IMAGE) $(DEBUG_SYMBOL_IMAGE)
+endif
+
+dependencyFiles = $(addprefix $(buildDirectory)/, $(MAK_FILES))
 ifneq ($(MAKECMDGOALS), clean)
   ifneq ($(MAKECMDGOALS), veryclean)
-    -include $(MAK_FILES)
+    -include $(dependencyFiles)
   endif
 endif
+

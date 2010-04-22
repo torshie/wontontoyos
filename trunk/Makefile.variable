@@ -1,43 +1,54 @@
 include $(WONTON)/Makefile.config
 
-SHELL = /usr/bin/env bash
-CROSS = x86_64-unknown-linux-gnu-
-CXX = $(CROSS)g++
-LD = $(CROSS)ld
-AS = $(CROSS)as
-AR = $(CROSS)ar
-OBJCOPY = $(CROSS)objcopy
-OBJDUMP = $(CROSS)objdump
-STRIP = $(CROSS)strip
+rootBuildDirectory = $(WONTON)/$(BUILD_MODE).build
 
-INCLUDE_FLAGS = -I$(WONTON)/common -I$(WONTON) -I$(WONTON)/src
-WARNING_FLAGS = -W -Wall -Wextra -Werror -Wno-enum-compare
-OPTIMIZE_FLAGS = -O2
-COMMON_FLAGS += -nostdlib -nostartfiles -nodefaultlibs -ansi -mno-red-zone -fno-exceptions \
-		-fshow-column -ftabstop=4 -g3 \
-		$(INCLUDE_FLAGS) $(WARNING_FLAGS)
-OPTIMIZE_BUILD_FLAGS = $(COMMON_FLAGS) $(OPTIMIZE_FLAGS) -mcmodel=large \
-		-DBUILD_TEST_MODE_KERNEL
-DEBUG_FLAGS = -O2
-DEBUG_BUILD_FLAGS = $(COMMON_FLAGS) $(DEBUG_FLAGS) -mcmodel=large -DBUILD_DEBUG_MODE_KERNEL \
-		-DBUILD_TEST_MODE_KERNEL
-CXXFLAGS32 = $(COMMON_FLAGS) -m32 -D__X86_32__ -O0
-LDFLAGS = $(addprefix -L, $(dir $(LIBS))) \
-		$(addprefix -l, $(patsubst lib%, %, $(patsubst %.a, %, $(notdir $(LIBS))))) \
+compilerFlags = $(CXXFLAGS) \
+		-nostdlib -nostartfiles -nodefaultlibs -ansi -mno-red-zone -fno-exceptions \
+		-I$(WONTON)/common -I$(WONTON) -I$(WONTON)/src \
+		-W -Wall -Wextra -Werror -Wno-enum-compare \
+		-g -flto
+x86Flags = -m32 -D__X86_32__
+x64Flags = -mcmodel=large
+asmFlags = -D__ASM__
+linkerFlags = $(LDFLAGS) \
+		-nostdlib -nostartfiles -nodefaultlibs \
+		$(addprefix -L, $(dir $(REQUIRED_LIBRARIES))) \
+		$(addprefix -l, $(patsubst lib%, %, $(patsubst %.a, %, $(notdir $(REQUIRED_LIBRARIES))))) \
 		-Wl,-z,max-page-size=0x1000
-ifeq ($(DEBUG_BUILD), 1)
-  CXXFLAGS = $(DEBUG_BUILD_FLAGS)
+ifeq ($(BUILD_MODE), test)
+  compilerFlags += -DBUILD_TEST_MODE_KERNEL -O2
 else
-  CXXFLAGS = $(OPTIMIZE_BUILD_FLAGS)
+  ifeq ($(BUILD_MODE), debug)
+    compilerFlags += -DBUILD_DEBUG_MODE_KERNEL=1 -DBUILD_TEST_MODE_KERNEL -O0
+  else
+    compilerFlags += -O2
+  endif
 endif
 
-ALL_OBJS = $(shell find $(CURDIR) -type f|grep \.o$$)
+# The relative path of currect directory, compared with $(WONTON)
+ifeq ($(CURDIR), $(WONTON))
+  relativePath = .
+else
+  relativePath = $(strip $(subst $(WONTON)/, , $(CURDIR)))
+endif
+
+# The build directory of files under currect directory
+buildDirectory = $(rootBuildDirectory)/$(relativePath)
+
+# The object files to be compiled
 OBJS += $(patsubst %.cpp, %.o, $(wildcard *.cpp)) $(patsubst %.S, %.o, $(wildcard *.S))
-MAK_FILES += $(patsubst %.cpp, %.mak, $(wildcard *.cpp))
-ifndef SUBDIR
-  SUBDIR = $(shell find . -maxdepth 2 -mindepth 2 -name Makefile -type f \
+
+# The absolute path of the object files
+objectFiles = $(addprefix $(buildDirectory)/, $(OBJS))
+
+# If variable MODULES isn't defined, set it to all the directories that contain a 'Makefile' file
+ifndef MODULES
+  MODULES = $(shell find . -maxdepth 2 -mindepth 2 -name Makefile -type f \
     | sed 's/\/Makefile//g' \
     | sed 's/^\.\///g')
 endif
-LD_SCRIPT = $(wildcard *.ld)
-CLEAN += $(LIBRARY)
+
+# .d files
+MAK_FILES += $(patsubst %.cpp, %.d, $(wildcard *.cpp)) 
+# All the object files that were generated when building current module
+allObjectFiles = $(shell find $(buildDirectory) -type f | grep \.o$$)

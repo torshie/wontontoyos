@@ -1,28 +1,18 @@
-KERNEL = kernel.elf
-DBG_IMG = kernel.dbg
-MAP = link.map.txt
-LIBRARY = libkernel.a
-CLEAN = $(KERNEL) $(X64KERNEL) $(MAP) $(LIBRARY) $(DBG_IMG)
-LIBS = ../cxx/libcxx.a ../common/libwonton.a
-REQ_DIR = ../cxx ../common ../server
+LINKER_SCRIPT = kernel.ld
+FINAL_IMAGE = $(buildDirectory)/kernel.elf
+DEBUG_SYMBOL_IMAGE = $(buildDirectory)/kernel.dbg
+REQUIRED_LIBRARIES = $(rootBuildDirectory)/cxx/libcxx.a $(rootBuildDirectory)/common/libwonton.a
+REQUIRED_MODULES = ../cxx ../common ../server
+TARGETS = $(FINAL_IMAGE)
 
 include $(WONTON)/Makefile.variable
 include $(WONTON)/Makefile.rule
 
-build: compile $(KERNEL)
+$(buildDirectory)/server.o: $(rootBuildDirectory)/server/sample/sample.elf server.S
+	@cp $< .
+	#  AS $(@F)
+	@$(CXX) $(compilerFlags) $(x64Flags) -D__ASM__ -c -o $@ $(lastword $^)
+	@rm sample.elf
 
-$(KERNEL): $(DBG_IMG)
-	#  STRIP $@
-	@cp $^ $@
-	@$(STRIP) $@
-	#  OBJCOPY $@
-	@$(OBJCOPY) -R .lto $@
-
-$(DBG_IMG): $(LIBS) $(LIBRARY) $(LIBS) $(LD_SCRIPT)
-	#  LD $@
-	@$(CXX) $(CXXFLAGS) -L. -lkernel $(LDFLAGS) -L. -lkernel -T $(LD_SCRIPT) -o $@ -Wl,-Map=$(MAP)
-
-dump: $(KERNEL)
+dump: $(FINAL_IMAGE)
 	$(OBJDUMP) $< -D --demangle | less
-
-server.o: server.S ../server/sample/sample.elf
