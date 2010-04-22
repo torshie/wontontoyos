@@ -8,6 +8,3 @@ include $(WONTON)/Makefile.rule
 
 run: $(buildDirectory)/pangu/pangu.mboot
 	$(qemu) -kernel $^ -m 256
-
-echo:
-	@echo $(buildDirectory)
