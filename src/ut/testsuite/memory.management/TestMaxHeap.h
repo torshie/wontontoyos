@@ -4,7 +4,7 @@
 
 #define IS_MAX_HEAP(rootKey, height) \
 	UT_ASSERT_EQUAL(heap->root->key, rootKey); \
-	UT_ASSERT_EQUAL(getHeapHeight(heap->root), height); \
+	UT_ASSERT_EQUAL(heap->getHeapHeight(), height); \
 	UT_ASSERT_EQUAL(heap->root->parent, 0);
 
 namespace kernel {
@@ -18,41 +18,6 @@ class TestMaxHeap : public TestCase {
 	char pool[4096];
 	char allocatorSite[sizeof(Allocator)];
 	Allocator* allocator;
-
-	static int getHeapHeight(Node* node) {
-		if (node == 0) {
-			return 0;
-		}
-
-		if (node->left == 0 && node->right != 0) {
-			return -1;
-		}
-
-		if (node->left != 0) {
-			if (node->left->key > node->key) {
-				return -1;
-			}
-			if (node->left->parent != node) {
-				return -1;
-			}
-		}
-		if (node->right != 0) {
-			if (node->right->key > node->key) {
-				return -1;
-			}
-			if (node->right->parent != node) {
-				return -1;
-			}
-		}
-
-		int leftHeight = getHeapHeight(node->left);
-		int rightHeight = getHeapHeight(node->right);
-		if (leftHeight == -1 || rightHeight == -1 || leftHeight < rightHeight
-				|| leftHeight - rightHeight > 1) {
-			return -1;
-		}
-		return leftHeight + 1;
-	}
 
 public:
 	bool getTestPoint(TestPoint&, const char*&);
@@ -75,7 +40,7 @@ public:
 
 	void testEmptyMaxHeap() {
 		UT_ASSERT_EQUAL(heap->root, 0);
-		UT_ASSERT_EQUAL(getHeapHeight(heap->root), 0);
+		UT_ASSERT_EQUAL(heap->getHeapHeight(), 0);
 	}
 
 	void testInsertOneNode() {
@@ -104,85 +69,6 @@ public:
 		heap->insert(2, 2);
 
 		IS_MAX_HEAP(2, 2);
-	}
-
-	void testSwapRootAndLeftChild() {
-		heap->insert(2, 2);
-		heap->insert(1, 1);
-		heap->swap(heap->root, heap->root->left);
-
-		UT_ASSERT_EQUAL(heap->root->key, 1);
-		UT_ASSERT_EQUAL(heap->root->data, 1);
-		UT_ASSERT_EQUAL(heap->root->right, 0);
-		UT_ASSERT_EQUAL(heap->root->parent, 0);
-
-		UT_ASSERT_EQUAL(heap->root->left->key, 2);
-		UT_ASSERT_EQUAL(heap->root->left->data, 2);
-		UT_ASSERT_EQUAL(heap->root->left->left, 0);
-		UT_ASSERT_EQUAL(heap->root->left->right, 0);
-		UT_ASSERT_EQUAL(heap->root->left->parent, heap->root);
-	}
-
-	void testSwapRootAndRightChild() {
-		heap->insert(3, 3);
-		heap->insert(1, 1);
-		heap->insert(2, 2);
-		heap->swap(heap->root, heap->root->right);
-
-		UT_ASSERT_EQUAL(heap->root->key, 2);
-		UT_ASSERT_EQUAL(heap->root->data, 2);
-		UT_ASSERT_EQUAL(heap->root->parent, 0);
-
-		UT_ASSERT_EQUAL(heap->root->right->key, 3);
-		UT_ASSERT_EQUAL(heap->root->right->data, 3);
-		UT_ASSERT_EQUAL(heap->root->right->parent, heap->root);
-		UT_ASSERT_EQUAL(heap->root->right->left, 0);
-		UT_ASSERT_EQUAL(heap->root->right->right, 0);
-	}
-
-	void testSwapSeparateNodes() {
-		heap->insert(8, 8);
-		heap->insert(7, 7);
-		heap->insert(6, 6);
-
-		heap->insert(1, 1);
-		heap->insert(2, 2);
-		heap->insert(3, 3);
-		heap->insert(4, 4);
-
-		heap->swap(heap->root->left, heap->root->right);
-
-		UT_ASSERT_EQUAL(heap->root->parent, 0);
-		UT_ASSERT_EQUAL(heap->root->key, 8);
-		UT_ASSERT_EQUAL(heap->root->data, 8);
-
-		UT_ASSERT_EQUAL(heap->root->left->key, 6);
-		UT_ASSERT_EQUAL(heap->root->left->data, 6);
-		UT_ASSERT_EQUAL(heap->root->left->parent, heap->root);
-
-		UT_ASSERT_EQUAL(heap->root->right->key, 7);
-		UT_ASSERT_EQUAL(heap->root->right->data, 7);
-		UT_ASSERT_EQUAL(heap->root->right->parent, heap->root);
-
-		UT_ASSERT_EQUAL(heap->root->left->left->key, 1);
-		UT_ASSERT_EQUAL(heap->root->left->left->left, 0);
-		UT_ASSERT_EQUAL(heap->root->left->left->right, 0);
-		UT_ASSERT_EQUAL(heap->root->left->left->parent, heap->root->left);
-
-		UT_ASSERT_EQUAL(heap->root->left->right->key, 2);
-		UT_ASSERT_EQUAL(heap->root->left->right->left, 0);
-		UT_ASSERT_EQUAL(heap->root->left->right->right, 0);
-		UT_ASSERT_EQUAL(heap->root->left->right->parent, heap->root->left);
-
-		UT_ASSERT_EQUAL(heap->root->right->left->key, 3);
-		UT_ASSERT_EQUAL(heap->root->right->left->left, 0);
-		UT_ASSERT_EQUAL(heap->root->right->left->right, 0);
-		UT_ASSERT_EQUAL(heap->root->right->left->parent, heap->root->right);
-
-		UT_ASSERT_EQUAL(heap->root->right->right->key, 4);
-		UT_ASSERT_EQUAL(heap->root->right->right->left, 0);
-		UT_ASSERT_EQUAL(heap->root->right->right->right, 0);
-		UT_ASSERT_EQUAL(heap->root->right->right->parent, heap->root->right);
 	}
 
 	void testInsertThirdNodeLargerThanRoot() {
@@ -239,7 +125,6 @@ public:
 		UT_ASSERT_EQUAL(heap->root->left->parent, heap->root);
 	}
 
-
 	void testRemoveSingleNode() {
 		Node* node = heap->insert(1, 1);
 		heap->remove(node);
@@ -249,11 +134,13 @@ public:
 	}
 
 	void testRemoveLeftChild() {
-		heap->insert(2, 2);
+		heap->insert(4, 4);
 		Node* left = heap->insert(1, 1);
+		heap->insert(3, 3);
 		heap->remove(left);
 
-		IS_MAX_HEAP(2, 1);
+		IS_MAX_HEAP(4, 2);
+		UT_ASSERT_EQUAL(heap->root->left->key, 3);
 	}
 
 	void testRemoveRightChild() {
@@ -296,25 +183,17 @@ public:
 	void testDecreaseRoot() {
 		Node* root = heap->insert(3, 3);
 		heap->insert(2, 2);
-
 		heap->decrease(root, 2);
 
-		UT_ASSERT_EQUAL(heap->root->key, 2);
-		UT_ASSERT_EQUAL(heap->root->left->key, 1);
-		UT_ASSERT_EQUAL(heap->root->left->data, 3);
+		IS_MAX_HEAP(2, 2);
 	}
 
-
-	void testIncreaseLeaf() {
+	void testBubbleAfterIncrease() {
 		heap->insert(2, 2);
 		Node* leaf = heap->insert(1, 1);
-
 		heap->increase(leaf, 2);
 
-		UT_ASSERT_EQUAL(heap->root->key, 3);
-		UT_ASSERT_EQUAL(heap->root->data, 1);
-		UT_ASSERT_EQUAL(heap->root->left->data, 2);
-		UT_ASSERT_EQUAL(heap->root->left->key, 2);
+		IS_MAX_HEAP(3, 2);
 	}
 };
 

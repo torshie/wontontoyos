@@ -9,7 +9,7 @@ namespace kernel {
 	UT_ASSERT_EQUAL(tree->root->parent, 0); \
 	UT_ASSERT_TRUE(Node::isBlack(tree->root)); \
 	UT_ASSERT_EQUAL(tree->root->key, rootKey); \
-	UT_ASSERT_EQUAL(getBlackHeight(tree->root), blackHeight);
+	UT_ASSERT_EQUAL(tree->getBlackHeight(), blackHeight);
 
 class TestSearchTree : public TestCase {
 	typedef SearchTree<int, int>::Allocator Allocator;
@@ -21,10 +21,6 @@ class TestSearchTree : public TestCase {
 
 	char treeSite[sizeof(SearchTree<int, int>)];
 	SearchTree<int, int>* tree;
-
-	static int getBlackHeight(Node* node) {
-		return SearchTree<int, int>::getBlackHeight(node);
-	}
 
 public:
 	bool getTestPoint(TestPoint&, const char*&);
@@ -43,7 +39,7 @@ public:
 
 	void testEmptyTree() {
 		UT_ASSERT_EQUAL(tree->root, 0);
-		UT_ASSERT_EQUAL(getBlackHeight(tree->root), 0);
+		UT_ASSERT_EQUAL(tree->getBlackHeight(), 0);
 	}
 
 	void testInsertOneNode() {

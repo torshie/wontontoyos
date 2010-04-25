@@ -3,8 +3,6 @@ buildSubdirectories = $(addsuffix /build, $(MODULES))
 buildRequiredModules = $(addsuffix /build, $(REQUIRED_MODULES))
 cleanSubdirectories = $(addsuffix /clean, $(MODULES))
 
-buildDirectoryMagic = $(buildDirectory)/.buildDirectoryMagic
-
 targetsNeeded = $(buildRequiredModules) compile $(buildSubdirectories)
 ifdef LIBRARY
   targetsNeeded += $(buildDirectory)/$(LIBRARY)
@@ -15,12 +13,12 @@ build: $(targetsNeeded)
 
 .PHONY: clean compile $(compileSubdirectories) $(buildRequiredModules)
 
-.SUFFIXES: .x86 .d
+.SUFFIXES: .x86 .mak
 
 $(buildRequiredModules) $(compileSubdirectories) $(buildSubdirectories) $(cleanSubdirectories):
 	@$(MAKE) -C $(@D) $(@F)
 
-$(rootBuildDirectory)/%.o: $(WONTON)/%.cpp $(buildDirectoryMagic) 
+$(rootBuildDirectory)/%.o: $(WONTON)/%.cpp $(buildDirectoryMagic)
 	#  CC $(@F)
 	@$(CXX) $(compilerFlags) $(x64Flags) -c -o $@ $<
 
@@ -36,13 +34,17 @@ $(rootBuildDirectory)/%.x86: $(WONTON)/%.S $(buildDirectoryMagic)
 	#  AS.X86 $(@F)
 	@$(CXX) $(compilerFlags) $(x86Flags) $(asmFlags) -c -o $@ $<
 
-$(rootBuildDirectory)/%.d: $(WONTON)/%.cpp $(buildDirectoryMagic)
-	#  MF $(@F)
-	@$(CXX) $(compilerFlags) $(x64Flags) -M -MF $@ $<
-
 %.o: %.cpp
 	#  CC $(@F)
 	@$(CXX) $(compilerFlags) $(x64Flags) -c -o $@ $<
+
+%.mak: %.cpp
+	#  MF $(@F)
+	@$(CXX) $(compilerFlags) $(x64Flags) -M -MF $@ -MT $*.o $<
+
+$(rootBuildDirectory)/%.mak: $(WONTON)/%.cpp $(buildDirectoryMagic)
+	#  MF $(@F)
+	@$(CXX) $(compilerFlags) $(x64Flags) -M -MF $@ -MT $(rootBuildDirectory)/$*.o $<
 
 compile: $(buildDirectoryMagic) $(compileSubdirectories) $(objectFiles)
 
@@ -68,12 +70,12 @@ $(buildDirectory)/$(LIBRARY): $(allObjectFiles)
 
 clean: $(cleanSubdirectories)
 	#  CLEAN $(notdir $(CURDIR))
-	@rm -f $(buildDirectory)/*.o $(buildDirectory)/*.d \
+	@rm -f $(buildDirectory)/*.o $(buildDirectory)/*.mak \
 		$(CLEAN) $(FINAL_IMAGE) $(DEBUG_SYMBOL_IMAGE) $(buildDirectory)/$(LIBRARY)
 else
 clean: $(cleanSubdirectories)
 	#  CLEAN $(notdir $(CURDIR))
-	@rm -f $(buildDirectory)/*.o $(buildDirectory)/*.d \
+	@rm -f $(buildDirectory)/*.o $(buildDirectory)/*.mak \
 		$(CLEAN) $(FINAL_IMAGE) $(DEBUG_SYMBOL_IMAGE)
 endif
 

@@ -6,7 +6,7 @@ compilerFlags = $(CXXFLAGS) \
 		-nostdlib -nostartfiles -nodefaultlibs -ansi -mno-red-zone -fno-exceptions \
 		-I$(WONTON)/common -I$(WONTON) -I$(WONTON)/src \
 		-W -Wall -Wextra -Werror -Wno-enum-compare \
-		-g -flto
+		-g
 x86Flags = -m32 -D__X86_32__
 x64Flags = -mcmodel=large
 asmFlags = -D__ASM__
@@ -16,16 +16,16 @@ linkerFlags = $(LDFLAGS) \
 		$(addprefix -l, $(patsubst lib%, %, $(patsubst %.a, %, $(notdir $(REQUIRED_LIBRARIES))))) \
 		-Wl,-z,max-page-size=0x1000
 ifeq ($(BUILD_MODE), test)
-  compilerFlags += -DBUILD_TEST_MODE_KERNEL -O2
+  compilerFlags += -DENABLE_RUNTIME_CHECK=1 -O2
 else
   ifeq ($(BUILD_MODE), debug)
-    compilerFlags += -DBUILD_DEBUG_MODE_KERNEL=1 -DBUILD_TEST_MODE_KERNEL -O0
+    compilerFlags += -DENABLE_GDB_HOOK=1 -DENABLE_RUNTIME_CHECK=1 -O0
   else
     compilerFlags += -O2
   endif
 endif
 
-# The relative path of currect directory, compared with $(WONTON)
+# The relative path of current directory, compared with $(WONTON)
 ifeq ($(CURDIR), $(WONTON))
   relativePath = .
 else
@@ -34,6 +34,8 @@ endif
 
 # The build directory of files under currect directory
 buildDirectory = $(rootBuildDirectory)/$(relativePath)
+
+buildDirectoryMagic = $(buildDirectory)/.buildDirectoryMagic
 
 # The object files to be compiled
 OBJS += $(patsubst %.cpp, %.o, $(wildcard *.cpp)) $(patsubst %.S, %.o, $(wildcard *.S))
@@ -48,7 +50,7 @@ ifndef MODULES
     | sed 's/^\.\///g')
 endif
 
-# .d files
-MAK_FILES += $(patsubst %.cpp, %.d, $(wildcard *.cpp)) 
+# .mak files
+MAK_FILES += $(patsubst %.cpp, %.mak, $(wildcard *.cpp)) 
 # All the object files that were generated when building current module
 allObjectFiles = $(shell find $(buildDirectory) -type f | grep \.o$$)

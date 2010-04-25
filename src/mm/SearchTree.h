@@ -50,7 +50,7 @@ private:
 		TreeNodeHelper::replaceWith(this, replacement);
 	}
 
-	static bool isRed(RedBlackTreeNode* node) {
+	static bool isRed(const RedBlackTreeNode* node) {
 		if (node != 0) {
 			return node->red;
 		} else {
@@ -58,7 +58,7 @@ private:
 		}
 	}
 
-	static bool isBlack(RedBlackTreeNode* node) {
+	static bool isBlack(const RedBlackTreeNode* node) {
 		return !isRed(node);
 	}
 };
@@ -140,7 +140,7 @@ public:
 		node->~Node();
 		allocator.release(node);
 
-#ifdef BUILD_TEST_MODE_KERNEL
+#ifdef ENABLE_RUNTIME_CHECK
 		checkRedBlackTree();
 #endif
 	}
@@ -276,15 +276,18 @@ private:
 		}
 	}
 
-#ifdef BUILD_TEST_MODE_KERNEL
+#ifdef ENABLE_RUNTIME_CHECK
 	void checkRedBlackTree() {
-		int height = getBlackHeight(root);
-		if (height < 0) {
+		if (getBlackHeight() < 0) {
 			BUG("SearchTree isn't a valid red-black tree.");
 		}
 	}
 
-	static int getBlackHeight(Node* node) {
+	int getBlackHeight() const {
+		return getBlackHeight(root);
+	}
+
+	static int getBlackHeight(const Node* node) {
 		if (node == 0) {
 			return 0;
 		}

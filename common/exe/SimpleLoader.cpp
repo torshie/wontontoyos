@@ -28,7 +28,7 @@ int SimpleLoader::parse(const void* image, Size) {
 }
 
 Address SimpleLoader::load(Size) {
-	SectionHeader* section = (SectionHeader*) ((char*)header + header->sectionHeaderOffset);
+	SectionHeader* section = (SectionHeader*)((char*)header + header->sectionHeaderOffset);
 	Address b = getBaseAddress();
 	for (Size i = 0; i < header->sectionHeaderCount; ++i) {
 		if (section[i].flags & SectionHeader::FLAG_ALLOCATE) {
