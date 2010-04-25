@@ -8,7 +8,6 @@ namespace kernel {
 
 typedef signed char I8;
 typedef short I16;
-
 typedef int I32;
 typedef TYPE_SELECTOR<
 	sizeof(long) == 8, long,

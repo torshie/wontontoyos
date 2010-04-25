@@ -8,15 +8,15 @@ sourceFiles = $(addprefix $(buildDirectory)/, $(patsubst %.o, %.cpp, $(OBJS)))
 
 OBJS += $(patsubst %.h, %.o, $(headers)) $(testSuiteName)_installTestSuite.o
 TARGETS += $(sourceFiles)
-MAK_FILES += $(patsubst %.h, %.d, $(headers))
+MAK_FILES += $(patsubst %.h, %.mak, $(headers))
 CLEAN = $(sourceFiles)
 
-$(rootBuildDirectory)/%.cpp: $(WONTON)/%.h
+$(rootBuildDirectory)/%.cpp: $(WONTON)/%.h $(buildDirectoryMagic)
 	@chmod +x $(caseGenerator)
 	#  GEN $(@F)
 	@$(caseGenerator) $< $@
 
-$(testSuiteInstaller): $(headers) $(buildDirectory)
+$(testSuiteInstaller): $(buildDirectoryMagic) $(headers)
 	@chmod +x $(suiteGenerator)
 	#  GEN $(@F)
 	@$(suiteGenerator) $@

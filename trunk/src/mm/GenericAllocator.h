@@ -16,8 +16,9 @@ class GenericAllocator {
 	friend GenericAllocator& getSingleInstance<GenericAllocator>();
 
 	/**
-	 * XXX In the SearchTree, the void* is in fact a pointer to a node in the MaxHeap. Replace
-	 * void* with some concrete type. The same to MaxHeap.
+	 * XXX We need some C++ syntax expert here. In the SearchTree, the void* is in fact a
+	 * pointer to a node in the MaxHeap. Replace void* with some concrete type. Do the same to
+	 * MaxHeap.
 	 */
 	typedef SearchTree<Address, void*> Tree;
 	typedef MaxHeap<Size, void*> Heap;

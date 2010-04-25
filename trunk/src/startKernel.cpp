@@ -45,6 +45,8 @@ void startKernel(Address timerAddress) {
 	runner.run(result);
 	result.show();
 
+	for (;;);
+/*
 	Message::brief << "Timer: " << timerAddress << "\n";
 
 	Processor::initializeUserMode();
@@ -59,21 +61,21 @@ void startKernel(Address timerAddress) {
 	delete loader;
 
 	Thread sample(entry);
-	sample.start();
+	sample.start(); */
 
 	// XXX Objects on the stack should be destructed
 }
 
 } /* namespace kernel */
 
-#ifdef BUILD_DEBUG_MODE_KERNEL
-static void WAIT_FOR_DEBUGGER() {
+#ifdef ENABLE_GDB_HOOK
+static void WAIT_FOR_GDB() {
 	volatile int go = 0;
 	while (go == 0)
 		;
 }
 #else
-#	define WAIT_FOR_DEBUGGER()
+#	define WAIT_FOR_GDB()
 #endif
 
 using namespace kernel;
@@ -86,7 +88,7 @@ extern "C" void startKernel(Address timerAddress) {
 	// Remove the temporary page map, so the space is available to kernel stack.
 	PageMap::create(KERNEL_STACK_TOP, TEMP_MAP_SIZE, 0, true);
 
-	WAIT_FOR_DEBUGGER();
+	WAIT_FOR_GDB();
 
 	initCxxSupport();
 

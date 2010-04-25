@@ -13,7 +13,7 @@ template<Size SLICE_SIZE> class StackBasedAllocator {
 	friend class TestStackBasedAllocator;
 	typedef char Load[SLICE_SIZE];
 public:
-#ifdef BUILD_TEST_MODE_KERNEL
+#ifdef ENABLE_RUNTIME_CHECK
 	int counter;
 
 	StackBasedAllocator() : counter(0) {}
@@ -54,10 +54,9 @@ template<Size SLICE_SIZE> void* StackBasedAllocator<SLICE_SIZE>::allocate(Size s
 		return 0;
 	}
 
-
 	typename SimpleStack<Load>::Node* node = stack.pop();
 	if (node != 0) {
-#if defined(BUILD_TEST_MODE_KERNEL)
+#ifdef ENABLE_RUNTIME_CHECK
 		++counter;
 #endif
 		return &(node->load);
@@ -68,7 +67,7 @@ template<Size SLICE_SIZE> void* StackBasedAllocator<SLICE_SIZE>::allocate(Size s
 }
 
 template<Size SLICE_SIZE> void StackBasedAllocator<SLICE_SIZE>::release(void* pointer) {
-#ifdef BUILD_TEST_MODE_KERNEL
+#ifdef ENABLE_RUNTIME_CHECK
 	--counter;
 #endif
 	void* tmp = (char*)pointer - OFFSET_OF(typename SimpleStack<Load>::Node, load);
