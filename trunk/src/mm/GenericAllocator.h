@@ -9,6 +9,29 @@
 
 namespace kernel {
 
+/**
+ * XXX This is a hack, try to remove it. Probably a new design of MaxHeap & SearchTree is needed.
+ *
+ * The default MaxHeap::swap cannot be used by GenericAllocator, because of the internal of our
+ * GenericAllocator. So specialization is used to override the default MaxHeap::swap.
+ */
+template<>
+inline void MaxHeap<Size, void*, StackBasedAllocator<sizeof(HeapNode<Size, void*>)> >::swap(
+		Node* first, Node* second) {
+	typedef SearchTree<Address, void*>::Node TreeNode;
+	TreeNode* firstTreeNode = (TreeNode*)(first->data);
+	TreeNode* secondTreeNode = (TreeNode*)(second->data);
+	firstTreeNode->data = second;
+	secondTreeNode->data = first;
+
+	Size key = first->key;
+	void* data = first->data;
+	first->key = second->key;
+	first->data = second->data;
+	second->key = key;
+	second->data = data;
+}
+
 extern "C" int __ld_image_end;
 
 // XXX Thread-safety

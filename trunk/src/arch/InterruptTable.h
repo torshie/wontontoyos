@@ -16,6 +16,8 @@ public:
 
 		HANDLER_HPET_TIMER = 33,
 
+		HANDLER_IRQ8 = 0x70,
+
 		/**
 		 * !!!!!!!!!!!!!!!!
 		 * !!! Warning !!!!

@@ -26,17 +26,17 @@ include $(WONTON)/Makefile.rule
 
 $(debugSymbolImage): $(linkerScript) $(allX86ObjectFiles)
 	#  LD $(@F)
-	@$(CXX) $(allX86ObjectFiles) $(linkerFlags) -T $(linkerScript) -o $@
+	@$(CROSS_CXX) $(allX86ObjectFiles) $(linkerFlags) -T $(linkerScript) -o $@
 
 $(finalImage): $(debugSymbolImage)
 	@cp $< $@
 	#  STRIP $(@F)
-	@$(STRIP) $@
+	@$(CROSS_STRIP) $@
 	#  OBJCOPY $(@F)
-	@$(OBJCOPY) -R .lto $@
+	@$(CROSS_OBJCOPY) -R .lto $@
 
 $(buildDirectory)/pangu.x86: pangu.S $(loaderImage) $(kernelImage)
 	@cp $(loaderImage) $(kernelImage) .
 	#  AS $(@F)
-	@$(CXX) $(compilerFlags) $(x86Flags) $(asmFlags) -c -o $@ $<
+	@$(CROSS_CXX) $(compilerFlags) $(x86Flags) $(asmFlags) -c -o $@ $<
 	@rm loader.elf kernel.elf

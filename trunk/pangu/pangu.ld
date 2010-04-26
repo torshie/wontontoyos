@@ -3,7 +3,7 @@ OUTPUT_FORMAT(elf32-i386)
 ENTRY (_start)
 
 /* Modify loader.ld when this variable is modified */
-BASE = 0x300000;
+BASE = 0x600000;
 
 ALIGNMENT = 8;
 

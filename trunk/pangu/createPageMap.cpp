@@ -6,8 +6,6 @@ using namespace kernel;
 
 enum {
 	NUMBER_OF_LEVEL_TWO_PAGE_POINTERS = (TEMP_MAP_SIZE - 3 * PAGE_SIZE) / PAGE_SIZE,
-	NUMBER_OF_LEVEL_THREE_PAGE_POINTERS = 1,
-	NUMBER_OF_LEVEL_FOUR_PAGE_POINTERS = 1,
 	SIZE_OF_MAPPED_MEMORY = PagePointer<2>::MEMORY_POINTED
 									* NUMBER_OF_LEVEL_TWO_PAGE_POINTERS,
 };
@@ -36,13 +34,13 @@ static PagePointer<4>* createIdentityAndHigherHalfPagingMap() {
 		levelTwo[i].writable = 1;
 		levelTwo[i].present = 1;
 	}
-	offset += PAGE_SIZE * NUMBER_OF_LEVEL_THREE_PAGE_POINTERS;
+	offset += PAGE_SIZE;
 
 	PagePointer<3>* levelThree = (PagePointer<3>*)offset;
 	levelThree[0].address = (Address)levelTwo;
 	levelThree[0].present = 1;
 	levelThree[0].writable = 1;
-	offset += PAGE_SIZE * NUMBER_OF_LEVEL_FOUR_PAGE_POINTERS;
+	offset += PAGE_SIZE;
 
 	PagePointer<4>* levelFour = (PagePointer<4>*)offset;
 	levelFour[0].address = (Address)levelThree;

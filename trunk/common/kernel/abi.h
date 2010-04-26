@@ -5,15 +5,14 @@
 
 BEGIN_DEFINE(KernelApplicationBinaryInterfaceConstant)
 
-/* !!!!!!!!!!!!!!!
- * !!! Warning !!!
- * !!!!!!!!!!!!!!!
- * If you want to change these variables, make sure the corresponding linker scripts are consistent
+/**
+ * If you want to change these variables, make sure the corresponding linker scripts are
+ * consistent and clean the build tree before testing.
  */
 DEFINE_LONG_LONG(KERNEL_VIRTUAL_BASE, 0xFFFF800000000000)
 DEFINE(LOW_MEMORY_SIZE, 0x100000)
 DEFINE(MEMORY_HOLE_SIZE, 0x4000)
-DEFINE(TEMP_MAP_SIZE, 0x5000)
+DEFINE(TEMP_MAP_SIZE, 0x7000)
 
 DEFINE(KERNEL_HOLE_BASE, KERNEL_VIRTUAL_BASE + LOW_MEMORY_SIZE)
 DEFINE(KERNEL_STACK_TOP, KERNEL_HOLE_BASE + MEMORY_HOLE_SIZE)

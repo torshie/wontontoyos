@@ -12,25 +12,26 @@ using namespace kernel;
 
 namespace pangu {
 
+static U64 getEventTimerAddress() {
+	const InterfaceDescriptionPointer* pointer = InterfaceDescriptionPointer::find();
+	const InterfaceDescriptionTable* root = pointer->getRootTable();
+	const InterfaceDescriptionTable* hpet = root->find("HPET");
+	if (hpet == 0) {
+		return 0;
+	}
+	EventTimerDescriptor* timer = (EventTimerDescriptor*)(&(hpet->data));
+	return timer->address;
+}
+
 extern "C" Address loadFileImage(void*, Size);
 extern "C" char kernelStart, kernelEnd, loaderStart, loaderEnd, globalDescriptorTablePointer;
 extern "C" Address rise() {
 	initCxxSupport();
 
-	const InterfaceDescriptionPointer* pointer = InterfaceDescriptionPointer::find();
-	const InterfaceDescriptionTable* root = pointer->getRootTable();
-	const InterfaceDescriptionTable* hpet = root->find("HPET");
-	if (hpet == 0) {
-		Message::fatal << "Cannot find HPET\n";
-		for (;;);
-	}
-
-	EventTimerDescriptor* timer = (EventTimerDescriptor*)(&(hpet->data));
-
 	PagePointer<4>* map = createPageMap();
 	Address loaderEntry = loadFileImage(&loaderStart, &loaderEnd - &loaderStart);
 	// XXX Evil literal
-	*(U64*)(loaderEntry - 32) = timer->address; // Pass parameter to 64-bit loader
+	*(U64*)(loaderEntry - 32) = getEventTimerAddress();
 
 	Processor::Register<Processor::CR0>::set(1 << CR0_BIT_PROTECTION_ENABLED);
 	Processor::Register<Processor::CR4>::set(

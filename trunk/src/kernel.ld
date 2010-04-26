@@ -3,12 +3,10 @@ OUTPUT_FORMAT(elf64-x86-64)
 ENTRY(_start)
 
 /**
- * !!!!!!!!!!!!!!!
- * !!! Warning !!!
- * !!!!!!!!!!!!!!!
- * If you want to change load address, make sure <kernel/abi.h> is consistent
+ * If you want to change load address, make sure abi.h is consistent and clean build tree before
+ * testing
  */
-BASE = 0xFFFF800000000000 + 0x100000 + 0x4000 + 0x6000;
+BASE = 0xFFFF800000000000 + 0x100000 + 0x4000 + 0x8000;
 /*           ^                  ^         ^        ^
  *           |                  |         |        |
  *     VIRTUAL_BASE         RESERVED     HOLE    STACK
