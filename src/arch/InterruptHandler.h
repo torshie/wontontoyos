@@ -7,6 +7,7 @@
 #include "Processor.h"
 #include "Message.h"
 #include "InterruptController.h"
+#include "driver/timer/RealTimeClock/RealTimeClock.h"
 
 namespace kernel {
 
@@ -33,6 +34,16 @@ public:
 	static void handle() {
 		static int tick = 0;
 		++tick;
+	}
+};
+
+template<> class InterruptHandler<InterruptTable::HANDLER_IRQ8> {
+public:
+	static void handle() {
+		static int tick = 0;
+		++tick;
+		Message::brief << "RTC tick: " << tick << "C register: "
+				<< getSingleInstance<RealTimeClock>().readRegister(0xC) << "\n";
 	}
 };
 

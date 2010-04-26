@@ -112,8 +112,7 @@ public:
 			lastNode = parentOfLastNode->right;
 		}
 
-		node->key = lastNode->key;
-		node->data = lastNode->data;
+		swap(node, lastNode);
 
 		if (isLeftChild) {
 			lastNode->parent->left = 0;

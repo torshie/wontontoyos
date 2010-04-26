@@ -1,21 +1,22 @@
-qemu = qemu-system-x86_64
+qemu = qemu-system-x86_64 -m 256
 
-all: buildKernelImage
-
-buildKernelImage:
-	$(MAKE) -C pangu build
+all:
 
 include $(WONTON)/Makefile.variable
 include $(WONTON)/Makefile.rule
 
-run: $(buildDirectory)/pangu/pangu.mboot
-	$(qemu) -kernel $^ -m 256
+ghost = $(buildDirectory)/tools/ghost/ghost
 
-debug-build:
-	$(MAKE) BUILD_MODE=debug -C pangu build
+$(ghost):
+	$(MAKE) -C tools build
 
-debug: debug.build/pangu/pangu.mboot
-	$(qemu) -kernel $^ -m 256 -s -monitor stdio -S
+test/build debug/build release/build:
+	$(MAKE) BUILD_MODE=$(@D) -C pangu build
 
-test: buildKernelImage $(buildDirectory)/pangu/pangu.mboot
-	$(qemu) -kernel $(lastword $^) -m 256
+$(buildDirectory)/pangu/pangu.mboot: $(BUILD_MODE)/build
+
+test/run debug/run release/run: $(buildDirectory)/pangu/pangu.mboot $(ghost)
+	$(ghost) "$(qemu) -s -kernel $<"
+
+test debug release:
+	$(MAKE) BUILD_MODE=$(@) $(@)/run

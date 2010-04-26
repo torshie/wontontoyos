@@ -38,11 +38,11 @@ void GenericAllocator::release(void* address) {
 }
 
 void GenericAllocator::merge(Tree::Node* firstTreeNode, Tree::Node* secondTreeNode) {
-	Heap::Node* firstHeapNode = (Heap::Node*)(firstTreeNode->data);
 	Heap::Node* secondHeapNode = (Heap::Node*)(secondTreeNode->data);
 	Size secondMemorySliceSize = secondHeapNode->key;
 	heap.remove(secondHeapNode);
 	tree.remove(secondTreeNode);
+	Heap::Node* firstHeapNode = (Heap::Node*)(firstTreeNode->data);
 	firstHeapNode = heap.increase(firstHeapNode, secondMemorySliceSize);
 	firstTreeNode->data = firstHeapNode;
 }

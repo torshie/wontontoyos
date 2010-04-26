@@ -3,7 +3,7 @@ OUTPUT_FORMAT(elf64-x86-64)
 ENTRY (_start)
 
 /* Modify pangu.ld if this value is modified */
-BASE = 0x300000 - 0x2000;
+BASE = 0x600000 - 0x2000;
 
 ALIGNMENT = 8;
 

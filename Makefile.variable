@@ -2,7 +2,7 @@ include $(WONTON)/Makefile.config
 
 rootBuildDirectory = $(WONTON)/$(BUILD_MODE).build
 
-compilerFlags = $(CXXFLAGS) \
+compilerFlags = $(CROSS_CXXFLAGS) \
 		-nostdlib -nostartfiles -nodefaultlibs -ansi -mno-red-zone -fno-exceptions \
 		-I$(WONTON)/common -I$(WONTON) -I$(WONTON)/src \
 		-W -Wall -Wextra -Werror -Wno-enum-compare \
@@ -10,7 +10,7 @@ compilerFlags = $(CXXFLAGS) \
 x86Flags = -m32 -D__X86_32__
 x64Flags = -mcmodel=large
 asmFlags = -D__ASM__
-linkerFlags = $(LDFLAGS) \
+linkerFlags = $(CROSS_LDFLAGS) \
 		-nostdlib -nostartfiles -nodefaultlibs \
 		$(addprefix -L, $(dir $(REQUIRED_LIBRARIES))) \
 		$(addprefix -l, $(patsubst lib%, %, $(patsubst %.a, %, $(notdir $(REQUIRED_LIBRARIES))))) \
@@ -52,5 +52,6 @@ endif
 
 # .mak files
 MAK_FILES += $(patsubst %.cpp, %.mak, $(wildcard *.cpp)) 
+
 # All the object files that were generated when building current module
 allObjectFiles = $(shell find $(buildDirectory) -type f | grep \.o$$)

@@ -6,8 +6,3 @@ FINAL_IMAGE = $(buildDirectory)/$(serverName).elf
 DEBUG_SYMBOL_IMAGE = $(buildDirectory)/$(serverName).dbg
 REQUIRED_LIBRARIES = $(rootBuildDirectory)/system/jelly/libjelly.a
 REQUIRED_MODULES = ../../system/jelly
-TARGETS = $(FINAL_IMAGE)
-	
-dump: $(DEBUG_SYMBOL_IMAGE)
-	$(OBJDUMP) $^ -d --demangle | less
-

@@ -1,0 +1,8 @@
+toolName = $(notdir $(CURDIR))
+sources = $(abspath $(wildcard *.cpp))
+headers = $(abspath $(wildcard *.h))
+
+FINAL_IMAGE = $(buildDirectory)/$(toolName)
+NATIVE_COMPILE = 1
+TARGETS = $(FINAL_IMAGE)
+

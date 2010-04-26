@@ -3,7 +3,7 @@ buildSubdirectories = $(addsuffix /build, $(MODULES))
 buildRequiredModules = $(addsuffix /build, $(REQUIRED_MODULES))
 cleanSubdirectories = $(addsuffix /clean, $(MODULES))
 
-targetsNeeded = $(buildRequiredModules) compile $(buildSubdirectories)
+targetsNeeded = $(buildRequiredModules) compile $(buildSubdirectories) $(FINAL_IMAGE)
 ifdef LIBRARY
   targetsNeeded += $(buildDirectory)/$(LIBRARY)
 endif
@@ -20,31 +20,39 @@ $(buildRequiredModules) $(compileSubdirectories) $(buildSubdirectories) $(cleanS
 
 $(rootBuildDirectory)/%.o: $(WONTON)/%.cpp $(buildDirectoryMagic)
 	#  CC $(@F)
-	@$(CXX) $(compilerFlags) $(x64Flags) -c -o $@ $<
+ifndef NATIVE_COMPILE
+	@$(CROSS_CXX) $(compilerFlags) $(x64Flags) -c -o $@ $<
+else
+	@$(NATIVE_CXX) $(NATIVE_CXXFLAGS) -c -o $@ $<
+endif
 
 $(rootBuildDirectory)/%.x86: $(WONTON)/%.cpp $(buildDirectoryMagic) 
 	#  CC.X86 $(@F)
-	@$(CXX) $(compilerFlags) $(x86Flags) -c -o $@ $<
+	@$(CROSS_CXX) $(compilerFlags) $(x86Flags) -c -o $@ $<
 
 $(rootBuildDirectory)/%.o: $(WONTON)/%.S $(buildDirectoryMagic)
 	#  AS $(@F)
-	@$(CXX) $(compilerFlags) $(x64Flags) $(asmFlags) -c -o $@ $<
+	@$(CROSS_CXX) $(compilerFlags) $(x64Flags) $(asmFlags) -c -o $@ $<
 
 $(rootBuildDirectory)/%.x86: $(WONTON)/%.S $(buildDirectoryMagic)
 	#  AS.X86 $(@F)
-	@$(CXX) $(compilerFlags) $(x86Flags) $(asmFlags) -c -o $@ $<
+	@$(CROSS_CXX) $(compilerFlags) $(x86Flags) $(asmFlags) -c -o $@ $<
 
 %.o: %.cpp
 	#  CC $(@F)
-	@$(CXX) $(compilerFlags) $(x64Flags) -c -o $@ $<
+	@$(CROSS_CXX) $(compilerFlags) $(x64Flags) -c -o $@ $<
 
 %.mak: %.cpp
 	#  MF $(@F)
-	@$(CXX) $(compilerFlags) $(x64Flags) -M -MF $@ -MT $*.o $<
+	@$(CROSS_CXX) $(compilerFlags) $(x64Flags) -M -MF $@ -MT $*.o $<
 
 $(rootBuildDirectory)/%.mak: $(WONTON)/%.cpp $(buildDirectoryMagic)
 	#  MF $(@F)
-	@$(CXX) $(compilerFlags) $(x64Flags) -M -MF $@ -MT $(rootBuildDirectory)/$*.o $<
+ifndef NATIVE_COMPILE
+	@$(CROSS_CXX) $(compilerFlags) $(x64Flags) -M -MF $@ -MT $(rootBuildDirectory)/$*.o $<
+else
+	@$(NATIVE_CXX) -M -MF $@ -MT $(rootBuildDirectory)/$*.o $<
+endif
 
 compile: $(buildDirectoryMagic) $(compileSubdirectories) $(objectFiles)
 
@@ -52,21 +60,32 @@ $(buildDirectoryMagic):
 	@mkdir -p $(buildDirectory)
 	@touch $@
 
+ifndef NATIVE_COMPILE
 $(FINAL_IMAGE): $(DEBUG_SYMBOL_IMAGE)
 	#  STRIP $(@F)
 	@cp $^ $@
-	@$(STRIP) $@
+	@$(CROSS_STRIP) $@
 	#  OBJCOPY $(@F)
-	@$(OBJCOPY) -R .lto $@
+	@$(CROSS_OBJCOPY) -R .lto $@
+else
+$(FINAL_IMAGE): $(objectFiles)
+	#  LD $(@F)
+	@$(NATIVE_CXX) $^ -o $@
+endif
 
 $(DEBUG_SYMBOL_IMAGE): $(allObjectFiles) $(REQUIRED_LIBRARIES) $(LINKER_SCRIPT)
 	#  LD $(@F)
-	@$(CXX) $(allObjectFiles) $(linkerFlags) -T $(LINKER_SCRIPT) -o $@
+	@$(CROSS_CXX) $(allObjectFiles) $(linkerFlags) -T $(LINKER_SCRIPT) -o $@
+
+ifdef DEBUG_SYMBOL_IMAGE
+dump: $(DEBUG_SYMBOL_IMAGE)
+	$(CROSS_OBJDUMP) $< --demangle -D | less
+endif
 
 ifdef LIBRARY
 $(buildDirectory)/$(LIBRARY): $(allObjectFiles)
 	#  AR $(@F)
-	@$(AR) rcs $@ $(allObjectFiles)
+	@$(CROSS_AR) rcs $@ $(allObjectFiles)
 
 clean: $(cleanSubdirectories)
 	#  CLEAN $(notdir $(CURDIR))
