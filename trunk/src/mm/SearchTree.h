@@ -81,110 +81,10 @@ public:
 	}
 
 	Node* insert(const Key& key, const Data& data);
-
-	void remove(Node* node) {
-		Node* cursor = 0;
-		if (node->left == 0 || node->right == 0) {
-			cursor = node;
-		} else {
-			cursor = getSuccessor(node);
-		}
-
-		Node* child = 0;
-		if (cursor->left != 0) {
-			child = cursor->left;
-		} else {
-			child = cursor->right;
-		}
-
-		Node* fix = 0;
-		bool left = false;;
-		if (cursor != root) {
-			fix = cursor->parent;
-			if (cursor->isLeftChild()) {
-				left = true;
-			} else {
-				left = false;
-			}
-			cursor->replaceWith(child);
-		} else {
-			root = child;
-			if (root != 0) {
-				root->parent = 0;
-			}
-		}
-
-		bool isBlack = Node::isBlack(cursor);
-		if (cursor != node) {
-			if (node != root) {
-				node->replaceWith(cursor);
-			} else {
-				root = cursor;
-				root->parent = 0;
-			}
-			cursor->setLeftChild(node->left);
-			cursor->setRightChild(node->right);
-			cursor->red = node->red;
-		}
-
-		if (isBlack) {
-			if (fix != 0) {
-				fixUpRemove(fix, left);
-			}
-		}
-
-		if (root != 0) {
-			root->red = false;
-		}
-
-		node->~Node();
-		allocator.release(node);
-
-#ifdef ENABLE_RUNTIME_CHECK
-		checkRedBlackTree();
-#endif
-	}
-
-	Node* search(const Key& key) const {
-		Node* cursor = root;
-		while (cursor != 0) {
-			if (key < cursor->key) {
-				cursor = cursor->left;
-			} else if (key == cursor->key) {
-				break;
-			} else {
-				cursor = cursor->right;
-			}
-		}
-		return cursor;
-	}
-
-
-	static Node* getSuccessor(const Node* node) {
-		if (node->right != 0) {
-			return getMinimum(node->right);
-		} else {
-			Node* parent = node->parent;
-			while (parent != 0 && parent->right == node) {
-				node = parent;
-				parent = node->parent;
-			}
-			return parent;
-		}
-	}
-
-	static Node* getPredecessor(const Node* node) {
-		if (node->left != 0) {
-			return node->left;
-		}
-
-		Node* parent = node->parent;
-		while (parent != 0 && node->isLeftChild()) {
-			node = parent;
-			parent = node->parent;
-		}
-		return parent;
-	}
+	void remove(Node* node);
+	Node* search(const Key& key) const;
+	static Node* getSuccessor(const Node* node);
+	static Node* getPredecessor(const Node* node);
 
 private:
 	Node* root;
@@ -193,88 +93,8 @@ private:
 	void leftRotate(Node* node);
 	void rightRotate(Node* child);
 	void fixUpInsert(Node* node);
-
-	static Node* getMinimum(Node* node) {
-		Node* cursor = node;
-		while (cursor->left != 0) {
-			cursor = cursor->left;
-		}
-		return cursor;
-	}
-
-	void fixUpRemove(Node* fix, bool left) {
-		while (fix != 0) {
-			if (left) {
-				Node* child = fix->left;
-				if (Node::isRed(child)) {
-					child->red =false;
-					break;
-				}
-
-				Node* cursor = fix->right;
-				if (Node::isRed(cursor)) {
-					cursor->red = false;
-					fix->red = true;
-					cursor = fix;
-					leftRotate(fix);
-				}
-				if (Node::isBlack(cursor->left) && Node::isBlack(cursor->right)) {
-					cursor->red = true;
-					if (cursor->parent->isLeftChild()) {
-						left = true;
-					} else {
-						left = false;
-					}
-					fix = cursor->parent->parent;
-				} else {
-					if (Node::isBlack(cursor->right)) {
-						cursor->left->red = false;
-						cursor->red = true;
-						cursor = cursor->left;
-						rightRotate(cursor->left);
-					}
-					cursor->red = cursor->parent->red;
-					cursor->parent->red = false;
-					leftRotate(cursor->parent);
-					fix = 0;
-				}
-			} else {
-				Node* child = fix->right;
-				if (Node::isRed(child)) {
-					child->red = false;
-					break;
-				}
-
-				Node* cursor = fix->left;
-				if (Node::isRed(cursor)) {
-					cursor->red = false;
-					fix->red = true;
-					cursor = fix;
-					rightRotate(fix);
-				}
-				if (Node::isBlack(cursor->left) && Node::isBlack(cursor->right)) {
-					cursor->red = true;
-					if (cursor->parent->isLeftChild()) {
-						left = true;
-					} else {
-						left = false;
-					}
-					fix = cursor->parent->parent;
-				} else {
-					if (Node::isBlack(cursor->left)) {
-						cursor->right->red = false;
-						cursor->red = true;
-						cursor = cursor->right;
-						leftRotate(cursor->right);
-					}
-					cursor->red = cursor->parent->red;
-					cursor->parent->red = false;
-					rightRotate(cursor->parent);
-					fix = 0;
-				}
-			}
-		}
-	}
+	static Node* getMinimum(Node* node);
+	void fixUpRemove(Node* fix, bool left);
 
 #ifdef ENABLE_RUNTIME_CHECK
 	void checkRedBlackTree() {
@@ -287,38 +107,7 @@ private:
 		return getBlackHeight(root);
 	}
 
-	static int getBlackHeight(const Node* node) {
-		if (node == 0) {
-			return 0;
-		}
-
-		int leftBlackHeight = getBlackHeight(node->left);
-		int rightBlackHeight = getBlackHeight(node->right);
-		if (leftBlackHeight != rightBlackHeight || leftBlackHeight == -1
-				|| rightBlackHeight == -1) {
-			return -1;
-		}
-
-		if (node->left != 0) {
-			if (node->left->key > node->key || node->left->parent != node) {
-				return -1;
-			}
-		}
-		if (node->right != 0) {
-			if (node->right->key < node->key || node->right->parent  != node) {
-				return -1;
-			}
-		}
-
-		if (Node::isRed(node)) {
-			if (Node::isRed(node->left) || Node::isRed(node->right)) {
-				return -1;
-			}
-			return leftBlackHeight;
-		} else {
-			return leftBlackHeight + 1;
-		}
-	}
+	static int getBlackHeight(const Node* node);
 #endif
 
 };
@@ -368,8 +157,8 @@ void SearchTree<Key, Data, MemoryAllocator>::rightRotate(Node* child) {
 }
 
 template<typename Key, typename Data, typename MemoryAllocator>
-RedBlackTreeNode<Key, Data>* SearchTree<Key, Data, MemoryAllocator>::insert(const Key& key,
-		const Data& data) {
+RedBlackTreeNode<Key, Data>*
+SearchTree<Key, Data, MemoryAllocator>::insert(const Key& key, const Data& data) {
 	void* buffer = allocator.allocate(sizeof(Node));
 	Node* node = new (buffer) Node(key, data);
 
@@ -399,7 +188,7 @@ RedBlackTreeNode<Key, Data>* SearchTree<Key, Data, MemoryAllocator>::insert(cons
 
 	root->red = false;
 
-#ifdef BUILD_TEST_MODE_KERNEL
+#ifdef ENABLE_RUNTIME_CHECK
 		checkRedBlackTree();
 #endif
 
@@ -459,6 +248,235 @@ void SearchTree<Key, Data, MemoryAllocator>::fixUpInsert(Node* node) {
 			}
 		}
 	}
+}
+
+template<typename Key, typename Data, typename MemoryAllocator>
+void SearchTree<Key, Data, MemoryAllocator>::fixUpRemove(Node* fix, bool left) {
+	while (fix != 0) {
+		if (left) {
+			Node* child = fix->left;
+			if (Node::isRed(child)) {
+				child->red =false;
+				break;
+			}
+
+			Node* cursor = fix->right;
+			if (Node::isRed(cursor)) {
+				cursor->red = false;
+				fix->red = true;
+				cursor = fix;
+				leftRotate(fix);
+			}
+			if (Node::isBlack(cursor->left) && Node::isBlack(cursor->right)) {
+				cursor->red = true;
+				if (cursor->parent->isLeftChild()) {
+					left = true;
+				} else {
+					left = false;
+				}
+				fix = cursor->parent->parent;
+			} else {
+				if (Node::isBlack(cursor->right)) {
+					cursor->left->red = false;
+					cursor->red = true;
+					cursor = cursor->left;
+					rightRotate(cursor->left);
+				}
+				cursor->red = cursor->parent->red;
+				cursor->parent->red = false;
+				leftRotate(cursor->parent);
+				fix = 0;
+			}
+		} else {
+			Node* child = fix->right;
+			if (Node::isRed(child)) {
+				child->red = false;
+				break;
+			}
+
+			Node* cursor = fix->left;
+			if (Node::isRed(cursor)) {
+				cursor->red = false;
+				fix->red = true;
+				cursor = fix;
+				rightRotate(fix);
+			}
+			if (Node::isBlack(cursor->left) && Node::isBlack(cursor->right)) {
+				cursor->red = true;
+				if (cursor->parent->isLeftChild()) {
+					left = true;
+				} else {
+					left = false;
+				}
+				fix = cursor->parent->parent;
+			} else {
+				if (Node::isBlack(cursor->left)) {
+					cursor->right->red = false;
+					cursor->red = true;
+					cursor = cursor->right;
+					leftRotate(cursor->right);
+				}
+				cursor->red = cursor->parent->red;
+				cursor->parent->red = false;
+				rightRotate(cursor->parent);
+				fix = 0;
+			}
+		}
+	}
+}
+
+template<typename Key, typename Data, typename MemoryAllocator>
+int SearchTree<Key, Data, MemoryAllocator>::getBlackHeight(const Node* node) {
+	if (node == 0) {
+		return 0;
+	}
+
+	int leftBlackHeight = getBlackHeight(node->left);
+	int rightBlackHeight = getBlackHeight(node->right);
+	if (leftBlackHeight != rightBlackHeight || leftBlackHeight == -1
+			|| rightBlackHeight == -1) {
+		return -1;
+	}
+
+	if (node->left != 0) {
+		if (node->left->key > node->key || node->left->parent != node) {
+			return -1;
+		}
+	}
+	if (node->right != 0) {
+		if (node->right->key < node->key || node->right->parent  != node) {
+			return -1;
+		}
+	}
+
+	if (Node::isRed(node)) {
+		if (Node::isRed(node->left) || Node::isRed(node->right)) {
+			return -1;
+		}
+		return leftBlackHeight;
+	} else {
+		return leftBlackHeight + 1;
+	}
+}
+
+template<typename Key, typename Data, typename MemoryAllocator>
+typename SearchTree<Key, Data, MemoryAllocator>::Node*
+SearchTree<Key, Data, MemoryAllocator>::getMinimum(Node* node) {
+	Node* cursor = node;
+	while (cursor->left != 0) {
+		cursor = cursor->left;
+	}
+	return cursor;
+}
+
+template<typename Key, typename Data, typename MemoryAllocator>
+typename SearchTree<Key, Data, MemoryAllocator>::Node*
+SearchTree<Key, Data, MemoryAllocator>::getPredecessor(const Node* node) {
+	if (node->left != 0) {
+		return node->left;
+	}
+
+	Node* parent = node->parent;
+	while (parent != 0 && node->isLeftChild()) {
+		node = parent;
+		parent = node->parent;
+	}
+	return parent;
+}
+
+template<typename Key, typename Data, typename MemoryAllocator>
+typename SearchTree<Key, Data, MemoryAllocator>::Node*
+SearchTree<Key, Data, MemoryAllocator>::getSuccessor(const Node* node) {
+	if (node->right != 0) {
+		return getMinimum(node->right);
+	} else {
+		Node* parent = node->parent;
+		while (parent != 0 && parent->right == node) {
+			node = parent;
+			parent = node->parent;
+		}
+		return parent;
+	}
+}
+
+template<typename Key, typename Data, typename MemoryAllocator>
+typename SearchTree<Key, Data, MemoryAllocator>::Node*
+SearchTree<Key, Data, MemoryAllocator>::search(const Key& key) const {
+	Node* cursor = root;
+	while (cursor != 0) {
+		if (key < cursor->key) {
+			cursor = cursor->left;
+		} else if (key == cursor->key) {
+			break;
+		} else {
+			cursor = cursor->right;
+		}
+	}
+	return cursor;
+}
+
+template<typename Key, typename Data, typename MemoryAllocator>
+void SearchTree<Key, Data, MemoryAllocator>::remove(Node* node) {
+	Node* cursor = 0;
+	if (node->left == 0 || node->right == 0) {
+		cursor = node;
+	} else {
+		cursor = getSuccessor(node);
+	}
+
+	Node* child = 0;
+	if (cursor->left != 0) {
+		child = cursor->left;
+	} else {
+		child = cursor->right;
+	}
+
+	Node* fix = 0;
+	bool left = false;;
+	if (cursor != root) {
+		fix = cursor->parent;
+		if (cursor->isLeftChild()) {
+			left = true;
+		} else {
+			left = false;
+		}
+		cursor->replaceWith(child);
+	} else {
+		root = child;
+		if (root != 0) {
+			root->parent = 0;
+		}
+	}
+
+	bool isBlack = Node::isBlack(cursor);
+	if (cursor != node) {
+		if (node != root) {
+			node->replaceWith(cursor);
+		} else {
+			root = cursor;
+			root->parent = 0;
+		}
+		cursor->setLeftChild(node->left);
+		cursor->setRightChild(node->right);
+		cursor->red = node->red;
+	}
+
+	if (isBlack) {
+		if (fix != 0) {
+			fixUpRemove(fix, left);
+		}
+	}
+
+	if (root != 0) {
+		root->red = false;
+	}
+
+	node->~Node();
+	allocator.release(node);
+
+#ifdef ENABLE_RUNTIME_CHECK
+	checkRedBlackTree();
+#endif
 }
 
 } // namespace kernel
