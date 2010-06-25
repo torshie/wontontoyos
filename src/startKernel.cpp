@@ -31,6 +31,7 @@ void startKernel(Address timerAddress) {
 
 	Message::brief << "__ld_image_start: " << &__ld_image_start << "\n"
 			<< "__ld_image_end:   " << &__ld_image_end << "\n";
+	Message::brief << "Timer Address: " << timerAddress << "\n";
 	getProcessorInstance<GlobalDescriptorTable>();
 	getProcessorInstance<InterruptTable>();
 	getProcessorInstance<InterruptController>();
