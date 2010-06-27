@@ -1,9 +1,9 @@
 #ifndef KERNEL_SEXY_NAKED_H_INCLUDED
 #define KERNEL_SEXY_NAKED_H_INCLUDED
 
-#include "STRIP_CONST.h"
-#include "STRIP_VOLATILE.h"
-#include <generic/STATIC_ASSERT.h>
+#include <sexy/STRIP_CONST.h>
+#include <sexy/STRIP_VOLATILE.h>
+#include <sexy/STATIC_ASSERT.h>
 
 namespace kernel {
 

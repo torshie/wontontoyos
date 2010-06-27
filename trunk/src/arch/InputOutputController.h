@@ -4,7 +4,7 @@
 #include <generic/getSingleInstance.h>
 #include <generic/type.h>
 #include <kernel/abi.h>
-#include <generic/STATIC_ASSERT.h>
+#include <sexy/STATIC_ASSERT.h>
 
 namespace kernel {
 

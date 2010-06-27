@@ -2,7 +2,7 @@
 #define KERNEL_ARCH_PAGE_POINTER_H_INCLUDED
 
 #include <generic/type.h>
-#include <generic/STATIC_ASSERT.h>
+#include <sexy/STATIC_ASSERT.h>
 #include "arch/X64Constant.h"
 #include <cxx/BUG.h>
 #include <kernel/abi.h>

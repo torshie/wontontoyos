@@ -2,7 +2,7 @@
 #define KERNEL_GENERIC_TYPE_H_INCLUDED
 
 #include <sexy/TYPE_SELECTOR.h>
-#include <generic/STATIC_ASSERT.h>
+#include <sexy/STATIC_ASSERT.h>
 
 namespace kernel {
 

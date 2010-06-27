@@ -1,7 +1,7 @@
 #ifndef KERNEL_SEXY_STRIP_VOLATILE_H_INCLUDED
 #define KERNEL_SEXY_STRIP_VOLATILE_H_INCLUDED
 
-#include "SAME_TYPE.h"
+#include <sexy/SAME_TYPE.h>
 
 namespace kernel {
 

@@ -2,7 +2,7 @@
 #define KERNEL_ARCH_DATA_SEGMENT_DESCRIPTOR_H_INCLUDED
 
 #include <generic/type.h>
-#include <generic/STATIC_ASSERT.h>
+#include <sexy/STATIC_ASSERT.h>
 
 namespace kernel {
 

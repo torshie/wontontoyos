@@ -8,7 +8,7 @@
 #include <kernel/abi.h>
 #include "arch/X64Constant.h"
 #include "mm/PageMap.h"
-#include <generic/STATIC_ASSERT.h>
+#include <sexy/STATIC_ASSERT.h>
 #include "Message.h"
 
 namespace kernel {

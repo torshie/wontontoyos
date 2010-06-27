@@ -3,7 +3,7 @@
 
 #include "arch/getProcessorInstance.h"
 #include <generic/type.h>
-#include <generic/STATIC_ASSERT.h>
+#include <sexy/STATIC_ASSERT.h>
 #include "NullDescriptor.h"
 #include "TaskStateSegment.h"
 #include "CodeSegmentDescriptor.h"

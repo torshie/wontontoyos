@@ -3,7 +3,7 @@
 
 #include <generic/type.h>
 #include "arch/getProcessorInstance.h"
-#include <generic/STATIC_ASSERT.h>
+#include <sexy/STATIC_ASSERT.h>
 
 namespace kernel {
 

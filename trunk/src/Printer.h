@@ -8,14 +8,16 @@
 #include <sexy/IS_STRING.h>
 #include <sexy/IS_POINTER.h>
 #include <sexy/IS_ENUM.h>
-#include <sexy/IS_CHAR_ARRAY.h>
 #include <sexy/IS_UNSIGNED.h>
+#include <sexy/IS_ARRAY_OF.h>
 #include <sexy/TYPE_SELECTOR.h>
+#include <sexy/NAKED.h>
 #include <kernel/abi.h>
 
 namespace kernel {
 
 // XXX Make all methods thread-safe
+// XXX Printer cannot print wchar_t
 class Printer {
 	friend Printer& getSingleInstance<Printer>();
 	friend class Message;
@@ -140,15 +142,16 @@ private:
 	};
 
 	template<typename T> Printer& operator << (const T& data) {
+		typedef typename NAKED<T>::Type Naked;
 		typedef typename TYPE_SELECTOR<
-			SAME_TYPE<char, typename NAKED<T>::Type >::value, CharPrinter<T>,
-			SAME_TYPE<bool, typename NAKED<T>::Type >::value, BooleanPrinter<T>,
-			IS_SIGNED<typename NAKED<T>::Type >::value, SignedIntegerPrinter<T>,
-			IS_UNSIGNED<typename NAKED<T>::Type >::value, UnsignedIntegerPrinter<T>,
-			IS_CHAR_ARRAY<typename NAKED<T>::Type >::value, CharArrayPrinter<T>,
-			IS_STRING<typename NAKED<T>::Type>::value, StringPrinter<T>,
-			IS_POINTER<typename NAKED<T>::Type>::value, PointerPrinter<T>,
-			IS_ENUM<typename NAKED<T>::Type>::value, EnumPrinter<T>,
+			SAME_TYPE<Naked, char>::value, CharPrinter<T>,
+			SAME_TYPE<Naked, bool>::value, BooleanPrinter<T>,
+			IS_SIGNED<Naked>::value, SignedIntegerPrinter<T>,
+			IS_UNSIGNED<Naked>::value, UnsignedIntegerPrinter<T>,
+			IS_ARRAY_OF<Naked, char>::value, CharArrayPrinter<T>,
+			IS_STRING<Naked>::value, StringPrinter<T>,
+			IS_POINTER<Naked>::value, PointerPrinter<T>,
+			IS_ENUM<Naked>::value, EnumPrinter<T>,
 			true, NullPrinter<T>
 		>::Type CompetentPrinter;
 

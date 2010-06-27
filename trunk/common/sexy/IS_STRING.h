@@ -1,7 +1,7 @@
 #ifndef KERNEL_SEXY_IS_STRING_H_INCLUDED
 #define KERNEL_SEXY_IS_STRING_H_INCLUDED
 
-#include <generic/STATIC_ASSERT.h>
+#include <sexy/STATIC_ASSERT.h>
 
 namespace kernel {
 
