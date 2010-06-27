@@ -20,7 +20,7 @@ public:
 	kernel::U8 oemId[6];
 	kernel::U8 revision;
 	kernel::U32 address;
-} __attribute__((packed));
+} __attribute__((__packed__));
 
 } // namespace pangu
 

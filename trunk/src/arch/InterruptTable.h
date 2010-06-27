@@ -56,7 +56,7 @@ private:
 		U32 offset2;
 	private:
 		U32 ignored1;
-	} __attribute__((packed));
+	} __attribute__((__packed__));
 
 	void (*handler[HANDLER_COUNT])(void);
 
@@ -74,7 +74,7 @@ private:
 
 	// Yes, handle is private. Assembly is used to get access to this static method
 	static void handle(unsigned int isrNumber);
-} __attribute__((packed));
+} __attribute__((__packed__));
 
 inline void InterruptTable::setHandler(int isrNumber, void (*h)(void)) {
 	handler[isrNumber] = h;

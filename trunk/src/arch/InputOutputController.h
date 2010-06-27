@@ -36,7 +36,7 @@ public:
 			U8 mask:1;
 			U64 __reserved:39;
 			U8 desination;
-		} __attribute__((packed));
+		} __attribute__((__packed__));
 
 		explicit Router(U8 interruptVector) : __value(0), interrupt(interruptVector) {}
 	};

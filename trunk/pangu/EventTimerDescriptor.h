@@ -15,7 +15,7 @@ struct EventTimerDescriptor {
 	kernel::U8 number;
 	kernel::U16 minTick;
 	kernel::U8 attribute;
-} __attribute__((packed));
+} __attribute__((__packed__));
 
 } // namespace pangu
 
