@@ -4,20 +4,22 @@
 #include <sexy/IS_POINTER.h>
 #include <sexy/IS_REFERENCE.h>
 #include <sexy/IS_INTEGER.h>
-#include <sexy/IS_VOID.h>
 #include <sexy/IS_ARRAY.h>
 #include <sexy/IS_CLASS.h>
-#include <sexy/IS_BOOL.h>
-#include <generic/STATIC_ASSERT.h>
+#include <sexy/STATIC_ASSERT.h>
+#include <sexy/SAME_TYPE.h>
 
 namespace kernel {
 
+// XXX Check whether this implementation is correct
 template<typename T> class IS_ENUM {
 public:
 	enum {
 		value = !(IS_POINTER<T>::value || IS_REFERENCE<T>::value || IS_INTEGER<T>::value
-						|| IS_VOID<T>::value || IS_ARRAY<T>::value || IS_CLASS<T>::value
-						|| IS_BOOL<T>::value)
+						|| IS_ARRAY<T>::value || IS_CLASS<T>::value
+						|| IS_POINTER_TO_MEMBER<T>::value
+						|| SAME_TYPE<T, bool>::value || SAME_TYPE<T, char>::value
+						|| SAME_TYPE<T, wchar_t>::value || SAME_TYPE<T, void>::value)
 	};
 };
 

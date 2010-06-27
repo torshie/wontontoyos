@@ -1,7 +1,7 @@
 #ifndef KERNE_SEXY_STRIP_CONST_H_INCLUDED
 #define KERNE_SEXY_STRIP_CONST_H_INCLUDED
 
-#include "SAME_TYPE.h"
+#include <sexy/SAME_TYPE.h>
 
 namespace kernel {
 

@@ -1,5 +1,5 @@
-#ifndef KERNEL_GENERIC_STATIC_ASSERT_H_INCLUDED
-#define KERNEL_GENERIC_STATIC_ASSERT_H_INCLUDED
+#ifndef KERNEL_SEXY_STATIC_ASSERT_H_INCLUDED
+#define KERNEL_SEXY_STATIC_ASSERT_H_INCLUDED
 
 #define STATIC_ASSERT_TRUE(expression) \
 	namespace internal { \
@@ -21,4 +21,4 @@
 		typedef int __staticAssert__[(first) != (second) ? 1 : -1]; \
 	}
 
-#endif // KERNEL_GENERIC_STATIC_ASSERT_H_INCLUDED
+#endif // KERNEL_SEXY_STATIC_ASSERT_H_INCLUDED

@@ -3,7 +3,7 @@
 
 #include <sexy/IS_SIGNED.h>
 #include <sexy/IS_INTEGER.h>
-#include <generic/STATIC_ASSERT.h>
+#include <sexy/STATIC_ASSERT.h>
 
 namespace kernel {
 
