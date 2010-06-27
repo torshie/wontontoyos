@@ -21,13 +21,13 @@ public:
 		U8 __zero_1:5;
 		U8 longMode:1;
 		U16 __zero_2:10;
-	} __attribute__((packed));
+	} __attribute__((__packed__));
 private:
 	CodeSegmentDescriptor() : initializer(0), __one_0(1), __one_1(1), present(1), longMode(1) {}
 
 	CodeSegmentDescriptor(const CodeSegmentDescriptor&);
 	const CodeSegmentDescriptor& operator = (const CodeSegmentDescriptor&);
-} __attribute__((packed));
+} __attribute__((__packed__));
 
 STATIC_ASSERT_EQUAL(sizeof(CodeSegmentDescriptor), 8)
 

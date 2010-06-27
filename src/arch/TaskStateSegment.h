@@ -31,7 +31,7 @@ private:
 	TaskStateSegment(const TaskStateSegment&);
 	const TaskStateSegment& operator = (const TaskStateSegment&);
 
-} __attribute__((packed));
+} __attribute__((__packed__));
 
 } // namespace kernel
 

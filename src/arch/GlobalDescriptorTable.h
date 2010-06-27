@@ -59,7 +59,7 @@ private:
 	 * with the address of data member taskState.
 	 */
 	void load() const;
-} __attribute__((packed));
+} __attribute__((__packed__));
 
 inline GlobalDescriptorTable::GlobalDescriptorTable() :
 		limit(sizeof(GlobalDescriptorTable) - sizeof(limit) - sizeof(base) - sizeof(__padding)),

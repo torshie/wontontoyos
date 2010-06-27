@@ -11,8 +11,8 @@ class TestOFFSET_OF : public TestCase {
 		struct Inner {
 			Member first;
 			Member second;
-		} __attribute__((packed));
-	} __attribute__((packed));
+		} __attribute__((__packed__));
+	} __attribute__((__packed__));
 
 public:
 	bool getTestPoint(TestPoint&, const char*&);
@@ -20,7 +20,7 @@ public:
 	void testPlainOldData() {
 		struct T {
 			int a, b;
-		} __attribute__((packed));
+		} __attribute__((__packed__));
 
 		UT_ASSERT_EQUAL(OFFSET_OF(T, a), 0);
 		UT_ASSERT_EQUAL(OFFSET_OF(T, b), sizeof(int));

@@ -21,13 +21,13 @@ public:
 		U8 __dpl:2;
 		U8 present:1;
 		U16 __ignored_1;
-	} __attribute__((packed));
+	} __attribute__((__packed__));
 private:
 	DataSegmentDescriptor() : initializer(0), writable(1), __one_0(1), present(1) {}
 
 	DataSegmentDescriptor(const DataSegmentDescriptor&);
 	const DataSegmentDescriptor& operator = (const DataSegmentDescriptor&);
-} __attribute__((packed));
+} __attribute__((__packed__));
 
 STATIC_ASSERT_EQUAL(sizeof(DataSegmentDescriptor), 8)
 

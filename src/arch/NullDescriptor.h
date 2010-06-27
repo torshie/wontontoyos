@@ -14,7 +14,7 @@ class NullDescriptor {
 
 	NullDescriptor(const NullDescriptor&);
 	const NullDescriptor& operator = (const NullDescriptor&);
-} __attribute__((packed));
+} __attribute__((__packed__));
 
 } // namespace kernel
 

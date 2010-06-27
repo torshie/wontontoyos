@@ -21,7 +21,7 @@ public:
 	kernel::U32 creatorId;
 	kernel::U32 creatorRevision;
 	char data[];
-} __attribute__((packed));
+} __attribute__((__packed__));
 
 } // namespace pangu
 

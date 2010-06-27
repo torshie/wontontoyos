@@ -26,7 +26,7 @@ struct TaskStateSegmentDescriptor {
 
 	TaskStateSegmentDescriptor(const TaskStateSegmentDescriptor&);
 	const TaskStateSegmentDescriptor& operator = (const TaskStateSegmentDescriptor&);
-} __attribute__((packed));
+} __attribute__((__packed__));
 
 STATIC_ASSERT_EQUAL(sizeof(TaskStateSegmentDescriptor), 16)
 

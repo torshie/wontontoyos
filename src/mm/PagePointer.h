@@ -48,7 +48,7 @@ public:
 			U64 page:40;
 			U16 __reserved_2:11;
 			U8 noExecute:1;
-		} __attribute__((packed));
+		} __attribute__((__packed__));
 
 		U64 address;
 	};
@@ -74,7 +74,7 @@ private:
 		return (PagePointer*)(pointerOffset * sizeof(PagePointer)
 				+ PageTable<LEVEL>::LOWEST_TABLE_ADDRESS);
 	}
-} __attribute__((packed));
+} __attribute__((__packed__));
 
 template<> class PagePointer<0> {
 public:

@@ -34,11 +34,11 @@ class EventTimer {
 				U8 __reserved :1;
 				U8 legacy :1;
 				U16 vendorId;
-			} __attribute__((packed));
+			} __attribute__((__packed__));
 			U32 __value;
 		};
 		U32 period;
-	} __attribute__((packed));
+	} __attribute__((__packed__));
 
 	union GeneralConfig {
 		struct {
@@ -47,7 +47,7 @@ class EventTimer {
 			U64 __reserved :62;
 		};
 		U64 __value;
-	} __attribute__((packed));
+	} __attribute__((__packed__));
 
 	struct TimerConfig {
 		union {
@@ -64,11 +64,11 @@ class EventTimer {
 				U8 interrupt :5;
 				U8 __unused1 :2;
 				U16 __reserved3;
-			}__attribute__((packed));
+			}__attribute__((__packed__));
 			U32 __value;
 		};
 		U32 possibleInterrupt;
-	} __attribute__((packed));
+	} __attribute__((__packed__));
 
 	/**
 	 * HPET registers only accept 32-bit or 64-bit access, so in order by read/write HPET
@@ -89,12 +89,12 @@ class EventTimer {
 		volatile TimerConfig config;
 		volatile U64 comparator;
 		U64 __unused[2];
-	} __attribute__((packed)) timer[24];
+	} __attribute__((__packed__)) timer[24];
 
 	int getAvailableInterrupt(int timerIndex) const;
 	int getPeriodicTimer() const;
 
-} __attribute__((packed));
+} __attribute__((__packed__));
 
 STATIC_ASSERT_EQUAL(sizeof(EventTimer), 1024);
 
